@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:route_name",
+ "creation": "2024-09-16 22:52:21.356358",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "route_name",
+  "to",
+  "column_break_koab",
+  "posting_date",
+  "column_break_ecia",
+  "from",
+  "section_break_ihax",
+  "table_foap"
+ ],
+ "fields": [
+  {
+   "fieldname": "route_name",
+   "fieldtype": "Data",
+   "label": "Route Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "label": "To",
+   "options": "City Master"
+  },
+  {
+   "fieldname": "column_break_koab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "column_break_ecia",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Link",
+   "label": "From",
+   "options": "City Master"
+  },
+  {
+   "fieldname": "section_break_ihax",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_foap",
+   "fieldtype": "Table",
+   "label": "Customer",
+   "options": "Customer Route Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-17 21:45:31.630604",
+ "modified_by": "Administrator",
+ "module": "Bolt Distribution",
+ "name": "Route Master",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
