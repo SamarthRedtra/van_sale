@@ -130,8 +130,8 @@ app_license = "mit"
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Vehicle": "van_sale.overrides.vehicle.VanSaleVehicle",
-	"Warehouse": "van_sale.overrides.warehouse.VanSaleWarehouse",
+    "Vehicle": "van_sale.overrides.vehicle.VanSaleVehicle",
+    "Warehouse": "van_sale.overrides.warehouse.VanSaleWarehouse",
 }
 
 # Document Events
@@ -243,4 +243,6 @@ override_doctype_class = {
 # }
 
 
-website_route_rules = [{'from_route': '/vansale/<path:app_path>', 'to_route': 'vansale'},]
+website_route_rules = [
+    {"from_route": "/vansale/<path:app_path>", "to_route": "vansale"},
+]

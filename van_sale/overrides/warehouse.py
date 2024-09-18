@@ -9,7 +9,7 @@ class VanSaleWarehouse(Warehouse):
 
         if is_vehicle and not self.flags.is_processed:
             vehicle_doc = frappe.get_doc("Vehicle", self.custom_vehicle)
-            
+
             self.custom_license_plate = vehicle_doc.license_plate
             self.custom_model = vehicle_doc.model
             self.custom_make = vehicle_doc.make
@@ -31,12 +31,10 @@ class VanSaleWarehouse(Warehouse):
             # Save the document after setting the value
             self.save()
 
-        
     def on_update(self):
         super().on_update()
         """Called during the update event."""
         self.update_vehicle_info()
-
 
     def after_insert(self):
         """Called after the document is inserted."""
