@@ -7,7 +7,9 @@ class VanSaleDeliveryTrip(DeliveryTrip):
         super().on_submit()
 
         if self.custom_warehouse and self.custom_user:
-            if frappe.db.exists("POS Profile User", {"user": self.custom_user, "default": 1}):
+            if frappe.db.exists(
+                "POS Profile User", {"user": self.custom_user, "default": 1}
+            ):
                 pos_user_profile = frappe.get_doc(
                     "POS Profile User", {"user": self.custom_user, "default": 1}
                 )
