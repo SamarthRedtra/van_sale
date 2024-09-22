@@ -1,0 +1,114 @@
+.delivery-status-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-filter {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.status-tag {
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid;
+  padding-left: 40px;
+}
+
+.status-tag.pending::before {
+  content: "";
+  display: flex;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-30px, 3px);
+  border-radius: 50%;
+  border: 3px solid #ff9900;
+  background-color: #f9cb9c;
+}
+
+.status-tag.in-transit::before {
+  content: "";
+  display: flex;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-30px, 3px);
+  border-radius: 50%;
+  border: 3px solid #009e0f;
+  background-color: #f9cb9c;
+}
+
+.status-tag.delivered::before {
+  content: "";
+  display: flex;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-30px, 3px);
+  border-radius: 50%;
+  border: 3px solid #009e0f;
+  background-color: #b6d7a8;
+}
+
+.status-columns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.status-column {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.delivery-card {
+  border: 1px solid #000000;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+
+.customer_address {
+  margin: 0;
+}
+
+.customer-info {
+  padding: 15px;
+}
+
+.customer-info > p {
+  margin: 0;
+  padding: 0;
+}
+
+.customer-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.delivery-card .status-info {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  width: 100%;
+  padding: 15px;
+}
+
+.delivery-card .delivery-timeline {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.delivery-card .moving-truck-icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+}

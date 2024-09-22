@@ -43,10 +43,9 @@
   },
   {
    "fieldname": "city",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "City",
-   "options": "City Master"
+   "label": "City"
   },
   {
    "fieldname": "contact",
@@ -58,7 +57,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-17 21:46:07.138321",
+ "modified": "2024-09-18 23:35:14.838495",
  "modified_by": "Administrator",
  "module": "Bolt Distribution",
  "name": "Customer Route Details",
