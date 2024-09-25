@@ -7,11 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "route_name",
-  "to",
+  "from",
   "column_break_koab",
   "posting_date",
   "column_break_ecia",
-  "from",
+  "to",
   "section_break_ihax",
   "table_foap"
  ],
@@ -60,7 +60,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-17 21:45:31.630604",
+ "modified": "2024-09-25 02:11:13.780301",
  "modified_by": "Administrator",
  "module": "Bolt Distribution",
  "name": "Route Master",

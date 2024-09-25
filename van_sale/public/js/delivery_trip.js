@@ -1,5 +1,14 @@
 frappe.ui.form.on('Delivery Trip', {
+    onload: function (frm) {
+        setTimeout(() => {
+            frm.remove_custom_button('Delivery Note', 'Get stops from');
+        }, 10);
+    },
     refresh: function (frm) {
+        setTimeout(() => {
+            frm.remove_custom_button('Delivery Note', 'Get stops from');
+        }, 10);
+
         // Add button to the form
         frm.add_custom_button(__('Show Delivery Status'), function () {
             show_delivery_status_modal(frm);
@@ -24,8 +33,11 @@ frappe.ui.form.on('Delivery Trip', {
                         frappe.model.set_value(stop.doctype, stop.name, {
                             "customer": element?.customer_name ?? "",
                             "address": element?.customer_address ?? "",
+                            "custom_mobile_no": element?.mobile_number ?? "",
                             "customer_address": element?.location ?? "",
-                            "contact": element?.contact_name ?? ""
+                            "contact": element?.contact_name ?? "",
+                            "lat": element?.latitude ?? 0,
+                            "lng": element?.longitude ?? 0,
                         });
                     });
 
