@@ -1,6 +1,6 @@
 import { useFrappeGetDoc } from "frappe-react-sdk";
 import { useNavigate, useParams } from "react-router-dom";
-import { DeliveryStop } from "../../utils/types.ts";
+import { DeliveryStop } from "../../utils/types";
 import DeliveryStopDetailCard from "../TripDetails/components/DeliveryStopDetailCard.tsx";
 import PreviewMap from "../PreviewMap.tsx";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";

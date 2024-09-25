@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DeliveryTripDetailCard from "./components/DeliveryTripDetailCard";
-import { DeliveryTripDetails } from "../../utils/types.ts";
+import { DeliveryTripDetails } from "../../utils/types";
 import getDeliveryDetails from "../../services/getTripDetails.tsx";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 

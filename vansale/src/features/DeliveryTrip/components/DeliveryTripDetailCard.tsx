@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { DeliveryTripDetails } from "../../../utils/types.ts";
+import { DeliveryTripDetails } from "../../../utils/types";
 import { formatDate } from "../../../utils/formatDate.ts";
 
 interface DeliveryTripDetailCardProps {
