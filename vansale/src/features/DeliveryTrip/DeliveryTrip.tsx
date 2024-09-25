@@ -18,6 +18,7 @@ export default function DeliveryTrip() {
       setIsLoading(true);
       try {
         const res = await getDeliveryDetails();
+        console.log("-----------------2------------", res)
         res && setDeliveryTrips(res.message.data ?? []);
       } catch (err) {
         console.error(

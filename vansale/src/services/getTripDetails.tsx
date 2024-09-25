@@ -1,19 +1,11 @@
+import axios from "axios";
+
 const getDeliveryDetails = async () => {
-  const res = await fetch(
-    "https://api.frappe.io/api/method/frappe.client.get_list",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        doctype: "Delivery Trip",
-        filters: {},
-        fields: ["*"],
-        limit_page_length: 100,
-      }),
-    }
+  const res = await axios.get(
+    "/api/method/van_sale.api.delivery_trip.get_all_delivery_trips"
   );
-  const data = await res.json();
-  return data;
+
+  return await res.data;
 };
 
 export default getDeliveryDetails;
