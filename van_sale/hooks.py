@@ -43,7 +43,10 @@ app_include_css = ["/assets/van_sale/css/delivery_trip.css"]
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Delivery Trip": "public/js/delivery_trip.js"}
+doctype_js = {
+    "Delivery Trip": "public/js/delivery_trip.js",
+    "POS Invoice": "public/js/pos_invoice.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

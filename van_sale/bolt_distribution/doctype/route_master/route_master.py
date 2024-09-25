@@ -46,24 +46,41 @@ def get_route_details(route_name):
     for item in route_details.table_foap:
         contacts = frappe.db.sql(
             """
-            SELECT contact.name AS contact_name
+            SELECT contact.*
             FROM `tabContact` AS contact
             JOIN `tabDynamic Link` AS link ON link.parent = contact.name
             WHERE link.link_doctype = 'Customer'
             AND link.link_name = %s
+            LIMIT 1
         """,
             item.customer_name,
             as_dict=True,
         )
 
+        addresses = frappe.get_all(
+            "Address",
+            filters={"link_doctype": "Customer", "link_name": item.customer_name},
+            fields=["*"],
+        )
+
+        address_details = addresses[0] if addresses and addresses[0] else None
+        contact_details = contacts[0] if contacts and contacts[0] else None
+
         updated_route_details.append(
             {
                 **item.as_dict(),
                 "contact_name": (
-                    contacts[0].contact_name if contacts[0].contact_name else None
+                    contact_details.contact_name if contact_details else None
                 ),
-                "customer_address": frappe.get_value(
-                    "Customer", item.customer_name, "customer_primary_address"
+                "mobile_number": (
+                    contact_details.mobile_no if contact_details else None
+                ),
+                "customer_address": address_details.name if address_details else None,
+                "latitude": (
+                    address_details.custom_latitude if address_details else None
+                ),
+                "longitude": (
+                    address_details.custom_longitude if address_details else None
                 ),
             }
         )
