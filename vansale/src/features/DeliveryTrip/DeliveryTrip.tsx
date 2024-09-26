@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DeliveryTripDetailCard from "./components/DeliveryTripDetailCard";
 import { DeliveryTripDetails } from "../../utils/types";
 import getDeliveryDetails from "../../services/getTripDetails.tsx";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
+import NoTripFound from "./components/NoTripFound.tsx";
 
 export default function DeliveryTrip() {
   const [search, setSearch] = useState("");
@@ -18,8 +19,8 @@ export default function DeliveryTrip() {
       setIsLoading(true);
       try {
         const res = await getDeliveryDetails();
-        console.log("-----------------2------------", res)
-        res && setDeliveryTrips(res.message.data ?? []);
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        res && setDeliveryTrips(res?.message?.data ?? []);
       } catch (err) {
         console.error(
           "ERROR IN DELIVERY TRIPS :- ",
@@ -30,6 +31,10 @@ export default function DeliveryTrip() {
       }
     })();
   }, []);
+
+  const filteredTrips = deliveryTrips.filter((trip) => {
+    return trip?.name?.toLowerCase()?.includes(search.toLowerCase()) || trip?.custom_route?.toLowerCase()?.includes(search.toLowerCase());
+  });
 
   return (
     <div className="mx-auto min-h-screen">
@@ -78,9 +83,13 @@ export default function DeliveryTrip() {
         {isLoading && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
-            {deliveryTrips?.map((item, index) => (
-              <DeliveryTripDetailCard key={index} tripDetials={item} />
-            ))}
+            {
+              filteredTrips.length
+                ? filteredTrips.map((item, index) => (
+                    <DeliveryTripDetailCard key={index} tripDetails={item} />
+                  ))
+                : <NoTripFound />
+            }
           </div>
         )}
       </div>

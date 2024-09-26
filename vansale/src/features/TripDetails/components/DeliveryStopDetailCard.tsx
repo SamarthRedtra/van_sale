@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { DELIVERY_STATUS_CONST } from "../../../utils/constants.ts";
 import { CheckCircledIcon, ClockIcon } from "@radix-ui/react-icons";
 import { DeliveryStop } from "../../../utils/types";
-import { getDeliveryStatus } from "../../../utils/getDeliveryStatus.ts";
+import { getDeliveryStatus } from "../../../utils/getStatus.ts";
 // import { useFrappePutCall } from "frappe-react-sdk";
 // import { useState } from "react";
 

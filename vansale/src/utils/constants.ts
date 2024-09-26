@@ -1,7 +1,8 @@
-export const CONSTANTS = {
+export const TRIP_STATUS = {
+  SCHEDULED: "Scheduled",
   UPCOMING: "Upcoming",
-  SCHEDULED_FOR_TODAY: "Scheduled For Today",
-  DELIVERED: "Delivered",
+  COMPLETED: "Completed",
+  DRAFT: "Draft",
 };
 
 export const DELIVERY_STATUS_CONST = {
