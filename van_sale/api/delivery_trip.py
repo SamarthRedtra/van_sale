@@ -239,7 +239,6 @@ def pos_close_entry(delivery_trip_id, warehouse):
     delivery_trip_doc.custom_pos_closing_entry = voucher.name
     delivery_trip_doc.save()
 
-
     is_partially_completed = False
 
     for stop in delivery_trip_doc.delivery_stops:
@@ -247,7 +246,12 @@ def pos_close_entry(delivery_trip_id, warehouse):
             is_partially_completed = True
             break
 
-    frappe.db.set_value("Delivery Trip", delivery_trip_id, "status", "Partially Completed" if is_partially_completed else "Completed")
+    frappe.db.set_value(
+        "Delivery Trip",
+        delivery_trip_id,
+        "status",
+        "Partially Completed" if is_partially_completed else "Completed",
+    )
     frappe.db.commit()
 
     # Return the name of the newly created POS Closing Entry

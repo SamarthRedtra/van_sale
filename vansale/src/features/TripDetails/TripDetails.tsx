@@ -26,7 +26,7 @@ export default function TripDetails() {
   );
   const [search, setSearch] = useState("");
   const params = useParams();
-  const { data, isLoading } = useFrappeGetDoc<DeliveryTripDetails>(
+  const { data, isLoading, mutate } = useFrappeGetDoc<DeliveryTripDetails>(
     "Delivery Trip",
     params?.trip_id
   );
@@ -51,6 +51,7 @@ export default function TripDetails() {
           status: "success",
           message: "Successfully closed POS",
         });
+        mutate();
       }
     } catch (err: any) {
       setApiStatus({

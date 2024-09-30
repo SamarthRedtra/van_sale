@@ -11,6 +11,7 @@ import Toast from "../Components/Toast.tsx";
 import { getDeliveryStatus } from "../../utils/getStatus.ts";
 import { DELIVERY_STATUS_CONST } from "../../utils/constants.ts";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound.tsx";
+import InvoiceDetailCard from "./components/InvoiceDetailCard.tsx";
 
 export default function DeliveryStopDetails() {
   const navigate = useNavigate();
@@ -109,9 +110,10 @@ export default function DeliveryStopDetails() {
           </div>
           <button
             onClick={handleStartDelivery}
-            className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:opacity-50"
+            className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
             disabled={
-              false
+              status === DELIVERY_STATUS_CONST.DELIVERED ||
+              !!tripDetails?.custom_pos_closing_entry
               // true ||
               // (status === DELIVERY_STATUS_CONST.IN_TRANSIT &&
               //   !isPosOpenEntryFound)
@@ -129,6 +131,11 @@ export default function DeliveryStopDetails() {
           <div className="flex flex-col gap-4 p-4">
             {data && <DeliveryStopDetailCard stop={data} />}
           </div>
+
+          {status === DELIVERY_STATUS_CONST.DELIVERED &&
+            data?.custom_pos_invoice && (
+              <InvoiceDetailCard posInvoice={data.custom_pos_invoice} />
+            )}
 
           <div className="p-4">
             <PreviewMap lat={data?.lat ?? 0} long={data?.lng ?? 0} />
