@@ -3,21 +3,21 @@ import { DELIVERY_STATUS_CONST } from "../../../utils/constants.ts";
 import { CheckCircledIcon, ClockIcon } from "@radix-ui/react-icons";
 import { DeliveryStop } from "../../../utils/types";
 import { getDeliveryStatus } from "../../../utils/getStatus.ts";
-// import { useFrappePutCall } from "frappe-react-sdk";
-// import { useState } from "react";
+import { PhoneCall } from "lucide-react";
 
 interface DeliveryStopDetailCardProps {
   stop: DeliveryStop;
   isCTAAllowed?: boolean;
+  hasIcon?: boolean;
 }
 
 export default function DeliveryStopDetailCard({
   stop,
   isCTAAllowed = false,
+  hasIcon = false,
 }: DeliveryStopDetailCardProps) {
   const { trip_id } = useParams();
   const navigate = useNavigate();
-  // const { call, isCompleted } = useFrappePutCall("frappe.client.set_value");
 
   const status = getDeliveryStatus(stop);
 
@@ -25,30 +25,25 @@ export default function DeliveryStopDetailCard({
 
   const handleClick = (stopId: string) => async () => {
     if (!stopId) return;
-    // if (isStart) {
-    //   const data = await call({
-    //     doctype: "Delivery Stop",
-    //     name: stopId,
-    //     fieldname: "custom_in_transition",
-    //     value: 1,
-    //   });
-
-    //   if (data?.message) {
-    //     const updatedStop = data?.message?.delivery_stops?.find(
-    //       (item: DeliveryStop) => item.name === stopId
-    //     );
-    //     setStopDetails(updatedStop);
-    //   }
-    // } else {
-    // window.location.href = "/app/point-of-sale";
     navigate(`/vansale/delivery-trip/${trip_id}/${stopId}`);
-    // }
   };
 
   return (
     <div className="bg-white rounded-lg shadow">
-      <div className="flex justify-between items-start border border-gray-200 p-2 rounded-t-md">
-        <div className="flex flex-col justify-between items-start">
+      <div className="flex gap-4 justify-between items-start border border-gray-200 p-2 rounded-t-md">
+        {hasIcon && (
+          <div className="bg-[#f4ebfe] rounded-md">
+            <p className="text-2xl font-bold p-1.5 px-2 text-[#9e25fc]">
+              {stop?.customer
+                .split(" ")
+                .slice(0, 2)
+                .map((item) => item[0])
+                .join("")
+                .toLocaleUpperCase() ?? ""}
+            </p>
+          </div>
+        )}
+        <div className="flex flex-col flex-1 justify-between items-start">
           <h2 className="font-semibold">{stop?.customer ?? "-"}</h2>
           <p
             className="text-sm text-gray-500 truncate max-w-56 w-full"
@@ -57,17 +52,11 @@ export default function DeliveryStopDetailCard({
             {stop?.address?.replace("<br>", ",") ?? 0}
           </p>
         </div>
-        {/* <span
-          className={`text-xs py-1 rounded-3xl font-bold px-2 ${
-            status === DELIVERY_STATUS_CONST.IN_TRANSIT
-              ? "bg-[#00abff] text-white"
-              : status === DELIVERY_STATUS_CONST.PENDING
-              ? "bg-[#ffefc2] text-[#9e7602]"
-              : "bg-[#1faa00] text-white"
-          }`}
-        >
-          {isCompleted}
-        </span> */}
+        <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
+          <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
+            <PhoneCall />
+          </div>
+        </a>
       </div>
       <div className="flex text-sm">
         <div className="flex p-2 w-28 rounded-bl-md flex-col gap-1.5 border border-gray-200">

@@ -1,6 +1,6 @@
-import {DELIVERY_STATUS_CONST, TRIP_STATUS} from "./constants";
-import {DeliveryStop, DeliveryTripDetails} from "./types";
-import {formatDate} from "./formatDate.ts";
+import { DELIVERY_STATUS_CONST, TRIP_STATUS } from "./constants";
+import { DeliveryStop, DeliveryTripDetails } from "./types";
+import { formatDate } from "./formatDate.ts";
 
 export const getDeliveryStatus = (doc: DeliveryStop | undefined): string => {
   if (!doc) return DELIVERY_STATUS_CONST.PENDING;
@@ -12,24 +12,49 @@ export const getDeliveryStatus = (doc: DeliveryStop | undefined): string => {
   return DELIVERY_STATUS_CONST.PENDING;
 };
 
-export const getTripStatus = (doc: DeliveryTripDetails): { "status": string, "message": string } => {
-  if (!doc) return {
-    "status": TRIP_STATUS.UPCOMING,
-    "message": TRIP_STATUS.UPCOMING,
-  };
+export const getTripStatus = (
+  doc: DeliveryTripDetails
+): { status: string; message: string } => {
+  if (!doc || !doc.status)
+    return {
+      status: TRIP_STATUS.UPCOMING,
+      message: TRIP_STATUS.UPCOMING,
+    };
 
-  if (doc?.status && doc.status === TRIP_STATUS.SCHEDULED && doc?.departure_time) {
+  if (
+    (doc.status === TRIP_STATUS.SCHEDULED && doc?.departure_time) ||
+    doc.status === TRIP_STATUS.IN_TRANSIT
+  ) {
     const date = formatDate(doc.departure_time);
 
     if (date === "Today") {
-      return { "status": TRIP_STATUS.SCHEDULED, "message": `${TRIP_STATUS.SCHEDULED} for ${formatDate(doc?.departure_time ?? "")}`};
+      return {
+        status: TRIP_STATUS.SCHEDULED,
+        message: `${TRIP_STATUS.SCHEDULED} for ${formatDate(
+          doc?.departure_time ?? ""
+        )}`,
+      };
     }
-    return { "status": TRIP_STATUS.UPCOMING, "message": TRIP_STATUS.UPCOMING};
+
+    if (doc.departure_time) {
+      let departureTime = new Date(doc.departure_time);
+
+      let today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      if (date === "Yesterday" || departureTime < yesterday) {
+        return { status: TRIP_STATUS.OVERDUE, message: TRIP_STATUS.OVERDUE };
+      }
+    }
+    return { status: TRIP_STATUS.UPCOMING, message: TRIP_STATUS.UPCOMING };
   }
 
-  if (doc?.status && doc.status === TRIP_STATUS.COMPLETED) {
-    return { "status": TRIP_STATUS.COMPLETED, "message": TRIP_STATUS.COMPLETED};
+  if (doc.status === TRIP_STATUS.COMPLETED) {
+    return { status: TRIP_STATUS.COMPLETED, message: TRIP_STATUS.COMPLETED };
   }
 
-  return { "status": TRIP_STATUS.UPCOMING, "message": TRIP_STATUS.UPCOMING};
+  return { status: TRIP_STATUS.UPCOMING, message: TRIP_STATUS.UPCOMING };
 };

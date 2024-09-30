@@ -17,11 +17,6 @@ export default function PreviewMap({ lat, long }: PreviewMapProps) {
         center: [lat, long],
         zoom: 12,
         zoomSnap: 0.001,
-        doubleClickZoom: false, // Disable zoom on double click
-        tap: false, // Disable zoom on double tap
-        scrollWheelZoom: false, // Disable zoom on scroll
-        dragging: false, // Disable dragging
-        touchZoom: false, // Disable zoom on pinch gestures
       });
 
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -51,7 +46,7 @@ export default function PreviewMap({ lat, long }: PreviewMapProps) {
       id="map_preview"
       style={{
         borderRadius: "16px",
-        height: "240px",
+        height: "440px",
         width: "100%",
         overflow: "hidden",
       }}

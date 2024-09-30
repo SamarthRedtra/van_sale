@@ -40,7 +40,7 @@ app_include_css = ["/assets/van_sale/css/delivery_trip.css"]
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"point-of-sale": "public/js/point_of_sale.js"}
 
 # include js in doctype views
 doctype_js = {

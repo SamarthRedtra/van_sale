@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { DeliveryTripDetails } from "../../../utils/types";
 import { formatDate } from "../../../utils/formatDate.ts";
 import { TRIP_STATUS } from "../../../utils/constants.ts";
-import {getTripStatus} from "../../../utils/getStatus.ts";
+import { getTripStatus } from "../../../utils/getStatus.ts";
+import { useMemo } from "react";
 
 interface DeliveryTripDetailCardProps {
   tripDetails: DeliveryTripDetails;
@@ -19,6 +20,26 @@ export default function DeliveryTripDetailCard({
 
   const status_obj = getTripStatus(tripDetails);
 
+  const style = useMemo(() => {
+    if (!status_obj.status) return {};
+    switch (status_obj.status) {
+      case TRIP_STATUS.SCHEDULED:
+        return { backgroundColor: "#ef9e00", color: "#fff" };
+      case TRIP_STATUS.UPCOMING:
+        return { backgroundColor: "#ffefc2", color: "#9e7602" };
+      case TRIP_STATUS.IN_TRANSIT:
+        return { backgroundColor: "#f5f5f5", color: "#9e7602" };
+      case TRIP_STATUS.CANCELLED:
+        return { backgroundColor: "#f5f5f5", color: "#9e7602" };
+      case TRIP_STATUS.COMPLETED:
+        return { backgroundColor: "#1faa00", color: "#fff" };
+      case TRIP_STATUS.OVERDUE:
+        return { backgroundColor: "#FFA500", color: "#fff" };
+      default:
+        return { backgroundColor: "#1faa00", color: "#9e7602" };
+    }
+  }, [status_obj.status]);
+
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="flex justify-between items-start border border-gray-200 p-2 rounded-t-md">
@@ -34,13 +55,8 @@ export default function DeliveryTripDetailCard({
           </p>
         </div>
         <span
-          className={`text-xs py-1 rounded-3xl font-bold px-2 ${
-              status_obj.status === TRIP_STATUS.SCHEDULED
-              ? "bg-[#ef9e00] text-white"
-              : status_obj.status === TRIP_STATUS.UPCOMING
-              ? "bg-[#ffefc2] text-[#9e7602]"
-              : "bg-[#1faa00] text-white"
-          }`}
+          className={`text-xs py-1 rounded-3xl font-bold px-2`}
+          style={style}
         >
           {status_obj.message}
         </span>

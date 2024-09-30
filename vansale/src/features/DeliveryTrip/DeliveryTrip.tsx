@@ -33,7 +33,10 @@ export default function DeliveryTrip() {
   }, []);
 
   const filteredTrips = deliveryTrips.filter((trip) => {
-    return trip?.name?.toLowerCase()?.includes(search.toLowerCase()) || trip?.custom_route?.toLowerCase()?.includes(search.toLowerCase());
+    return (
+      trip?.name?.toLowerCase()?.includes(search.toLowerCase()) ||
+      trip?.custom_route?.toLowerCase()?.includes(search.toLowerCase())
+    );
   });
 
   return (
@@ -49,9 +52,9 @@ export default function DeliveryTrip() {
         <div className="bg-purple-500 p-4">
           <div className="flex justify-between items-center">
             <span className="text-white font-semibold">My Planned Trips</span>
-            <button className="bg-white text-purple-500 px-3 py-1 rounded-full text-sm">
+            {/* <button className="bg-white text-purple-500 px-3 py-1 rounded-full text-sm">
               Today
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -83,13 +86,13 @@ export default function DeliveryTrip() {
         {isLoading && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
-            {
-              filteredTrips.length
-                ? filteredTrips.map((item, index) => (
-                    <DeliveryTripDetailCard key={index} tripDetails={item} />
-                  ))
-                : <NoTripFound />
-            }
+            {filteredTrips.length ? (
+              filteredTrips.map((item, index) => (
+                <DeliveryTripDetailCard key={index} tripDetails={item} />
+              ))
+            ) : (
+              <NoTripFound />
+            )}
           </div>
         )}
       </div>

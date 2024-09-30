@@ -1,8 +1,11 @@
 export const TRIP_STATUS = {
   SCHEDULED: "Scheduled",
   UPCOMING: "Upcoming",
+  IN_TRANSIT: "In Transit",
+  CANCELLED: "Cancelled",
   COMPLETED: "Completed",
   DRAFT: "Draft",
+  OVERDUE: "Overdue",
 };
 
 export const DELIVERY_STATUS_CONST = {
