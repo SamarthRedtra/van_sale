@@ -35,6 +35,8 @@ export default function DeliveryTripDetailCard({
         return { backgroundColor: "#1faa00", color: "#fff" };
       case TRIP_STATUS.OVERDUE:
         return { backgroundColor: "#FFA500", color: "#fff" };
+      case TRIP_STATUS.PARTIALLY_COMPLETED:
+        return { backgroundColor: "#1faa00", color: "#fff" };
       default:
         return { backgroundColor: "#1faa00", color: "#9e7602" };
     }

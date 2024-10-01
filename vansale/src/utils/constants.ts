@@ -6,6 +6,7 @@ export const TRIP_STATUS = {
   COMPLETED: "Completed",
   DRAFT: "Draft",
   OVERDUE: "Overdue",
+  PARTIALLY_COMPLETED: "Partially Completed",
 };
 
 export const DELIVERY_STATUS_CONST = {

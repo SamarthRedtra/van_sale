@@ -6,10 +6,10 @@ import PreviewMap from "../PreviewMap.tsx";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 import startDelivery from "../../services/startDelivery.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Toast from "../Components/Toast.tsx";
-import { getDeliveryStatus } from "../../utils/getStatus.ts";
-import { DELIVERY_STATUS_CONST } from "../../utils/constants.ts";
+import { getDeliveryStatus, getTripStatus } from "../../utils/getStatus.ts";
+import { DELIVERY_STATUS_CONST, TRIP_STATUS } from "../../utils/constants.ts";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound.tsx";
 import InvoiceDetailCard from "./components/InvoiceDetailCard.tsx";
 
@@ -47,6 +47,7 @@ export default function DeliveryStopDetails() {
         } else {
           setIsPosOpenEntryFound(false);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsPosOpenEntryFound(false);
       }
@@ -78,6 +79,21 @@ export default function DeliveryStopDetails() {
     setErrorMsg("");
     setSuccessMsg("");
   };
+
+  const isCTADisabled = useMemo(() => {
+    if (tripDetails) {
+      const tripStatus = getTripStatus(tripDetails).status;
+      return (
+        !!tripDetails.custom_pos_closing_entry ||
+        tripStatus === TRIP_STATUS.DRAFT ||
+        tripStatus === TRIP_STATUS.OVERDUE ||
+        tripStatus === TRIP_STATUS.CANCELLED ||
+        tripStatus === TRIP_STATUS.COMPLETED ||
+        tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED
+      );
+    }
+    return status === DELIVERY_STATUS_CONST.DELIVERED;
+  }, [status, tripDetails]);
 
   return (
     <div className="mx-auto min-h-screen">
@@ -111,13 +127,7 @@ export default function DeliveryStopDetails() {
           <button
             onClick={handleStartDelivery}
             className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
-            disabled={
-              status === DELIVERY_STATUS_CONST.DELIVERED ||
-              !!tripDetails?.custom_pos_closing_entry
-              // true ||
-              // (status === DELIVERY_STATUS_CONST.IN_TRANSIT &&
-              //   !isPosOpenEntryFound)
-            }
+            disabled={isCTADisabled}
           >
             {status === DELIVERY_STATUS_CONST.IN_TRANSIT
               ? "Create Invoice"

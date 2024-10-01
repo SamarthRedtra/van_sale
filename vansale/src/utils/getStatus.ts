@@ -37,15 +37,12 @@ export const getTripStatus = (
     }
 
     if (doc.departure_time) {
-      let departureTime = new Date(doc.departure_time);
+      const departureTime = new Date(doc.departure_time);
 
-      let today = new Date();
+      const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      let yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-
-      if (date === "Yesterday" || departureTime < yesterday) {
+      if (departureTime < today) {
         return { status: TRIP_STATUS.OVERDUE, message: TRIP_STATUS.OVERDUE };
       }
     }
@@ -54,6 +51,13 @@ export const getTripStatus = (
 
   if (doc.status === TRIP_STATUS.COMPLETED) {
     return { status: TRIP_STATUS.COMPLETED, message: TRIP_STATUS.COMPLETED };
+  }
+
+  if (doc.status === TRIP_STATUS.PARTIALLY_COMPLETED) {
+    return {
+      status: TRIP_STATUS.PARTIALLY_COMPLETED,
+      message: TRIP_STATUS.PARTIALLY_COMPLETED,
+    };
   }
 
   return { status: TRIP_STATUS.UPCOMING, message: TRIP_STATUS.UPCOMING };
