@@ -74,6 +74,7 @@ export default function TripDetails() {
         } else {
           setIsPosOpenEntryFound(false);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsPosOpenEntryFound(false);
       }

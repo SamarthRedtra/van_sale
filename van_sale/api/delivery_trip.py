@@ -1,6 +1,6 @@
 import json
 import frappe
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.wrappers import Response
 
 
@@ -24,9 +24,17 @@ def get_all_delivery_trips():
     scheduled = frappe.get_list(
         "Delivery Trip",
         fields=["*"],
-        filters={"status": "Scheduled", "custom_user": cur_user},
+        filters={"status": "Scheduled", "custom_user": cur_user, "departure_time": [">=", date.today()]},
     )
     trip_list.extend(scheduled)
+
+    # Fetch overdue trips
+    overdue = frappe.get_list(
+        "Delivery Trip",
+        fields=["*"],
+        filters={"status": "Scheduled", "custom_user": cur_user, "departure_time": ["<", date.today()]},
+    )
+    trip_list.extend(overdue)
 
     # Fetch partially completed trips
     partially_completed = frappe.get_list(

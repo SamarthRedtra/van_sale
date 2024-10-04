@@ -54,6 +54,8 @@ export interface DeliveryStop {
   doctype: string;
 }
 
+// POS Invoice Types
+
 export interface POSInvoice {
   name: string;
   owner: string;
@@ -227,4 +229,28 @@ export interface Payment {
   parentfield: string;
   parenttype: string;
   doctype: string;
+}
+
+// Delivery Trip Types
+
+export interface IProductItem {
+  message: Message;
+}
+
+export interface Message {
+  items: PItem[];
+}
+
+export interface PItem {
+  item_code: string;
+  item_name: string;
+  description: string;
+  stock_uom: string;
+  item_image: null;
+  is_stock_item: number;
+  actual_qty: number;
+  uom: string;
+  price_list_rate?: number;
+  currency?: string;
+  batch_no?: null;
 }

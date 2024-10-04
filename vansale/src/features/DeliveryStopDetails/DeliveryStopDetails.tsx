@@ -75,6 +75,13 @@ export default function DeliveryStopDetails() {
     }
   };
 
+  const createSalesInvoice = async () => {
+    if (!data) return;
+    navigate(
+      `/vansale/delivery-trip/${data.parent}/${customer_id}/sales-invoice`
+    );
+  };
+
   const handleCloseAlert = () => {
     setErrorMsg("");
     setSuccessMsg("");
@@ -108,8 +115,8 @@ export default function DeliveryStopDetails() {
           </h1>
         </div>
 
-        <div className="flex justify-between items-center p-4 bg-[#ebf1f9]">
-          <div className="flex flex-col items-start truncate">
+        <div className="flex flex-col gap-2 p-4 bg-[#ebf1f9]">
+          <div className="flex flex-1 flex-col items-start truncate">
             <p className="flex gap-2 items-center">
               <strong>Address:</strong>
               <span
@@ -121,18 +128,30 @@ export default function DeliveryStopDetails() {
             </p>
             <p className="flex gap-2 items-center">
               <strong>Contact:</strong>
-              <span> {data?.custom_mobile_no ?? "-"}</span>
+              <span> {data?.custom_mobile_no || "-"}</span>
             </p>
           </div>
-          <button
-            onClick={handleStartDelivery}
-            className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
-            disabled={isCTADisabled}
-          >
-            {status === DELIVERY_STATUS_CONST.IN_TRANSIT
-              ? "Create Invoice"
-              : "Start Delivery"}
-          </button>
+          <div className="flex gap-2">
+            {status === DELIVERY_STATUS_CONST.IN_TRANSIT && (
+              <button
+                onClick={createSalesInvoice}
+                className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+                disabled={isCTADisabled}
+              >
+                Create Sales Invoice
+              </button>
+            )}
+
+            <button
+              onClick={handleStartDelivery}
+              className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+              disabled={isCTADisabled}
+            >
+              {status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                ? "Create Invoice"
+                : "Start Delivery"}
+            </button>
+          </div>
         </div>
       </div>
       {isLoading && <LoadingOverlay />}
