@@ -8,6 +8,11 @@ const closePosEntry = async (delivery_trip_id: string, warehouse: string) => {
       delivery_trip_id: delivery_trip_id,
       warehouse: warehouse,
     },
+
+    headers: {
+      // @ts-ignore
+      "x-frappe-csrf-token": window?.csrf_token ?? "",
+    },
   });
 
   return await res.data;
