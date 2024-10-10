@@ -10,7 +10,6 @@
   "from",
   "column_break_koab",
   "posting_date",
-  "column_break_ecia",
   "to",
   "section_break_ihax",
   "table_foap"
@@ -38,10 +37,6 @@
    "label": "Posting Date"
   },
   {
-   "fieldname": "column_break_ecia",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "from",
    "fieldtype": "Link",
    "label": "From",
@@ -60,7 +55,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-25 02:11:13.780301",
+ "modified": "2024-10-10 22:28:34.173553",
  "modified_by": "Administrator",
  "module": "Bolt Distribution",
  "name": "Route Master",
