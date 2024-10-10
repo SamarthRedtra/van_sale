@@ -132,13 +132,19 @@ export default function DeliveryStopDetails() {
             </p>
           </div>
           <div className="flex gap-2">
+            {data && data.custom_is_credit === 1 && (
+              <button className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white">
+                Collect Payment
+              </button>
+            )}
+
             {status === DELIVERY_STATUS_CONST.IN_TRANSIT && (
               <button
                 onClick={createSalesInvoice}
                 className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
                 disabled={isCTADisabled}
               >
-                Create Sales Invoice
+                Create Credit Invoice
               </button>
             )}
 
@@ -148,7 +154,7 @@ export default function DeliveryStopDetails() {
               disabled={isCTADisabled}
             >
               {status === DELIVERY_STATUS_CONST.IN_TRANSIT
-                ? "Create Invoice"
+                ? "Create POS Invoice"
                 : "Start Delivery"}
             </button>
           </div>

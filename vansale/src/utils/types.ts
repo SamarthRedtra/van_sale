@@ -52,6 +52,8 @@ export interface DeliveryStop {
   parentfield: string;
   parenttype: string;
   doctype: string;
+  custom_is_credit: number;
+  custom_sales_invoice?: string;
 }
 
 // POS Invoice Types

@@ -1,28 +1,46 @@
 import { useEffect, useState } from "react";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound";
-import { useFrappeCreateDoc, useFrappeGetDoc } from "frappe-react-sdk";
-import { DeliveryTripDetails, PItem } from "../../utils/types";
+import {
+  useFrappeCreateDoc,
+  useFrappeGetDoc,
+  useFrappeUpdateDoc,
+} from "frappe-react-sdk";
+import { DeliveryStop, DeliveryTripDetails, PItem } from "../../utils/types";
 import { useNavigate, useParams } from "react-router-dom";
-import getItemList from "../../services/getItemList";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import LoadingOverlay from "../Loader/LoadingOverlay";
-import Toast from "../Components/Toast";
 import ProductItem from "./components/ProductItem";
 import { format } from "date-fns";
+import ProductItemDetails from "./components/ProductItemDetails";
+import NoItemSelected from "./components/NoItemSelected";
+import Toast from "../Components/Toast";
 
 export default function SalesInvoice() {
   const { trip_id, customer_id } = useParams();
   const navigate = useNavigate();
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
   const [posProfile, setPosProfile] = useState<string>();
-  const [itemList, setItemList] = useState<PItem[]>([]);
+  const [errorMsg, setErrorMsg] = useState<string>();
+  const [successMsg, setSuccessMsg] = useState<string>();
   const { data: tripDetails, isLoading } = useFrappeGetDoc<DeliveryTripDetails>(
     "Delivery Trip",
     trip_id
   );
-  const [dueDate, setDueDate] = useState<string>();
+  const { data: stopDetails } = useFrappeGetDoc<DeliveryStop>(
+    "Delivery Stop",
+    customer_id
+  );
+  const { updateDoc, loading } = useFrappeUpdateDoc();
+  const [dueDate, setDueDate] = useState<string>(
+    format(new Date(), "yyyy-MM-dd")
+  );
   const [productItems, setProductItems] = useState<
-    ({ quantity: number; price: number } & PItem)[]
+    ({
+      quantity: number;
+      price: number;
+      discount: number;
+      amount: number;
+    } & PItem)[]
   >([]);
 
   const { createDoc } = useFrappeCreateDoc();
@@ -42,14 +60,6 @@ export default function SalesInvoice() {
           setIsPosOpenEntryFound(false);
         }
 
-        const itemRes = await getItemList({
-          pos_profile: res?.message?.pos_profile,
-        });
-
-        if (itemRes?.message?.items && itemRes?.message?.items.length > 0) {
-          setItemList(itemRes.message.items);
-        }
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsPosOpenEntryFound(false);
@@ -57,38 +67,59 @@ export default function SalesInvoice() {
     })();
   }, [tripDetails]);
 
-  useEffect(() => {
-    if (!posProfile) return;
-    (async () => {
-      try {
-        const itemList = await getItemList({
-          pos_profile: posProfile,
-        });
-        console.log("itemList", itemList);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, [posProfile]);
-
-  const handleAdd = (item: { quantity: number; price: number } & PItem) => {
+  const handleAdd = (
+    item: {
+      quantity: number;
+      price: number;
+      discount: number;
+      amount: number;
+    } & PItem
+  ) => {
     setProductItems((prev) => [...prev, item]);
   };
 
-  const handleCreateInvoice = () => {
-    createDoc("Sales Invoice", {
-      posting_time: format(new Date(), "HH:mm:ss"),
-      customer: customer_id,
-      due_date: dueDate ?? "",
-      items: productItems.map((item) => {
-        return {
-          item_code: item.item_code,
-          qty: item.quantity,
-          price_list_rate: item.price_list_rate,
-          net_amount: (item?.price_list_rate ?? 0) * item.quantity,
-        };
-      }),
-    });
+  const handleCreateInvoice = async () => {
+    try {
+      const salesDoc = await createDoc("Sales Invoice", {
+        posting_time: format(new Date(), "HH:mm:ss"),
+        customer: stopDetails?.customer,
+        due_date: dueDate ?? "",
+        custom_warehouse: tripDetails?.custom_warehouse,
+        items: productItems.map((item) => {
+          return {
+            item_code: item.item_code,
+            qty: item.quantity,
+            price_list_rate: item.price_list_rate,
+            net_amount: (item?.price_list_rate ?? 0) * item.quantity,
+            discount_percentage: item.discount,
+            amount: item.amount,
+          };
+        }),
+      });
+
+      if (customer_id) {
+        await updateDoc("Delivery Stop", customer_id, {
+          custom_is_credit: 1,
+          custom_sales_invoice: salesDoc?.name ?? "",
+          visited: 1,
+        });
+      }
+      setSuccessMsg("Invoice created successfully");
+      setTimeout(() => {
+        navigate(`/vansale/delivery-trip/${trip_id}/${customer_id}`);
+      }, 2000);
+    } catch (err: any) {
+      setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
+    }
+  };
+
+  const handleDeleteItem = (value: number) => {
+    setProductItems(productItems.filter((_, index) => index !== value));
+  };
+
+  const handleCloseAlert = () => {
+    setErrorMsg("");
+    setSuccessMsg("");
   };
 
   return (
@@ -107,42 +138,60 @@ export default function SalesInvoice() {
         </div>
       </div>
       {isLoading && <LoadingOverlay />}
-      {!isLoading &&
-        (itemList?.length > 0 ? (
-          <>
-            <div className="flex gap-2 items-center p-4">
-              <label htmlFor="date">Due Date :</label>
-              <input
-                id="date"
-                className="border border-gray-300 rounded-md p-2"
-                type="date"
-                onChange={(e) => setDueDate(e.target.value)}
-                value={dueDate}
-              />
-            </div>
-            <p className="text-xl font-bold p-4">All Items</p>
-            {itemList.map((item, idx) => (
-              <ProductItem key={idx} item={item} handleAdd={handleAdd} />
-            ))}
+      {!isLoading && (
+        <>
+          <div className="flex gap-2 items-center justify-end p-4 text-sm">
+            <label htmlFor="date">Due Date :</label>
+            <input
+              id="date"
+              className="border border-gray-300 rounded-md p-2"
+              type="date"
+              onChange={(e) => setDueDate(e.target.value)}
+              value={dueDate}
+              min={format(new Date(), "yyyy-MM-dd")}
+            />
+          </div>
+          <p className="text-xl text-left font-bold p-4">All Items</p>
+
+          <ProductItem handleAdd={handleAdd} posProfile={posProfile} />
+
+          <div>
+            <p className="text-xl text-left font-bold p-4">Selected Items</p>
+          </div>
+          <div className="flex flex-col p-4 gap-3">
+            {productItems.length > 0 ? (
+              productItems.map((product, idx) => (
+                <ProductItemDetails
+                  key={idx}
+                  item={product}
+                  index={idx}
+                  handleDelete={handleDeleteItem}
+                />
+              ))
+            ) : (
+              <NoItemSelected />
+            )}
+          </div>
+          {productItems?.length > 0 && (
             <div className="flex justify-end p-4">
               <button
                 className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-fit"
                 onClick={handleCreateInvoice}
+                disabled={loading}
               >
                 Create Invoice
               </button>
             </div>
-          </>
-        ) : (
-          <p className="text-xl font-bold p-4">No Items</p>
-        ))}
+          )}
+        </>
+      )}
 
-      {/* {errorMsg && (
+      {errorMsg && (
         <Toast message={errorMsg} type="error" onClose={handleCloseAlert} />
       )}
       {successMsg && (
         <Toast message={successMsg} type="success" onClose={handleCloseAlert} />
-      )} */}
+      )}
     </div>
   );
 }

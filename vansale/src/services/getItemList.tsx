@@ -19,7 +19,7 @@ const getItemList = async ({
 }: ItemListPayload) => {
   const payload = {
     start: start || 0,
-    page_length: page_length || 40,
+    page_length: page_length || 10,
     price_list: price_list || "Standard Selling",
     item_group: item_group || "All Item Groups",
     search_term: search_term || "",
