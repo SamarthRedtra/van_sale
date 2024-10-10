@@ -24,7 +24,11 @@ def get_all_delivery_trips():
     scheduled = frappe.get_list(
         "Delivery Trip",
         fields=["*"],
-        filters={"status": "Scheduled", "custom_user": cur_user, "departure_time": [">=", date.today()]},
+        filters={
+            "status": "Scheduled",
+            "custom_user": cur_user,
+            "departure_time": [">=", date.today()],
+        },
     )
     trip_list.extend(scheduled)
 
@@ -32,7 +36,11 @@ def get_all_delivery_trips():
     overdue = frappe.get_list(
         "Delivery Trip",
         fields=["*"],
-        filters={"status": "Scheduled", "custom_user": cur_user, "departure_time": ["<", date.today()]},
+        filters={
+            "status": "Scheduled",
+            "custom_user": cur_user,
+            "departure_time": ["<", date.today()],
+        },
     )
     trip_list.extend(overdue)
 
