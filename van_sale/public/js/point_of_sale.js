@@ -16,7 +16,9 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }
 
         $('.standard-actions .btn-primary').on('click', () => {
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000)
         });
     }, 2000);
 
