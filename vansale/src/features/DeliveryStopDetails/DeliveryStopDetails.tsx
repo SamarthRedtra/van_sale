@@ -12,6 +12,7 @@ import { getDeliveryStatus, getTripStatus } from "../../utils/getStatus.ts";
 import { DELIVERY_STATUS_CONST, TRIP_STATUS } from "../../utils/constants.ts";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound.tsx";
 import InvoiceDetailCard from "./components/InvoiceDetailCard.tsx";
+import createPaymentEntry from "../../services/createPaymentEntry.tsx";
 
 export default function DeliveryStopDetails() {
   const navigate = useNavigate();
@@ -87,6 +88,17 @@ export default function DeliveryStopDetails() {
     setSuccessMsg("");
   };
 
+  const handleCreatePaymentEntry = async () => {
+    if (!customer_id || !data?.custom_sales_invoice) return;
+    try {
+      await createPaymentEntry(customer_id, data?.custom_sales_invoice);
+      setSuccessMsg("Payment Entry created successfully");
+      mutate();
+    } catch (err) {
+      setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
+    }
+  };
+
   const isCTADisabled = useMemo(() => {
     if (tripDetails) {
       const tripStatus = getTripStatus(tripDetails).status;
@@ -132,11 +144,16 @@ export default function DeliveryStopDetails() {
             </p>
           </div>
           <div className="flex gap-2">
-            {data && data.custom_is_credit === 1 && (
-              <button className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white">
-                Collect Payment
-              </button>
-            )}
+            {data &&
+              data.custom_is_credit === 1 &&
+              data.custom_is_paid === 0 && (
+                <button
+                  className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+                  onClick={handleCreatePaymentEntry}
+                >
+                  Collect Payment
+                </button>
+              )}
 
             {status === DELIVERY_STATUS_CONST.IN_TRANSIT && (
               <button

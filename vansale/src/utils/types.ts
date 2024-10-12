@@ -53,6 +53,7 @@ export interface DeliveryStop {
   parenttype: string;
   doctype: string;
   custom_is_credit: number;
+  custom_is_paid: number;
   custom_sales_invoice?: string;
 }
 
