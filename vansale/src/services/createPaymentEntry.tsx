@@ -11,6 +11,9 @@ const createPaymentEntry = async (
       delivery_stop: delivery_stop_id,
       sales_invoice: sales_invoice_id,
     },
+    headers: {
+      "x-frappe-csrf-token": window?.csrf_token ?? "",
+    },
   });
 
   return await res.data;

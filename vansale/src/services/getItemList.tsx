@@ -30,6 +30,9 @@ const getItemList = async ({
     method: "POST",
     url: "/api/method/erpnext.selling.page.point_of_sale.point_of_sale.get_items",
     data: payload,
+    headers: {
+      "x-frappe-csrf-token": window?.csrf_token ?? "",
+    },
   });
 
   return await res.data;
