@@ -8,6 +8,9 @@ const startDelivery = async (trip_name: string, stop_name: string) => {
       trip_name,
       stop_name,
     },
+    headers: {
+      "x-frappe-csrf-token": window?.csrf_token ?? "",
+    },
   });
 
   return await res.data;
