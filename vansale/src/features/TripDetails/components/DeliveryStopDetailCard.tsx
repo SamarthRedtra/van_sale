@@ -91,7 +91,7 @@ export default function DeliveryStopDetailCard({
             <CheckCircledIcon color="#00f" />
             <span>Status</span>
           </p>
-          
+
         </div> */}
         <div className="flex p-2 flex-col gap-1.5 border border-gray-200">
           <p className="flex items-center gap-1 text-xs">

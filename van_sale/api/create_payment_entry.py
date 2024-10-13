@@ -13,7 +13,7 @@ def create_payment_entry(sales_invoice, delivery_stop):
 
     sales_invoice_doc = frappe.get_doc("Sales Invoice", sales_invoice)
     sales_invoice_doc.submit()
-    
+
     payment_entry_doc = get_payment_entry(dt="Sales Invoice", dn=sales_invoice)
     payment_entry_doc.reference_no = "Cash"
     payment_entry_doc.insert(ignore_permissions=True)
@@ -22,4 +22,8 @@ def create_payment_entry(sales_invoice, delivery_stop):
     delivery_stop_doc.custom_is_paid = 1
     delivery_stop_doc.save(ignore_permissions=True)
 
-    return { "message": "Payment Entry created", "payment_entry": payment_entry_doc.name, "status": "success" }
+    return {
+        "message": "Payment Entry created",
+        "payment_entry": payment_entry_doc.name,
+        "status": "success",
+    }
