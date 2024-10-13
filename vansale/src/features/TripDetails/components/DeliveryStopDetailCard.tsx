@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { DELIVERY_STATUS_CONST } from "../../../utils/constants.ts";
-import { CheckCircledIcon, ClockIcon } from "@radix-ui/react-icons";
+import { ClockIcon } from "@radix-ui/react-icons";
 import { DeliveryStop } from "../../../utils/types";
 import { getDeliveryStatus } from "../../../utils/getStatus.ts";
 import { PhoneCall } from "lucide-react";
@@ -30,42 +30,40 @@ export default function DeliveryStopDetailCard({
 
   return (
     <div className="bg-white rounded-lg shadow">
-      <div className="flex gap-4 justify-between items-start border border-gray-200 p-2 rounded-t-md">
-        {hasIcon && (
-          <div className="bg-[#f4ebfe] rounded-md">
-            <p className="text-2xl font-bold p-1.5 px-2 text-[#9e25fc]">
-              {stop?.customer
-                .split(" ")
-                .slice(0, 2)
-                .map((item) => item[0])
-                .join("")
-                .toLocaleUpperCase() ?? ""}
+      <div className="border border-gray-200 p-2 rounded-t-md flex flex-col justify-start gap-1 items-start">
+        <div className="flex gap-4 justify-between items-start ">
+          {hasIcon && (
+            <div className="bg-[#f4ebfe] rounded-md">
+              <p className="text-2xl font-bold p-1.5 px-2 text-[#9e25fc]">
+                {stop?.customer
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((item) => item[0])
+                  .join("")
+                  .toLocaleUpperCase() ?? ""}
+              </p>
+            </div>
+          )}
+          <div className="flex flex-col flex-1 justify-between items-start">
+            <h2 className="font-semibold max-w-48 w-full text-start">
+              {stop?.customer ?? "-"}
+            </h2>
+            <p
+              className="text-sm text-gray-500 truncate max-w-48 w-full text-start"
+              title={stop?.address ?? ""}
+            >
+              {stop?.address?.replace("<br>", ",") ?? 0}
             </p>
           </div>
-        )}
-        <div className="flex flex-col flex-1 justify-between items-start">
-          <h2 className="font-semibold">{stop?.customer ?? "-"}</h2>
-          <p
-            className="text-sm text-gray-500 truncate max-w-56 w-full"
-            title={stop?.address ?? ""}
-          >
-            {stop?.address?.replace("<br>", ",") ?? 0}
-          </p>
+          <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
+            <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
+              <PhoneCall />
+            </div>
+          </a>
         </div>
-        <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
-          <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
-            <PhoneCall />
-          </div>
-        </a>
-      </div>
-      <div className="flex text-sm">
-        <div className="flex p-2 w-28 rounded-bl-md flex-col gap-1.5 border border-gray-200">
-          <p className="flex items-center gap-1 text-sm">
-            <CheckCircledIcon color="#00f" />
-            <span>Status</span>
-          </p>
+        <div className="flex justify-start gap-2">
           <span
-            className={`text-xs py-1 rounded-3xl font-bold px-2 ${
+            className={`text-[10px] py-1 rounded-3xl font-bold px-2 ${
               status === DELIVERY_STATUS_CONST.IN_TRANSIT
                 ? "bg-[#00abff] text-white"
                 : status === DELIVERY_STATUS_CONST.PENDING
@@ -75,9 +73,28 @@ export default function DeliveryStopDetailCard({
           >
             {status}
           </span>
+
+          {Boolean(stop.visited) &&
+            Boolean(stop.custom_is_credit) &&
+            !stop?.custom_is_paid && (
+              <span
+                className={`text-[10px] py-1 rounded-3xl font-bold px-2 bg-[#ffefc2] text-[#9e7602]`}
+              >
+                Pending Invoice
+              </span>
+            )}
         </div>
+      </div>
+      <div className="flex text-sm">
+        {/* <div className="flex p-2 w-28 rounded-bl-md flex-col gap-1.5 border border-gray-200">
+          <p className="flex items-center gap-1 text-xs">
+            <CheckCircledIcon color="#00f" />
+            <span>Status</span>
+          </p>
+          
+        </div> */}
         <div className="flex p-2 flex-col gap-1.5 border border-gray-200">
-          <p className="flex items-center gap-1 text-sm">
+          <p className="flex items-center gap-1 text-xs">
             <ClockIcon color="#00f" />
             <span>Est. Arrival</span>
           </p>
@@ -85,7 +102,7 @@ export default function DeliveryStopDetailCard({
         </div>
         <div className="flex p-2 rounded-br-md justify-between items-center flex-1 border border-gray-200">
           <div className="flex flex-col gap-1.5">
-            <p className="flex items-center gap-1 text-sm">
+            <p className="flex items-center gap-1 text-xs">
               <ClockIcon color="#00f" />
               <span>Delivered</span>
             </p>

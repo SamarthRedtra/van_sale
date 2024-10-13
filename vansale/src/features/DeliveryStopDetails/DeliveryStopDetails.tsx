@@ -144,7 +144,7 @@ export default function DeliveryStopDetails() {
               <span> {data?.custom_mobile_no || "-"}</span>
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-sm">
             {data &&
               data.custom_is_credit === 1 &&
               data.custom_is_paid === 0 && (

@@ -50,9 +50,9 @@ export default function DeliveryTripDetailCard({
             <span className="font-semibold">
               {tripDetails?.custom_route ?? "-"}
             </span>
-            <span className="ml-2 text-sm">({tripDetails?.name ?? "-"})</span>
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500">({tripDetails?.name ?? "-"})</p>
+          <p className="text-sm font-semibold">
             {tripDetails?.delivery_stops?.length ?? 0} Delivery Stops
           </p>
         </div>
@@ -63,27 +63,31 @@ export default function DeliveryTripDetailCard({
           {status_obj.message}
         </span>
       </div>
-      <div className="flex text-sm">
-        <p className="flex p-2 rounded-bl-md flex-col border border-gray-200">
-          <span>🚗 Vehicle No.</span>
-          <span className="font-semibold">{tripDetails?.vehicle ?? "-"}</span>
-        </p>
-        <p className="flex p-2 flex-col border border-gray-200">
-          <span>📅 Date</span>
-          <span className="font-semibold">
-            {formatDate(tripDetails?.departure_time ?? "")}
-          </span>
-        </p>
-        <div className="flex p-2 rounded-br-md justify-between items-center flex-1 border border-gray-200">
-          <p className="flex flex-col">
-            <span>👤 Diver</span>
+      <div className="text-sm">
+        <div className="flex ">
+          <p className="flex p-2 flex-col border border-gray-200">
+            <span>🚗 Vehicle No.</span>
+            <span className="font-semibold">{tripDetails?.vehicle ?? "-"}</span>
+          </p>
+          <p className="flex p-2 flex-col border border-gray-200">
+            <span>📅 Date</span>
             <span className="font-semibold">
-              {tripDetails?.driver_name ?? "-"}
+              {formatDate(tripDetails?.departure_time ?? "")}
             </span>
           </p>
+          <div className="flex p-2 justify-between items-center flex-1 border border-gray-200">
+            <p className="flex flex-col">
+              <span>👤 Diver</span>
+              <span className="font-semibold">
+                {tripDetails?.driver_name ?? "-"}
+              </span>
+            </p>
+          </div>
+        </div>
+        <div className="flex p-3">
           <button
             onClick={handleDetailViewClick}
-            className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg"
+            className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg w-full"
           >
             View
           </button>
