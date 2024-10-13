@@ -232,6 +232,22 @@ def pos_close_entry(delivery_trip_id, warehouse):
     # Get the current datetime
     now = datetime.now()
 
+    pos_invoice_list = []
+    total_item_quantity = 0
+    grand_total = 0
+    rounded_total = 0
+    paid_amount = 0
+
+    for stop in delivery_trip_doc.delivery_stops:
+        if stop.custom_pos_invoice:
+            pos_invoice_list.append({"pos_invoice":stop.custom_pos_invoice})
+            pos_invoice_doc = frappe.get_doc("POS Invoice", stop.custom_pos_invoice)
+            total_item_quantity += int(pos_invoice_doc.total_qty or 0)
+            grand_total += float(pos_invoice_doc.grand_total or 0)
+            rounded_total += float(pos_invoice_doc.rounded_total or 0)
+            paid_amount += float(pos_invoice_doc.paid_amount or 0)
+
+            
     # Create a new POS Closing Entry document
     voucher = frappe.get_doc(
         {
@@ -243,6 +259,18 @@ def pos_close_entry(delivery_trip_id, warehouse):
             "period_end_date": now,
             "posting_date": now.date(),
             "posting_time": now.strftime("%H:%M:%S"),
+            "pos_transactions": pos_invoice_list,
+            "payment_reconciliation": [
+                {
+                    "mode_of_payment": "Cash",
+                    "opening_amount": 0,
+                    "expected_amount": grand_total,
+                    "closing_amount": paid_amount,
+                }
+            ],
+            "grand_total": grand_total,
+            "net_total": paid_amount,
+            "total_quantity": total_item_quantity
         }
     )
 

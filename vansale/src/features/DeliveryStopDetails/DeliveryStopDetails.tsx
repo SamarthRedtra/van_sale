@@ -108,7 +108,8 @@ export default function DeliveryStopDetails() {
         tripStatus === TRIP_STATUS.OVERDUE ||
         tripStatus === TRIP_STATUS.CANCELLED ||
         tripStatus === TRIP_STATUS.COMPLETED ||
-        tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED
+        tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED ||
+        status === DELIVERY_STATUS_CONST.DELIVERED
       );
     }
     return status === DELIVERY_STATUS_CONST.DELIVERED;
