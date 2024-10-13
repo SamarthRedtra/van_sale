@@ -4,11 +4,15 @@ import { DeliveryTripDetails } from "../../utils/types";
 import getDeliveryDetails from "../../services/getTripDetails.tsx";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 import NoTripFound from "./components/NoTripFound.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Bell, LogOut, Menu } from "lucide-react";
+import { useFrappeAuth } from "frappe-react-sdk";
 
 export default function DeliveryTrip() {
   const [search, setSearch] = useState("");
   const [deliveryTrips, setDeliveryTrips] = useState<DeliveryTripDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { logout } = useFrappeAuth();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -39,11 +43,31 @@ export default function DeliveryTrip() {
     );
   });
 
+  const handleLogoutClick = () => {
+    logout();
+    window.location.reload();
+  };
+
   return (
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
         <div className="flex justify-between items-center p-4">
+          <Button variant="ghost" size="icon">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Menu</span>
+          </Button>
           <h1 className="text-xl font-bold">My Trips</h1>
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Notifications</span>
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleLogoutClick}>
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Logout</span>
+            </Button>
+          </div>
+          {/* <h1 className="text-xl font-bold">My Trips</h1> */}
           {/* <div className="flex items-center space-x-4">
             <span className="text-2xl">🔔</span>
             <span className="text-2xl">☰</span>

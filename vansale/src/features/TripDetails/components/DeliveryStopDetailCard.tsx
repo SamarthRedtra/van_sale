@@ -31,7 +31,7 @@ export default function DeliveryStopDetailCard({
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="border border-gray-200 p-2 rounded-t-md flex flex-col justify-start gap-1 items-start">
-        <div className="flex gap-4 justify-between items-start ">
+        <div className="flex gap-4 justify-between items-start w-full">
           {hasIcon && (
             <div className="bg-[#f4ebfe] rounded-md">
               <p className="text-2xl font-bold p-1.5 px-2 text-[#9e25fc]">
