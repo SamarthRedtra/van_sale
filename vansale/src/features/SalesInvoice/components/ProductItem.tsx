@@ -128,14 +128,14 @@ export default function ProductItem({
         quantity: Number(formData.quantity.value),
         discount:
           formData.margin_type.value === "Percentage"
-            ? Number(formData.discount.value)
-            : (Number(formData.amount.value) * 100) /
+            ? Number(formData.discount.value ?? 0)
+            : (Number(formData.amount.value ?? 0) * 100) /
               Number(selectedItem.price_list_rate),
         amount:
           formData.margin_type.value === "Amount"
-            ? Number(formData.amount.value)
+            ? Number(formData.amount.value ?? 0)
             : (Number(selectedItem.price_list_rate) *
-                Number(formData.discount.value)) /
+                Number(formData.discount.value ?? 0)) /
               100,
       });
 
@@ -197,7 +197,7 @@ export default function ProductItem({
   return (
     <div className="flex flex-col gap-2 m-4 border rounded-md p-4 shadow-sm bg-white text-sm">
       <div className="flex flex-wrap gap-4">
-        <div className="flex flex-col items-start gap-2 flex-1">
+        <div className="flex flex-col items-start gap-2 flex-1 justify-between">
           <p className="font-semibold">Name:</p>
           <Autocomplete
             fullWidth
@@ -205,17 +205,22 @@ export default function ProductItem({
             renderInput={(params) => <TextField {...params} />}
             onInputChange={(_, value) => setSearch(value ?? "")}
             onChange={(_, value) => handleSelectItem(value ?? "")}
+            sx={{
+              "& .MuiOutlinedInput-root": {},
+              "& .MuiInputBase-root": {
+                padding: "0.5rem 0.5rem !important",
+                height: "40px !important",
+              },
+            }}
           />
         </div>
-        {/* <div className="flex gap-2 flex-1">
-          <p className="font-semibold">Rate:</p>
-          <p>
-            {item?.price_list_rate ?? 0} / {item.uom}
-          </p>
-        </div> */}
-        <div className="flex gap-2 flex-1">
+        <div className="flex gap-2 flex-1 flex-col items-start">
           <p className="font-semibold">Available:</p>
-          <p>{selectedItem?.actual_qty ?? 0}</p>
+          <Input
+            value={selectedItem?.actual_qty ?? 0}
+            disabled
+            className="mt-1 p-2 border rounded-md w-full"
+          />
         </div>
       </div>
 
@@ -224,7 +229,11 @@ export default function ProductItem({
           <label htmlFor="price" className="font-medium">
             Price
           </label>
-          <p>{selectedItem?.price_list_rate || "-"}</p>
+          <Input
+            value={selectedItem?.price_list_rate ?? 0}
+            disabled
+            className="mt-1 p-2 border rounded-md w-full"
+          />
         </div>
         <div className="flex flex-col gap-2 items-start flex-1">
           <label htmlFor="quantity" className="font-medium">

@@ -91,8 +91,8 @@ export default function SalesInvoice() {
             qty: item.quantity,
             price_list_rate: item.price_list_rate,
             net_amount: (item?.price_list_rate ?? 0) * item.quantity,
-            discount_percentage: item.discount,
-            amount: item.amount,
+            discount_percentage: item.discount ?? 0,
+            amount: item.amount ?? 0,
           };
         }),
       });
