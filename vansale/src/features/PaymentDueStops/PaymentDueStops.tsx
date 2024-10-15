@@ -4,6 +4,7 @@ import getPaymentPendingStopList from "@/services/getPaymentPendingStopList";
 import { DeliveryStop } from "@/utils/types";
 import DeliveryStopDetailCard from "../TripDetails/components/DeliveryStopDetailCard";
 import LoadingOverlay from "../Loader/LoadingOverlay";
+import NoCustomerFound from "../TripDetails/components/NoCustomerFound";
 
 export default function PaymentDueStops() {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,8 +32,6 @@ export default function PaymentDueStops() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-
-  console.log("ytesytfv -----------------", deliveredStops);
 
   return (
     <div className="mx-auto min-h-screen">
@@ -76,10 +75,13 @@ export default function PaymentDueStops() {
         {isLoading && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
-            {deliveredStops.length &&
+            {deliveredStops.length ? (
               deliveredStops.map((item, index) => (
                 <DeliveryStopDetailCard key={index} stop={item} isCTAAllowed />
-              ))}
+              ))
+            ) : (
+              <NoCustomerFound />
+            )}
           </div>
         )}
       </div>
