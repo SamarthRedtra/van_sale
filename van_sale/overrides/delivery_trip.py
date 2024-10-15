@@ -1,8 +1,24 @@
-from erpnext.stock.doctype.delivery_trip.delivery_trip import DeliveryTrip
 import frappe
+from frappe.desk.form.assign_to import add as add_assignment
+from erpnext.stock.doctype.delivery_trip.delivery_trip import DeliveryTrip
 
 
 class VanSaleDeliveryTrip(DeliveryTrip):
+    def add_assinee(self):
+        cur_user = frappe.session.user
+
+        frappe.set_user("Administrator")
+
+        add_assignment(
+            {
+                "doctype": "Delivery Trip",
+                "name": self.name,
+                "assign_to": [self.custom_user],
+            }
+        )
+
+        frappe.set_user(cur_user)
+
     def on_submit(self):
         super().on_submit()
 
@@ -17,6 +33,8 @@ class VanSaleDeliveryTrip(DeliveryTrip):
                 pos_profile.append("applicable_for_users", {"user": self.custom_user})
 
                 pos_profile.save()
+
+                self.add_assinee()
             else:
                 frappe.throw(
                     f"No POS Profile found for warehouse: {self.custom_warehouse}"

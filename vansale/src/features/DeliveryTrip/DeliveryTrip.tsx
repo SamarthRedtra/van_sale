@@ -4,15 +4,22 @@ import { DeliveryTripDetails } from "../../utils/types";
 import getDeliveryDetails from "../../services/getTripDetails.tsx";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 import NoTripFound from "./components/NoTripFound.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Bell, LogOut, Menu } from "lucide-react";
-import { useFrappeAuth } from "frappe-react-sdk";
+import Header from "../Components/Header.tsx";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select.tsx";
+import { getTripStatus } from "@/utils/getStatus.ts";
+import { TRIP_STATUS } from "@/utils/constants.ts";
 
 export default function DeliveryTrip() {
   const [search, setSearch] = useState("");
   const [deliveryTrips, setDeliveryTrips] = useState<DeliveryTripDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { logout } = useFrappeAuth();
+  const [filter, setFilter] = useState<string>("all");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -36,49 +43,50 @@ export default function DeliveryTrip() {
     })();
   }, []);
 
-  const filteredTrips = deliveryTrips.filter((trip) => {
-    return (
-      trip?.name?.toLowerCase()?.includes(search.toLowerCase()) ||
-      trip?.custom_route?.toLowerCase()?.includes(search.toLowerCase())
-    );
-  });
+  const filteredTrips = deliveryTrips
+    .filter((trip) => {
+      if (filter === "all") return true;
 
-  const handleLogoutClick = () => {
-    logout();
-    window.location.reload();
-  };
+      const status = getTripStatus(trip);
+      if (filter === "scheduled")
+        return status.status === TRIP_STATUS.SCHEDULED;
+      if (filter === "completed")
+        return status.status === TRIP_STATUS.COMPLETED;
+      if (filter === "overdue") return status.status === TRIP_STATUS.OVERDUE;
+      if (filter === "partial")
+        return status.status === TRIP_STATUS.PARTIALLY_COMPLETED;
+    })
+    .filter((trip) => {
+      return (
+        trip?.name?.toLowerCase()?.includes(search.toLowerCase()) ||
+        trip?.custom_route?.toLowerCase()?.includes(search.toLowerCase())
+      );
+    });
 
   return (
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
-        <div className="flex justify-between items-center p-4">
-          <Button variant="ghost" size="icon">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Menu</span>
-          </Button>
-          <h1 className="text-xl font-bold">My Trips</h1>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Notifications</span>
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleLogoutClick}>
-              <LogOut className="h-5 w-5" />
-              <span className="sr-only">Logout</span>
-            </Button>
-          </div>
-          {/* <h1 className="text-xl font-bold">My Trips</h1> */}
-          {/* <div className="flex items-center space-x-4">
-            <span className="text-2xl">🔔</span>
-            <span className="text-2xl">☰</span>
-          </div> */}
-        </div>
+        <Header title="My Trips" />
         <div className="bg-purple-500 p-4">
           <div className="flex justify-between items-center">
             <span className="text-white font-semibold">My Planned Trips</span>
-            {/* <button className="bg-white text-purple-500 px-3 py-1 rounded-full text-sm">
-              Today
-            </button> */}
+            <Select
+              value={filter}
+              onValueChange={(value) => {
+                setFilter(value);
+              }}
+            >
+              <SelectTrigger className="w-[120px] bg-white">
+                <SelectValue placeholder="Filter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Trips</SelectItem>
+                <SelectItem value="scheduled">Scheduled</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="overdue">Overdue</SelectItem>
+                <SelectItem value="partial">Partially Completed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

@@ -61,7 +61,7 @@ def get_route_details(route_name):
 
         address_details = None
 
-        if frappe.db.exists("Address", item.customer_primary_address):
+        if frappe.db.exists("Address", customer_info.customer_primary_address):
             address_details = frappe.get_doc(
                 "Address", customer_info.customer_primary_address
             )

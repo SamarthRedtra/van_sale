@@ -8,6 +8,7 @@ import Login from "./features/login/Login.tsx";
 import { useFrappeAuth } from "frappe-react-sdk";
 import { useEffect } from "react";
 import SalesInvoice from "./features/SalesInvoice/SalesInvoice.tsx";
+import PaymentDueStops from "./features/PaymentDueStops/PaymentDueStops.tsx";
 
 type isRouteActive = boolean;
 
@@ -17,6 +18,7 @@ const pageRoutes: RouteConfig = [
   ["/vansale/login", <Login />, true],
   ["/vansale", <DeliveryTrip />, true],
   ["/vansale/delivery-trip/:trip_id", <TripDetails />, true],
+  ["/vansale/payment-due-stops", <PaymentDueStops />, true],
   [
     "/vansale/delivery-trip/:trip_id/:customer_id",
     <DeliveryStopDetails />,

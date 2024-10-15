@@ -4,6 +4,7 @@ import { formatDate } from "../../../utils/formatDate.ts";
 import { TRIP_STATUS } from "../../../utils/constants.ts";
 import { getTripStatus } from "../../../utils/getStatus.ts";
 import { useMemo } from "react";
+import { Calendar, Truck, User } from "lucide-react";
 
 interface DeliveryTripDetailCardProps {
   tripDetails: DeliveryTripDetails;
@@ -65,23 +66,32 @@ export default function DeliveryTripDetailCard({
       </div>
       <div className="text-sm">
         <div className="flex ">
-          <p className="flex p-2 flex-col border border-gray-200">
-            <span>🚗 Vehicle No.</span>
+          <div className="flex p-2 flex-col border border-gray-200">
+            <p className="flex items-center gap-2">
+              <Truck className="h-4 w-4" />
+              <span>Vehicle No.</span>
+            </p>
             <span className="font-semibold">{tripDetails?.vehicle ?? "-"}</span>
-          </p>
-          <p className="flex p-2 flex-col border border-gray-200">
-            <span>📅 Date</span>
+          </div>
+          <div className="flex p-2 flex-col border border-gray-200">
+            <p className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              <span>Date</span>
+            </p>
             <span className="font-semibold">
               {formatDate(tripDetails?.departure_time ?? "")}
             </span>
-          </p>
+          </div>
           <div className="flex p-2 justify-between items-center flex-1 border border-gray-200">
-            <p className="flex flex-col">
-              <span>👤 Diver</span>
+            <div className="flex flex-col">
+              <p className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Diver</span>
+              </p>
               <span className="font-semibold">
                 {tripDetails?.driver_name ?? "-"}
               </span>
-            </p>
+            </div>
           </div>
         </div>
         <div className="flex p-3">

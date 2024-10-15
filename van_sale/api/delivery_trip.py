@@ -299,3 +299,34 @@ def pos_close_entry(delivery_trip_id, warehouse):
 
     # Return the name of the newly created POS Closing Entry
     return {"message": f"POS Closing Entry created"}
+
+
+# van_sale.api.delivery_trip.get_pending_payment_stops
+@frappe.whitelist()
+def get_pending_payment_stops():
+    user = frappe.session.user
+
+    # Fetch the delivery trip names associated with the user in a single query
+    delivery_name_list = frappe.get_all(
+        "Delivery Trip", filters={"custom_user": user}, pluck="name"
+    )
+
+    # If no delivery trips found, return an empty list early
+    if not delivery_name_list:
+        return []
+
+    # Fetch the unpaid credit delivery stops in one go, filtering by the parent delivery trips
+    delivery_stop_list = frappe.get_all(
+        "Delivery Stop",
+        filters={
+            "custom_is_paid": 0,
+            "custom_is_credit": 1,
+            "parent": ["in", delivery_name_list],
+        },
+        fields=["*"],
+    )
+
+    return {
+        "message": "Success",
+        "delivery_stops": delivery_stop_list,
+    }

@@ -55,11 +55,13 @@ export default function DeliveryStopDetailCard({
               {stop?.address?.replace("<br>", ",") ?? 0}
             </p>
           </div>
-          <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
-            <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
-              <PhoneCall />
-            </div>
-          </a>
+          {!!stop?.custom_mobile_no && (
+            <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
+              <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
+                <PhoneCall />
+              </div>
+            </a>
+          )}
         </div>
         <div className="flex justify-start gap-2">
           <span
@@ -74,8 +76,8 @@ export default function DeliveryStopDetailCard({
             {status}
           </span>
 
-          {Boolean(stop.visited) &&
-            Boolean(stop.custom_is_credit) &&
+          {Boolean(stop?.visited) &&
+            Boolean(stop?.custom_is_credit) &&
             !stop?.custom_is_paid && (
               <span
                 className={`text-[10px] py-1 rounded-3xl font-bold px-2 bg-[#ffefc2] text-[#9e7602]`}
@@ -86,19 +88,12 @@ export default function DeliveryStopDetailCard({
         </div>
       </div>
       <div className="flex text-sm">
-        {/* <div className="flex p-2 w-28 rounded-bl-md flex-col gap-1.5 border border-gray-200">
-          <p className="flex items-center gap-1 text-xs">
-            <CheckCircledIcon color="#00f" />
-            <span>Status</span>
-          </p>
-
-        </div> */}
         <div className="flex p-2 flex-col gap-1.5 border border-gray-200">
           <p className="flex items-center gap-1 text-xs">
             <ClockIcon color="#00f" />
             <span>Est. Arrival</span>
           </p>
-          <span className="font-semibold">{"10:00 AM"}</span>
+          <span className="font-semibold">{"--:-- --"}</span>
         </div>
         <div className="flex p-2 rounded-br-md justify-between items-center flex-1 border border-gray-200">
           <div className="flex flex-col gap-1.5">
@@ -106,7 +101,7 @@ export default function DeliveryStopDetailCard({
               <ClockIcon color="#00f" />
               <span>Delivered</span>
             </p>
-            <span className="font-semibold">{"11:34 AM"}</span>
+            <span className="font-semibold">{"--:-- --"}</span>
           </div>
           {isCTAAllowed && (
             <button
