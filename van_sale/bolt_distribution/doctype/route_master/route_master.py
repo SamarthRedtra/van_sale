@@ -44,6 +44,8 @@ def get_route_details(route_name):
     updated_route_details = []
 
     for item in route_details.table_foap:
+        customer_info = frappe.get_doc("Customer", item.customer_name)
+
         contacts = frappe.db.sql(
             """
             SELECT contact.*
@@ -57,13 +59,18 @@ def get_route_details(route_name):
             as_dict=True,
         )
 
-        addresses = frappe.get_all(
-            "Address",
-            filters={"link_doctype": "Customer", "link_name": item.customer_name},
-            fields=["*"],
-        )
+        address_details = None
 
-        address_details = addresses[0] if addresses and addresses[0] else None
+        if frappe.db.exists("Address", item.customer_primary_address):
+            address_details = frappe.get_doc(
+                "Address", customer_info.customer_primary_address
+            )
+        else:
+            frappe.throw(
+                frappe._(f"Address does not exists {item.customer_name}"),
+                exc=frappe.DoesNotExistError,
+            )
+
         contact_details = contacts[0] if contacts and contacts[0] else None
 
         updated_route_details.append(
@@ -75,7 +82,11 @@ def get_route_details(route_name):
                 "mobile_number": (
                     contact_details.mobile_no if contact_details else None
                 ),
-                "customer_address": address_details.name if address_details else None,
+                "customer_address": (
+                    customer_info.primary_address
+                    if customer_info.primary_address
+                    else None
+                ),
                 "latitude": (
                     address_details.custom_latitude if address_details else None
                 ),
