@@ -25,11 +25,11 @@ export default function PreviewMap({ lat, long }: PreviewMapProps) {
       }).addTo(map);
 
       const myIcon = L.icon({
-        iconUrl: "/marker-icon.png",
+        iconUrl: "/assets/van_sale/vansale/marker-icon.png",
         iconSize: [25, 41],
         iconAnchor: [15, 41],
         popupAnchor: [-3, -41],
-        shadowUrl: "/marker-shadow.png",
+        shadowUrl: "/assets/van_sale/vansale/marker-shadow.png",
         shadowSize: [41, 41],
         shadowAnchor: [15, 41],
       });
