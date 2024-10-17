@@ -123,6 +123,8 @@ export default function TripDetails() {
     });
   };
 
+  console.log("----234------------------", isPosOpenEntryFound, data);
+
   return (
     <div className="mx-auto min-h-screen relative">
       <div className="bg-white shadow sticky">
