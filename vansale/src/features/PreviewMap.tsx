@@ -24,7 +24,19 @@ export default function PreviewMap({ lat, long }: PreviewMapProps) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker([lat, long]).addTo(map);
+      const myIcon = L.icon({
+        iconUrl: "/marker-icon.png",
+        iconSize: [25, 41],
+        iconAnchor: [15, 41],
+        popupAnchor: [-3, -41],
+        shadowUrl: "/marker-shadow.png",
+        shadowSize: [41, 41],
+        shadowAnchor: [15, 41],
+      });
+
+      L.marker([lat, long], {
+        icon: myIcon,
+      }).addTo(map);
 
       map.zoomControl.remove();
       map.attributionControl.remove();

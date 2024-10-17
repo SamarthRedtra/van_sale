@@ -43,3 +43,28 @@ self.addEventListener('activate', (event) => {
         })
     );
 });
+
+// Listen for push events
+self.addEventListener('push', (event) => {
+    const data = event.data ? event.data.json() : {};
+
+    const title = data.title || 'Notification Title';
+    const options = {
+        body: data.body || 'Here is the body of the notification.',
+        icon: 'icon.png',  // You can add your icon path here
+        badge: 'badge.png' // Add a small badge icon if you have one
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
+});
+
+// Handle notification click events
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+
+    event.waitUntil(
+        clients.openWindow('/') // Open your app when the notification is clicked
+    );
+});
