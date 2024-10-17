@@ -123,8 +123,6 @@ export default function TripDetails() {
     });
   };
 
-  console.log("----234------------------", isPosOpenEntryFound, data);
-
   return (
     <div className="mx-auto min-h-screen relative">
       <div className="bg-white shadow sticky">
@@ -156,7 +154,7 @@ export default function TripDetails() {
           </div>
           {isPosOpenEntryFound &&
             (data?.status === TRIP_STATUS.IN_TRANSIT ||
-              data?.status === TRIP_STATUS.SCHEDULED ||
+              data?.status === TRIP_STATUS.COMPLETED ||
               data?.status === TRIP_STATUS.PARTIALLY_COMPLETED) && (
               <button
                 onClick={handleButtonClick}
