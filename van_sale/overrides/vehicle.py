@@ -29,7 +29,7 @@ class VanSaleVehicle(Vehicle):
                     "company": frappe.defaults.get_defaults().company or "",
                 }
             ).insert(ignore_permissions=True)
-            
+
             self.custom_warehouse = warehouse_doc.name
             self.flags.is_processed = True
             self.save()
@@ -51,6 +51,5 @@ class VanSaleVehicle(Vehicle):
 
     def on_update(self):
         # If custom_is_warehouse is true but no warehouse is linked, create or update it
-        frappe.logger("debug").error(['---------234 sdsd sds------------', self.as_dict()])
         if self.custom_is_warehouse:
             self.update_warehouse()
