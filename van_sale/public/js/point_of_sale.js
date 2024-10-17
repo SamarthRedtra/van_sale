@@ -39,6 +39,15 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }
     }, 2000);
 
+    setTimeout(() => {
+        const frappeAwesomeBar =
+            document?.body?.getElementsByClassName('search-bar')?.[0]
+
+        if (frappeAwesomeBar) {
+            frappeAwesomeBar.remove()
+        }
+    }, 50)
+
     // Set up a MutationObserver to detect when the button is added to the DOM
     const observer = new MutationObserver(function (mutationsList) {
         mutationsList.forEach(function (mutation) {
