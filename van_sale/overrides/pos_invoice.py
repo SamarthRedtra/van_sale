@@ -23,7 +23,7 @@ class VanSalePOSInvoice(POSInvoice):
 
         if frappe.db.exists("Delivery Stop", delivery_stop_filters):
             delivery_stop = frappe.get_doc("Delivery Stop", delivery_stop_filters)
-            delivery_stop.update({"visited": 1, "custom_pos_invoice": self.name})
+            delivery_stop.update({"visited": 1, "custom_pos_invoice": self.name, "custom_end_timing": frappe.utils.now()})
             delivery_stop.save()
 
     def on_submit(self):

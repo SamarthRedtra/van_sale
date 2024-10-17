@@ -71,6 +71,8 @@ export default function DeliveryStopDetails() {
       }
     } catch (err: any) {
       if (err?.response?.data?.message) {
+        console.log("This is isPosOpenEntryFound :- ", isPosOpenEntryFound);
+
         setErrorMsg(err?.response?.data?.message);
       }
     }

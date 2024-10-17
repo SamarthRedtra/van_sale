@@ -55,6 +55,8 @@ export interface DeliveryStop {
   custom_is_credit: number;
   custom_is_paid: number;
   custom_sales_invoice?: string;
+  custom_start_timing?: string;
+  custom_end_timing?: string;
 }
 
 // POS Invoice Types

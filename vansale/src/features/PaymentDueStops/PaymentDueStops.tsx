@@ -33,6 +33,13 @@ export default function PaymentDueStops() {
     setSearch(e.target.value);
   };
 
+  const filteredStops = deliveredStops.filter((stop) => {
+    return (
+      stop?.customer?.toLowerCase().includes(search.toLowerCase()) ||
+      stop?.parent?.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   return (
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
@@ -75,9 +82,14 @@ export default function PaymentDueStops() {
         {isLoading && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
-            {deliveredStops.length ? (
-              deliveredStops.map((item, index) => (
-                <DeliveryStopDetailCard key={index} stop={item} isCTAAllowed />
+            {filteredStops.length ? (
+              filteredStops.map((item, index) => (
+                <DeliveryStopDetailCard
+                  key={index}
+                  stop={item}
+                  isCTAAllowed
+                  showStopName
+                />
               ))
             ) : (
               <NoCustomerFound />

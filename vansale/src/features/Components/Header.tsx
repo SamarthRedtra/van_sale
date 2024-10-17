@@ -5,11 +5,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet.tsx";
-import { Bell, HandCoins, LogOut, Menu, Truck } from "lucide-react";
+import { Bell, BellDot, HandCoins, LogOut, Menu, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFrappeAuth } from "frappe-react-sdk";
 import { useNavigate } from "react-router-dom";
+import getNotificationsList from "@/services/getNotificationsList";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import markNotificationToRead from "@/services/markNotifiactionToRead";
+import { parseISO, formatDistanceToNow } from "date-fns";
 
 interface HeaderProps {
   title?: string;
@@ -17,6 +27,8 @@ interface HeaderProps {
 
 export default function Header({ title }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUnreadMsgFound, setIsUnreadMsgFound] = useState(false);
+  const [notificationsList, setNotificationsList] = useState([]);
   const navigate = useNavigate();
   const { logout } = useFrappeAuth();
 
@@ -31,6 +43,33 @@ export default function Header({ title }: HeaderProps) {
     logout();
     window.location.reload();
   };
+
+  useEffect(() => {
+    const handleShowNotifications = async () => {
+      const list = await getNotificationsList();
+      setNotificationsList(list?.message?.notification_logs ?? []);
+    };
+    handleShowNotifications();
+  }, []);
+
+  useEffect(() => {
+    notificationsList.forEach((notification) => {
+      if (!notification?.read) {
+        setIsUnreadMsgFound(true);
+      }
+    });
+  }, [notificationsList]);
+
+  const handleClickNotifications =
+    (deliveryTrip: string, notificationId: string) => async () => {
+      await markNotificationToRead(notificationId);
+      navigate("/vansale/delivery-trip/" + deliveryTrip);
+    };
+
+  function formatRelativeTime(timestamp: string): string {
+    const date = parseISO(timestamp);
+    return formatDistanceToNow(date, { addSuffix: true });
+  }
 
   return (
     <div className="flex justify-between items-center p-4">
@@ -79,10 +118,54 @@ export default function Header({ title }: HeaderProps) {
       )}
 
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Notifications</span>
-        </Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon">
+              {isUnreadMsgFound && <BellDot className="h-5 w-5" />}
+              {!isUnreadMsgFound && <Bell className="h-5 w-5" />}
+              <span className="sr-only">Notifications</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 mx-3 p-0.5 bg-white/80 backdrop-blur-sm shadow-lg rounded-lg border border-gray-200">
+            <ScrollArea className="h-[300px]">
+              {notificationsList.map((notification, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-4 p-4 border-b last:border-b-0 relative"
+                  onClick={handleClickNotifications(
+                    notification?.document_name ?? "",
+                    notification?.name ?? ""
+                  )}
+                >
+                  {!notification?.read && (
+                    <div className="h-1 w-1 rounded-full bg-green-600 absolute left-2 top-7" />
+                  )}
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-green-100 text-green-600">
+                      {notification?.from_user?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col gap-1">
+                    <div
+                      className="text-xs w-60"
+                      dangerouslySetInnerHTML={{
+                        __html: notification?.subject,
+                      }}
+                    >
+                      {/* <p className="text-sm font-medium leading-none">{notification.title}</p>
+                    <p className="text-sm text-muted-foreground">{notification.description}</p>
+                    <p className="text-xs text-muted-foreground">{notification.time}</p> */}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {formatRelativeTime(notification.creation)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </ScrollArea>
+          </PopoverContent>
+        </Popover>
+
         <Button variant="ghost" size="icon" onClick={handleLogoutClick}>
           <LogOut className="h-5 w-5" />
           <span className="sr-only">Logout</span>

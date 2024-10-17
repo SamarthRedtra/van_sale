@@ -4,15 +4,18 @@ import { ClockIcon } from "@radix-ui/react-icons";
 import { DeliveryStop } from "../../../utils/types";
 import { getDeliveryStatus } from "../../../utils/getStatus.ts";
 import { PhoneCall } from "lucide-react";
+import { format } from "date-fns";
 
 interface DeliveryStopDetailCardProps {
   stop: DeliveryStop;
+  showStopName?: boolean;
   isCTAAllowed?: boolean;
   hasIcon?: boolean;
 }
 
 export default function DeliveryStopDetailCard({
   stop,
+  showStopName = false,
   isCTAAllowed = false,
   hasIcon = false,
 }: DeliveryStopDetailCardProps) {
@@ -50,9 +53,11 @@ export default function DeliveryStopDetailCard({
             </h2>
             <p
               className="text-sm text-gray-500 truncate max-w-48 w-full text-start"
-              title={stop?.address ?? ""}
+              title={showStopName ? stop?.parent : stop?.address ?? ""}
             >
-              {stop?.address?.replace("<br>", ",") ?? 0}
+              {showStopName
+                ? stop?.parent ?? ""
+                : stop?.address?.replace("<br>", ",") ?? 0}
             </p>
           </div>
           {!!stop?.custom_mobile_no && (
@@ -101,7 +106,11 @@ export default function DeliveryStopDetailCard({
               <ClockIcon color="#00f" />
               <span>Delivered</span>
             </p>
-            <span className="font-semibold">{"--:-- --"}</span>
+            <span className="font-semibold">
+              {stop?.custom_end_timing
+                ? format(new Date(stop?.custom_end_timing), "hh:mm a")
+                : "--:-- --"}
+            </span>
           </div>
           {isCTAAllowed && (
             <button

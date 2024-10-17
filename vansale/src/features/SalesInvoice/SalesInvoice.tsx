@@ -101,6 +101,7 @@ export default function SalesInvoice() {
         await updateDoc("Delivery Stop", customer_id, {
           custom_is_credit: 1,
           custom_sales_invoice: salesDoc?.name ?? "",
+          custom_end_timing: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
           visited: 1,
         });
       }
@@ -109,6 +110,7 @@ export default function SalesInvoice() {
         navigate(`/vansale/delivery-trip/${trip_id}/${customer_id}`);
       }, 2000);
     } catch (err: any) {
+      console.log(isPosOpenEntryFound);
       setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
     }
   };

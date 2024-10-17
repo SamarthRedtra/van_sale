@@ -2,6 +2,8 @@ import json
 import frappe
 from datetime import datetime, date
 from werkzeug.wrappers import Response
+from frappe.desk.doctype.notification_settings.notification_settings import set_seen_value
+from frappe.desk.doctype.notification_log.notification_log import get_notification_logs
 
 
 # van_sale.api.delivery_trip.get_all_delivery_trips
@@ -177,7 +179,7 @@ def start_delivery(trip_name, stop_name):
     pos_profile.save()
 
     stop = frappe.get_doc("Delivery Stop", stop_name)
-    stop.update({"custom_in_transition": 1})
+    stop.update({"custom_in_transition": 1, "custom_start_timing": frappe.utils.now()})
     stop.save()
 
     return {
@@ -330,3 +332,26 @@ def get_pending_payment_stops():
         "message": "Success",
         "delivery_stops": delivery_stop_list,
     }
+
+# van_sale.api.delivery_trip.get_notification_list
+@frappe.whitelist()
+def get_notification_list():
+    set_seen_value(user=frappe.session.user, value=1)
+
+    notifications = get_notification_logs(limit=100)
+
+    notification_list = []
+    count = 0
+
+    for notification in notifications.get("notification_logs", []):
+        if count == 20:
+            break
+
+        if notification.document_type == "Delivery Trip":
+            notification_list.append(notification)
+            count += 1
+
+    return {
+        "message": "Success",
+        "notification_logs": notification_list,
+    } 

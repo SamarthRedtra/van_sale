@@ -40,6 +40,7 @@ export default function AppRoutes() {
     if (!currentUser) {
       navigate("/vansale/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, currentUser]);
 
   return (
