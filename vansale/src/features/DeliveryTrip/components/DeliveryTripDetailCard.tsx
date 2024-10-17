@@ -86,7 +86,7 @@ export default function DeliveryTripDetailCard({
             <div className="flex flex-col">
               <p className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                <span>Diver</span>
+                <span>Driver</span>
               </p>
               <span className="font-semibold">
                 {tripDetails?.driver_name ?? "-"}
