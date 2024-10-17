@@ -152,14 +152,17 @@ export default function TripDetails() {
               <span> {formatDate(data?.departure_time ?? "")}</span>
             </p>
           </div>
-          {isPosOpenEntryFound && data?.status === TRIP_STATUS.IN_TRANSIT && (
-            <button
-              onClick={handleButtonClick}
-              className="bg-[#f00] text-white px-3 py-1 rounded font-semibold"
-            >
-              Close POS
-            </button>
-          )}
+          {isPosOpenEntryFound &&
+            (data?.status === TRIP_STATUS.IN_TRANSIT ||
+              data?.status === TRIP_STATUS.SCHEDULED ||
+              data?.status === TRIP_STATUS.PARTIALLY_COMPLETED) && (
+              <button
+                onClick={handleButtonClick}
+                className="bg-[#f00] text-white px-3 py-1 rounded font-semibold"
+              >
+                Close POS
+              </button>
+            )}
         </div>
       </div>
 
