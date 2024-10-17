@@ -5,6 +5,9 @@ import frappe.defaults
 
 class VanSaleVehicle(Vehicle):
     def update_warehouse(self):
+        if self.flags.is_processed:
+            return
+        
         # Check if the vehicle is linked to another warehouse
         linked_warehouse = frappe.get_value("Warehouse", {"custom_vehicle": self.name})
 
@@ -27,12 +30,16 @@ class VanSaleVehicle(Vehicle):
                 }
             ).insert(ignore_permissions=True)
             self.custom_warehouse = warehouse_doc.name
+            self.flags.is_processed = True
         else:
             # If custom_warehouse exists, update the warehouse linked to the vehicle
             warehouse_doc = frappe.get_doc("Warehouse", self.custom_warehouse)
             warehouse_doc.custom_is_vehicle = 1
             warehouse_doc.custom_vehicle = self.name
             warehouse_doc.save()
+            self.flags.is_processed = True
+
+        frappe.logger("debug").error(['---------234------------', self.as_dict()])
 
     def after_insert(self):
         # Create warehouse if it's flagged as a warehouse vehicle
