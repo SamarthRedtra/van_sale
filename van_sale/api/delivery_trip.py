@@ -169,7 +169,7 @@ def start_delivery(trip_name, stop_name):
             "POS Profile User", {"user": delivery_trip_doc.custom_user, "default": 1}
         )
         pos_user_profile.default = 0
-        pos_user_profile.save()
+        pos_user_profile.save(ignore_permissions=True)
 
     pos_profile = frappe.get_doc(
         "POS Profile", {"warehouse": delivery_trip_doc.custom_warehouse}
@@ -179,11 +179,11 @@ def start_delivery(trip_name, stop_name):
     pos_profile.append(
         "applicable_for_users", {"user": delivery_trip_doc.custom_user, "default": 1}
     )
-    pos_profile.save()
+    pos_profile.save(ignore_permissions=True)
 
     stop = frappe.get_doc("Delivery Stop", stop_name)
     stop.update({"custom_in_transition": 1, "custom_start_timing": frappe.utils.now()})
-    stop.save()
+    stop.save(ignore_permissions=True)
 
     return {
         "message": "success",
@@ -285,7 +285,7 @@ def pos_close_entry(delivery_trip_id, warehouse):
     voucher.submit()
 
     delivery_trip_doc.custom_pos_closing_entry = voucher.name
-    delivery_trip_doc.save()
+    delivery_trip_doc.save(ignore_permissions=True)
 
     is_partially_completed = False
 
