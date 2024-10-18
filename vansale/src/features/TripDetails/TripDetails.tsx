@@ -11,9 +11,22 @@ import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound.
 import { TRIP_STATUS } from "../../utils/constants.ts";
 import closePosEntry from "../../services/closePosEntry.tsx";
 import Toast from "../Components/Toast.tsx";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  // AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export default function TripDetails() {
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [apiStatus, setApiStatus] = useState<{
     status: "" | "success" | "error" | "info" | "warning";
     message: string;
@@ -123,6 +136,11 @@ export default function TripDetails() {
     });
   };
 
+  const handleClosePOS = () => {
+    handleButtonClick();
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="mx-auto min-h-screen relative">
       <div className="bg-white shadow sticky">
@@ -156,12 +174,30 @@ export default function TripDetails() {
             (data?.status === TRIP_STATUS.IN_TRANSIT ||
               data?.status === TRIP_STATUS.COMPLETED ||
               data?.status === TRIP_STATUS.PARTIALLY_COMPLETED) && (
-              <button
-                onClick={handleButtonClick}
-                className="bg-[#f00] text-white px-3 py-1 rounded font-semibold"
-              >
-                Close POS
-              </button>
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Close POS</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to close POS?
+                    </AlertDialogTitle>
+                    {/* <AlertDialogDescription>
+                      This action will end your current session and close all
+                      pending operations.
+                    </AlertDialogDescription> */}
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClosePOS}>
+                      Close POS
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
         </div>
       </div>
