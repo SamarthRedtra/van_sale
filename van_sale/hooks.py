@@ -26,7 +26,7 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 app_include_css = ["/assets/van_sale/css/delivery_trip.css"]
-# app_include_js = "/assets/van_sale/js/van_sale.js"
+app_include_js = "/assets/van_sale/js/customer_quick_entry_form.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/van_sale/css/van_sale.css"
@@ -137,6 +137,7 @@ override_doctype_class = {
     "Warehouse": "van_sale.overrides.warehouse.VanSaleWarehouse",
     "Delivery Trip": "van_sale.overrides.delivery_trip.VanSaleDeliveryTrip",
     "POS Invoice": "van_sale.overrides.pos_invoice.VanSalePOSInvoice",
+    "Customer":"van_sale.overrides.customer.CustomCustomer"
 }
 
 # Document Events
