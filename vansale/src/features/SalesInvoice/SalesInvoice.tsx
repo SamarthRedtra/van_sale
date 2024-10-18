@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound";
-import {
-  useFrappeCreateDoc,
-  useFrappeGetDoc,
-  useFrappeUpdateDoc,
-} from "frappe-react-sdk";
+import { useFrappeGetDoc, useFrappeUpdateDoc } from "frappe-react-sdk";
 import { DeliveryStop, DeliveryTripDetails, PItem } from "../../utils/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
@@ -14,6 +10,7 @@ import { format } from "date-fns";
 import ProductItemDetails from "./components/ProductItemDetails";
 import NoItemSelected from "./components/NoItemSelected";
 import Toast from "../Components/Toast";
+import createSalesInvoice from "@/services/createSalesInvoice";
 
 export default function SalesInvoice() {
   const { trip_id, customer_id } = useParams();
@@ -42,8 +39,6 @@ export default function SalesInvoice() {
       amount: number;
     } & PItem)[]
   >([]);
-
-  const { createDoc } = useFrappeCreateDoc();
 
   useEffect(() => {
     (async () => {
@@ -80,27 +75,19 @@ export default function SalesInvoice() {
 
   const handleCreateInvoice = async () => {
     try {
-      const salesDoc = await createDoc("Sales Invoice", {
-        posting_time: format(new Date(), "HH:mm:ss"),
-        customer: stopDetails?.customer,
-        due_date: dueDate ?? "",
-        custom_warehouse: tripDetails?.custom_warehouse,
-        items: productItems.map((item) => {
-          return {
-            item_code: item.item_code,
-            qty: item.quantity,
-            price_list_rate: item.price_list_rate,
-            net_amount: (item?.price_list_rate ?? 0) * item.quantity,
-            discount_percentage: item.discount ?? 0,
-            amount: item.amount ?? 0,
-          };
-        }),
+      const salesDoc = await createSalesInvoice({
+        tripDetails,
+        stopDetails,
+        productItems,
+        dueDate,
       });
+
+      console.log("----------wer-----------", salesDoc);
 
       if (customer_id) {
         await updateDoc("Delivery Stop", customer_id, {
           custom_is_credit: 1,
-          custom_sales_invoice: salesDoc?.name ?? "",
+          custom_sales_invoice: salesDoc?.message?.invoice_name ?? "",
           custom_end_timing: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
           visited: 1,
         });

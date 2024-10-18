@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import markNotificationToRead from "@/services/markNotifiactionToRead";
 import { parseISO, formatDistanceToNow } from "date-fns";
+import logout from "@/services/logout";
 
 interface HeaderProps {
   title?: string;
@@ -30,7 +31,7 @@ export default function Header({ title }: HeaderProps) {
   const [isUnreadMsgFound, setIsUnreadMsgFound] = useState(false);
   const [notificationsList, setNotificationsList] = useState([]);
   const navigate = useNavigate();
-  const { logout } = useFrappeAuth();
+  const { currentUser } = useFrappeAuth();
 
   const handleOptionClick = (path: string) => () => {
     setIsMenuOpen(false);
@@ -39,9 +40,11 @@ export default function Header({ title }: HeaderProps) {
     navigate(updatedPath);
   };
 
-  const handleLogoutClick = () => {
-    logout();
-    window.location.reload();
+  const handleLogoutClick = async () => {
+    if (currentUser) {
+      await logout(currentUser);
+      navigate("/vansale/login");
+    }
   };
 
   useEffect(() => {

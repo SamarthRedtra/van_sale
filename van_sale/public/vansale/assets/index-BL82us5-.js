@@ -182,23 +182,23 @@ Error generating stack: `+i.message+`
     margin-right: `).concat(l,"px ").concat(r,`;
     `),n==="padding"&&"padding-right: ".concat(l,"px ").concat(r,";")].filter(Boolean).join(""),`
   }
-  
+
   .`).concat(Pp,` {
     right: `).concat(l,"px ").concat(r,`;
   }
-  
+
   .`).concat(Tp,` {
     margin-right: `).concat(l,"px ").concat(r,`;
   }
-  
+
   .`).concat(Pp," .").concat(Pp,` {
     right: 0 `).concat(r,`;
   }
-  
+
   .`).concat(Tp," .").concat(Tp,` {
     margin-right: 0 `).concat(r,`;
   }
-  
+
   body[`).concat(Ll,`] {
     `).concat(Wz,": ").concat(l,`px;
   }

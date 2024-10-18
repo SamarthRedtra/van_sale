@@ -1,8 +1,11 @@
 import json
 import frappe
 from datetime import datetime, date
+import frappe.utils
 from werkzeug.wrappers import Response
-from frappe.desk.doctype.notification_settings.notification_settings import set_seen_value
+from frappe.desk.doctype.notification_settings.notification_settings import (
+    set_seen_value,
+)
 from frappe.desk.doctype.notification_log.notification_log import get_notification_logs
 
 
@@ -333,6 +336,7 @@ def get_pending_payment_stops():
         "delivery_stops": delivery_stop_list,
     }
 
+
 # van_sale.api.delivery_trip.get_notification_list
 @frappe.whitelist()
 def get_notification_list():
@@ -354,4 +358,77 @@ def get_notification_list():
     return {
         "message": "Success",
         "notification_logs": notification_list,
-    } 
+    }
+
+
+# van_sale.api.delivery_trip.create_sales_invoice
+@frappe.whitelist()
+def create_sales_invoice(trip_details, stop_details, product_items, due_date=None):
+    try:
+        # Create Sales Invoice document
+        sales_invoice = frappe.get_doc(
+            {
+                "doctype": "Sales Invoice",
+                "posting_time": frappe.utils.now(),  # Posting time in "HH:mm:ss" format
+                "customer": stop_details.get("customer"),
+                "due_date": due_date or "",
+                "custom_warehouse": trip_details.get("custom_warehouse"),
+                "update_stock": 1,
+                "set_warehouse": trip_details.get("custom_warehouse"),
+                "custom_delivery_trip": trip_details.get("name"),
+                "items": [
+                    {
+                        "item_code": item.get("item_code"),
+                        "qty": item.get("quantity"),
+                        "price_list_rate": item.get("price_list_rate"),
+                        "net_amount": (item.get("price_list_rate") or 0)
+                        * item.get("quantity"),
+                        "discount_percentage": item.get("discount") or 0,
+                        "amount": item.get("amount") or 0,
+                    }
+                    for item in product_items
+                ],
+            }
+        )
+
+        # Insert the document and submit
+        sales_invoice.insert()
+        sales_invoice.submit()
+
+        return {
+            "status": "success",
+            "message": frappe._("Sales Invoice created successfully"),
+            "invoice_name": sales_invoice.name,
+        }
+
+    except Exception as e:
+        frappe.log_error(
+            frappe.get_traceback(), frappe._("Sales Invoice Creation Error")
+        )
+        return {"status": "error", "message": str(e)}
+
+
+# van_sale.api.delivery_trip.clear_user_cache
+@frappe.whitelist(allow_guest=True)
+def clear_user_cache(user):
+    """
+    Clear user cache.
+
+    This is a whitelisted function. It is allowed to be called via an API call
+    or a web call.
+
+    Returns a dict with a message key. The value of message key is a string
+    that indicates whether the cache was cleared successfully or not. If the
+    cache is cleared successfully, the value of message key is
+    "Cache Cleared Successfully". If an error occurs, the value of message key
+    is an error message string.
+
+    :return: A dict with a message key.
+    :rtype: dict
+    """
+    try:
+        frappe.clear_cache(user=user)
+        return {"message": frappe._("Cache Cleared Successfully")}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Cache Clearing Error")
+        return {"error": frappe._("Error clearing cache: {0}").format(str(e))}

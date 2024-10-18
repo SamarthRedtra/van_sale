@@ -68,23 +68,11 @@ export default function ProductItemDetails({
             </span>
           </div>
         </div>
-
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="flex justify-between items-center font-semibold">
-            <span className="text-gray-600">Total Amount:</span>
-            <span className="text-gray-800">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: item.currency,
-              }).format((item.price_list_rate ?? 0) * (item?.quantity ?? 0))}
-            </span>
-          </div>
-        </div>
       </div>
 
       <div className="px-6 py-3 bg-gray-100">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Discounted Price:</span>
+          <span className="text-gray-600 font-bold">Total Amount:</span>
           <span className="text-lg font-semibold text-green-600">
             {new Intl.NumberFormat("en-US", {
               style: "currency",
