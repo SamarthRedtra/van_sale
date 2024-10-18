@@ -410,7 +410,7 @@ def create_sales_invoice(trip_details, stop_details, product_items, due_date=Non
 
 # van_sale.api.delivery_trip.clear_user_cache
 @frappe.whitelist(allow_guest=True)
-def clear_user_cache(user):
+def clear_user_cache(user=None):
     """
     Clear user cache.
 

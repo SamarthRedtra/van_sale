@@ -7,6 +7,7 @@ import { useFrappeAuth } from "frappe-react-sdk";
 import Button from "./components/Button.tsx";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
+import clearCache from "@/services/clearCache.tsx";
 
 export default function LoginScreen() {
   const { login, currentUser, isLoading } = useFrappeAuth();
@@ -28,6 +29,7 @@ export default function LoginScreen() {
         username: email,
         password,
       });
+      await clearCache();
       setNotification({ type: "success", message: "Login successful!" });
 
       navigate("/vansale");

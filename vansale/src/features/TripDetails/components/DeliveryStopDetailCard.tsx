@@ -83,13 +83,19 @@ export default function DeliveryStopDetailCard({
 
           {Boolean(stop?.visited) &&
             Boolean(stop?.custom_is_credit) &&
-            !stop?.custom_is_paid && (
+            (!stop?.custom_is_paid ? (
               <span
                 className={`text-[10px] py-1 rounded-3xl font-bold px-2 bg-[#ffefc2] text-[#9e7602]`}
               >
                 Pending Invoice
               </span>
-            )}
+            ) : (
+              <span
+                className={`text-[10px] py-1 rounded-3xl font-bold px-2 bg-[#1faa00] text-white"`}
+              >
+                Payment Collected
+              </span>
+            ))}
         </div>
       </div>
       <div className="flex text-sm">
