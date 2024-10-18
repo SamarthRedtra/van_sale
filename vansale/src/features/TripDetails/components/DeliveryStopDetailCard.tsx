@@ -26,9 +26,9 @@ export default function DeliveryStopDetailCard({
 
   const isStart = !stop?.visited && !stop?.custom_in_transition;
 
-  const handleClick = (stopId: string) => async () => {
+  const handleClick = (stopId: string, tripID: string) => async () => {
     if (!stopId) return;
-    navigate(`/vansale/delivery-trip/${trip_id}/${stopId}`);
+    navigate(`/vansale/delivery-trip/${tripID || trip_id}/${stopId}`);
   };
 
   return (
@@ -114,7 +114,7 @@ export default function DeliveryStopDetailCard({
           </div>
           {isCTAAllowed && (
             <button
-              onClick={handleClick(stop?.name ?? "")}
+              onClick={handleClick(stop?.name ?? "", stop?.parent)}
               className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg"
             >
               {isStart ? "Start" : "View"}
