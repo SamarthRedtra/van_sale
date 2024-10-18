@@ -70,7 +70,37 @@ export default function SalesInvoice() {
       amount: number;
     } & PItem
   ) => {
-    setProductItems((prev) => [...prev, item]);
+    setProductItems((prev) => {
+      // Check if the item is already present by comparing item_name
+      const existingItemIndex = prev.findIndex(
+        (existingItem) => existingItem.item_name === item.item_name
+      );
+
+      if (existingItemIndex !== -1) {
+        // Item already exists, update the quantity
+        const updatedItems = [...prev];
+        const existingItem = updatedItems[existingItemIndex];
+
+        // Calculate the new total quantity
+        const newQuantity = existingItem.quantity + item.quantity;
+
+        // Ensure the new quantity does not exceed actual_qty
+        if (newQuantity > item.actual_qty) {
+          existingItem.quantity = item.actual_qty;
+        } else {
+          existingItem.quantity = newQuantity;
+        }
+
+        return updatedItems;
+      } else {
+        // Item doesn't exist, ensure the added quantity is not greater than actual_qty
+        if (item.quantity > item.actual_qty) {
+          item.quantity = item.actual_qty;
+        }
+
+        return [...prev, item];
+      }
+    });
   };
 
   const handleCreateInvoice = async () => {
@@ -81,8 +111,6 @@ export default function SalesInvoice() {
         productItems,
         dueDate,
       });
-
-      console.log("----------wer-----------", salesDoc);
 
       if (customer_id) {
         await updateDoc("Delivery Stop", customer_id, {
@@ -109,6 +137,14 @@ export default function SalesInvoice() {
   const handleCloseAlert = () => {
     setErrorMsg("");
     setSuccessMsg("");
+  };
+
+  const handleUpdateItem = (value: number, quantity: number) => {
+    setProductItems((prev) => {
+      const updatedItems = [...prev];
+      updatedItems[value].quantity = quantity;
+      return updatedItems;
+    });
   };
 
   return (
@@ -155,6 +191,7 @@ export default function SalesInvoice() {
                   item={product}
                   index={idx}
                   handleDelete={handleDeleteItem}
+                  handleUpdate={handleUpdateItem}
                 />
               ))
             ) : (

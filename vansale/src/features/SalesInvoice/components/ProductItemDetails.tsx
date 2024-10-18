@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { PItem } from "../../../utils/types";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface IPItem {
   item: {
@@ -9,13 +12,40 @@ interface IPItem {
   } & PItem;
   index: number;
   handleDelete: (value: number) => void;
+  handleUpdate: (index: number, newQuantity: number) => void;
 }
 
 export default function ProductItemDetails({
   item,
   index,
   handleDelete,
+  handleUpdate,
 }: IPItem) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newQuantity, setNewQuantity] = useState<number | "">(item.quantity);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    if (newQuantity) {
+      handleUpdate(
+        index,
+        newQuantity > item.actual_qty ? item.actual_qty : newQuantity
+      );
+      setNewQuantity(
+        newQuantity > item.actual_qty ? item.actual_qty : newQuantity
+      );
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancelClick = () => {
+    setNewQuantity(item.quantity);
+    setIsEditing(false);
+  };
+
   return (
     <div className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden border">
       <div className="px-6 py-4">
@@ -49,7 +79,30 @@ export default function ProductItemDetails({
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-600">Quantity:</span>
-            <span className="text-sm text-gray-800">{item.quantity}</span>
+            {/* <span className="text-sm text-gray-800">{item.quantity}</span> */}
+            {isEditing ? (
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="number"
+                  value={newQuantity}
+                  onChange={(e) => setNewQuantity(Number(e.target.value) || "")}
+                  className="w-20 text-sm"
+                />
+                <Button size="sm" onClick={handleSaveClick}>
+                  Save
+                </Button>
+                <Button size="sm" variant="outline" onClick={handleCancelClick}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-800">{item.quantity}</span>
+                <Button size="sm" variant="outline" onClick={handleEditClick}>
+                  Edit
+                </Button>
+              </div>
+            )}
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-600">
