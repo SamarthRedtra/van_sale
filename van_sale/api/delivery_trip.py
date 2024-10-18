@@ -410,7 +410,7 @@ def create_sales_invoice(trip_details, stop_details, product_items, due_date=Non
 
 # van_sale.api.delivery_trip.clear_user_cache
 @frappe.whitelist(allow_guest=True)
-def clear_user_cache(user=None):
+def clear_user_cache(user=None, doctype=None):
     """
     Clear user cache.
 
@@ -427,7 +427,7 @@ def clear_user_cache(user=None):
     :rtype: dict
     """
     try:
-        frappe.clear_cache(user=user)
+        frappe.clear_cache(user=user, doctype=doctype)
         return {"message": frappe._("Cache Cleared Successfully")}
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Cache Clearing Error")

@@ -29,7 +29,7 @@ export default function LoginScreen() {
         username: email,
         password,
       });
-      await clearCache();
+      await clearCache(undefined, "User");
       setNotification({ type: "success", message: "Login successful!" });
 
       navigate("/vansale");
