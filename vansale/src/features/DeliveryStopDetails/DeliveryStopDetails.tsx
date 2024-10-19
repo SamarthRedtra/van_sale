@@ -13,6 +13,7 @@ import { DELIVERY_STATUS_CONST, TRIP_STATUS } from "../../utils/constants.ts";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound.tsx";
 import InvoiceDetailCard from "./components/InvoiceDetailCard.tsx";
 import createPaymentEntry from "../../services/createPaymentEntry.tsx";
+import ConfirmationComp from "../Components/ConfirmationComp.tsx";
 
 export default function DeliveryStopDetails() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function DeliveryStopDetails() {
   const [posProfile, setPosProfile] = useState<string>("");
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] =
     useState<boolean>(false);
+  const [isApiCalling, setIsApiCalling] = useState<boolean>(false);
 
   const { data: tripDetails } = useFrappeGetDoc<DeliveryTripDetails>(
     "Delivery Trip",
@@ -39,6 +41,8 @@ export default function DeliveryStopDetails() {
       try {
         if (!tripDetails?.custom_warehouse) return;
 
+        setIsApiCalling(true);
+
         const res = await getIsPosOpeningEntryFound(
           tripDetails?.custom_warehouse
         );
@@ -51,6 +55,8 @@ export default function DeliveryStopDetails() {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsPosOpenEntryFound(false);
+      } finally {
+        setIsApiCalling(false);
       }
     })();
   }, [tripDetails]);
@@ -64,6 +70,8 @@ export default function DeliveryStopDetails() {
     }
 
     try {
+      setIsApiCalling(true);
+
       const res = await startDelivery(data.parent, data.name);
       if (res) {
         mutate();
@@ -75,6 +83,8 @@ export default function DeliveryStopDetails() {
 
         setErrorMsg(err?.response?.data?.message);
       }
+    } finally {
+      setIsApiCalling(false);
     }
   };
 
@@ -93,11 +103,14 @@ export default function DeliveryStopDetails() {
   const handleCreatePaymentEntry = async () => {
     if (!customer_id || !data?.custom_sales_invoice) return;
     try {
+      setIsApiCalling(true);
       await createPaymentEntry(customer_id, data?.custom_sales_invoice);
       setSuccessMsg("Payment Entry created successfully");
       mutate();
     } catch (err) {
       setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
+    } finally {
+      setIsApiCalling(false);
     }
   };
 
@@ -150,19 +163,25 @@ export default function DeliveryStopDetails() {
             {data &&
               data.custom_is_credit === 1 &&
               data.custom_is_paid === 0 && (
-                <button
-                  className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
-                  onClick={handleCreatePaymentEntry}
+                <ConfirmationComp
+                  handleClick={handleCreatePaymentEntry}
+                  dialogCTAText="Collect Payment"
+                  dialogTitle="Are you sure you want collect Payment?"
                 >
-                  Collect Payment
-                </button>
+                  <button
+                    className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+                    disabled={isApiCalling}
+                  >
+                    Collect Payment
+                  </button>
+                </ConfirmationComp>
               )}
 
             {status === DELIVERY_STATUS_CONST.IN_TRANSIT && (
               <button
                 onClick={createSalesInvoice}
                 className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
-                disabled={isCTADisabled}
+                disabled={isCTADisabled || isApiCalling}
               >
                 Create Credit Invoice
               </button>
@@ -180,7 +199,7 @@ export default function DeliveryStopDetails() {
           </div>
         </div>
       </div>
-      {isLoading && <LoadingOverlay />}
+      {(isLoading || isApiCalling) && <LoadingOverlay />}
       {!isLoading && (
         <>
           <div className="flex flex-col gap-4 p-4">

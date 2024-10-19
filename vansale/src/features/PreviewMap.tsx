@@ -61,6 +61,7 @@ export default function PreviewMap({ lat, long }: PreviewMapProps) {
         height: "440px",
         width: "100%",
         overflow: "hidden",
+        zIndex: 0,
       }}
     ></div>
   );

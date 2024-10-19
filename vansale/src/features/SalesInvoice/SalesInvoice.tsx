@@ -11,6 +11,7 @@ import ProductItemDetails from "./components/ProductItemDetails";
 import NoItemSelected from "./components/NoItemSelected";
 import Toast from "../Components/Toast";
 import createSalesInvoice from "@/services/createSalesInvoice";
+import ConfirmationComp from "../Components/ConfirmationComp";
 
 export default function SalesInvoice() {
   const { trip_id, customer_id } = useParams();
@@ -27,6 +28,7 @@ export default function SalesInvoice() {
     "Delivery Stop",
     customer_id
   );
+  const [isApiCalling, setIsApiCalling] = useState(false);
   const { updateDoc, loading } = useFrappeUpdateDoc();
   const [dueDate, setDueDate] = useState<string>(
     format(new Date(), "yyyy-MM-dd")
@@ -105,6 +107,7 @@ export default function SalesInvoice() {
 
   const handleCreateInvoice = async () => {
     try {
+      setIsApiCalling(true);
       const salesDoc = await createSalesInvoice({
         tripDetails,
         stopDetails,
@@ -127,6 +130,8 @@ export default function SalesInvoice() {
     } catch (err: any) {
       console.log(isPosOpenEntryFound);
       setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
+    } finally {
+      setIsApiCalling(false);
     }
   };
 
@@ -147,6 +152,8 @@ export default function SalesInvoice() {
     });
   };
 
+  console.log("isPosOpenEntryFound", isPosOpenEntryFound, productItems);
+
   return (
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
@@ -162,7 +169,7 @@ export default function SalesInvoice() {
           </h1>
         </div>
       </div>
-      {isLoading && <LoadingOverlay />}
+      {(isLoading || isApiCalling) && <LoadingOverlay />}
       {!isLoading && (
         <>
           <div className="flex gap-2 items-center justify-end p-4 text-sm">
@@ -199,15 +206,20 @@ export default function SalesInvoice() {
             )}
           </div>
           {productItems?.length > 0 && (
-            <div className="flex justify-end p-4">
-              <button
-                className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-fit"
-                onClick={handleCreateInvoice}
-                disabled={loading}
-              >
-                Create Invoice
-              </button>
-            </div>
+            <ConfirmationComp
+              handleClick={handleCreateInvoice}
+              dialogCTAText="Create Invoice"
+              dialogTitle="Are you sure you want create Sales Invoice?"
+            >
+              <div className="flex justify-end p-4">
+                <button
+                  className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-fit disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={loading || isApiCalling}
+                >
+                  Create Invoice
+                </button>
+              </div>
+            </ConfirmationComp>
           )}
         </>
       )}
