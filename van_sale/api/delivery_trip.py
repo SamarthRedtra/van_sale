@@ -214,6 +214,7 @@ def is_pos_opening_entry_found(warehouse):
 # van_sale.api.delivery_trip.pos_close_entry
 @frappe.whitelist()
 def pos_close_entry(delivery_trip_id, warehouse):
+    frappe.clear_cache()
     delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip_id)
 
     # Check if warehouse is valid and associated with a POS Profile
@@ -245,8 +246,11 @@ def pos_close_entry(delivery_trip_id, warehouse):
 
     for stop in delivery_trip_doc.delivery_stops:
         if stop.custom_pos_invoice:
-            pos_invoice_list.append({"pos_invoice": stop.custom_pos_invoice})
             pos_invoice_doc = frappe.get_doc("POS Invoice", stop.custom_pos_invoice)
+            if pos_invoice_doc.status == "Consolidated":
+                continue
+
+            pos_invoice_list.append({"pos_invoice": stop.custom_pos_invoice})
             total_item_quantity += int(pos_invoice_doc.total_qty or 0)
             grand_total += float(pos_invoice_doc.grand_total or 0)
             rounded_total += float(pos_invoice_doc.rounded_total or 0)
