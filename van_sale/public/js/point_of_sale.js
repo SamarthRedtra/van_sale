@@ -14,7 +14,7 @@ frappe.ui.form.on('POS Invoice', {
                 method: "frappe.client.get",
                 args: {
                     doctype: "POS Profile",
-                    name: posProfile // Replace with the actual profile name or ID
+                    name: posProfile || window?.cur_pos?.pos_profile // Replace with the actual profile name or ID
                 },
                 callback: function (data) {
                     if (data?.message) {
@@ -65,6 +65,8 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         if (customerName) {
             customerInputField[0].value = customerName;
             customerInputField[0].dispatchEvent(new Event('change'));
+
+            console.log("-----sdfjn------sd", document?.frappe)
         }
     }, 1500);
 
