@@ -33,7 +33,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
     setTimeout(async () => {
         const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
 
-        if (!inputField?.length) {
+        if (!inputField?.length && !window?.frappe.is_mobile()) {
             return;
         }
         const urlParams = new URLSearchParams(window.location.search);
