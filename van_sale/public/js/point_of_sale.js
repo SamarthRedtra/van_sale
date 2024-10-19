@@ -6,9 +6,9 @@ frappe.ui.form.on('POS Invoice', {
             // Get the 'pos_profile' query parameter from the URL
             const posProfile = new URLSearchParams(window.location.search).get("pos_profile");
 
-            if (!posProfile) {
-                return;
-            }
+            // if (!posProfile) {
+            //     return;
+            // }
 
             frappe.call({
                 method: "frappe.client.get",
@@ -67,7 +67,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         const urlParams = new URLSearchParams(window.location.search);
         const POSProfile = urlParams.get('pos_profile');
 
-        if (POSProfile) {
+        if (POSProfile && inputField?.length ) {
             inputField[0].value = POSProfile;
             inputField[0].dispatchEvent(new Event('change'));
         }

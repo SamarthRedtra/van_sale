@@ -28,8 +28,10 @@ class VanSaleDeliveryTrip(DeliveryTrip):
                 pos_profile.append("applicable_for_users", {"user": self.custom_user})
 
                 pos_profile.save()
+                pos_profile.reload()
 
                 self.add_assinee()
+                self.db_set('custom_pos_profile',pos_profile.name,commit=True)
             else:
                 frappe.throw(
                     f"No POS Profile found for warehouse: {self.custom_warehouse}"

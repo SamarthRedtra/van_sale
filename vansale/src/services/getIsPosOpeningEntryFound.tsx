@@ -10,7 +10,7 @@ const getIsPosOpeningEntryFound = async (warehouse: string) => {
       "x-frappe-csrf-token": window?.csrf_token ?? "",
     },
   });
-
+  
   return await res.data;
 };
 

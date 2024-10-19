@@ -11,6 +11,7 @@ export interface DeliveryTripDetails {
   company: string;
   custom_route: string;
   custom_pos_closing_entry?: string;
+  custom_pos_closing_entry_link:string;
   email_notification_sent: number;
   driver: string;
   driver_name: string;

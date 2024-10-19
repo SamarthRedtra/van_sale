@@ -288,7 +288,7 @@ def pos_close_entry(delivery_trip_id, warehouse):
     # Submit the document
     voucher.submit()
 
-    delivery_trip_doc.custom_pos_closing_entry = voucher.name
+    delivery_trip_doc.custom_pos_closing_entry_link = voucher.name
     delivery_trip_doc.save(ignore_permissions=True)
 
     is_partially_completed = False

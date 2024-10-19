@@ -118,7 +118,7 @@ export default function DeliveryStopDetails() {
     if (tripDetails) {
       const tripStatus = getTripStatus(tripDetails).status;
       return (
-        !!tripDetails.custom_pos_closing_entry ||
+        !!tripDetails.custom_pos_closing_entry_link ||
         tripStatus === TRIP_STATUS.DRAFT ||
         tripStatus === TRIP_STATUS.OVERDUE ||
         tripStatus === TRIP_STATUS.CANCELLED ||
