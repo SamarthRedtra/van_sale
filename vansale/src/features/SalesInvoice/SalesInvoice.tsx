@@ -17,9 +17,9 @@ export default function SalesInvoice() {
   const { trip_id, customer_id } = useParams();
   const navigate = useNavigate();
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
-  const [posProfile, setPosProfile] = useState<string>();
-  const [errorMsg, setErrorMsg] = useState<string>();
-  const [successMsg, setSuccessMsg] = useState<string>();
+  const [posProfile, setPosProfile] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [successMsg, setSuccessMsg] = useState<string>("");
   const { data: tripDetails, isLoading } = useFrappeGetDoc<DeliveryTripDetails>(
     "Delivery Trip",
     trip_id
@@ -210,6 +210,7 @@ export default function SalesInvoice() {
               handleClick={handleCreateInvoice}
               dialogCTAText="Create Invoice"
               dialogTitle="Are you sure you want create Sales Invoice?"
+              disabled={loading || isApiCalling}
             >
               <div className="flex justify-end p-4">
                 <button

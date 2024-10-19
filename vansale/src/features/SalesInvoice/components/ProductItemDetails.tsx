@@ -25,6 +25,7 @@ export default function ProductItemDetails({
   const [newQuantity, setNewQuantity] = useState<number | "">(item.quantity);
 
   const handleEditClick = () => {
+    setNewQuantity(item.quantity);
     setIsEditing(true);
   };
 

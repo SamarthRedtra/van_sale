@@ -8,9 +8,11 @@ import Button from "./components/Button.tsx";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 import clearCache from "@/services/clearCache.tsx";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginScreen() {
   const { login, currentUser, isLoading } = useFrappeAuth();
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [notification, setNotification] = useState<{
@@ -30,9 +32,8 @@ export default function LoginScreen() {
         password,
       });
       await clearCache(undefined, "User");
-      setNotification({ type: "success", message: "Login successful!" });
-
       navigate("/vansale");
+      setNotification({ type: "success", message: "Login successful!" });
     } catch (error: any) {
       setNotification({
         type: "error",
@@ -97,7 +98,32 @@ export default function LoginScreen() {
             </div>
 
             <div className="flex flex-col gap-2 items-start">
-              <Label htmlFor="password">Password</Label>
+              <div className="relative w-full">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e: {
+                    target: { value: SetStateAction<string> };
+                  }) => setPassword(e.target.value)}
+                  className="mt-1 pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
+              {/* <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -109,7 +135,7 @@ export default function LoginScreen() {
                   setPassword(e.target.value)
                 }
                 className="mt-1"
-              />
+              /> */}
             </div>
 
             <div>
@@ -137,18 +163,6 @@ export default function LoginScreen() {
               <AlertDescription>{notification.message}</AlertDescription>
             </Alert>
           )}
-
-          {/* <div className="mt-6">
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{" "}
-              <a
-                href="#"
-                className="font-medium text-primary hover:text-primary/80"
-              >
-                Sign up
-              </a>
-            </p>
-          </div> */}
         </div>
       </div>
     </div>

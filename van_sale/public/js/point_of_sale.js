@@ -29,13 +29,41 @@ frappe.ui.form.on('POS Invoice', {
 });
 
 
+function applyStyling() {
+    const filterContainer = $(".point-of-sale-app .items-selector .filter-section");
+
+    if (filterContainer.length) {
+        filterContainer.css("grid-template-columns", "repeat(1, minmax(0, 1fr))");
+
+        const itemCodeSearchField = filterContainer.find('.search-field');
+        if (itemCodeSearchField.length) {
+            itemCodeSearchField.css("margin", "0");
+        }
+    }
+
+    const productCardContainers = $(".items-container .item-wrapper");
+
+    if (productCardContainers.length) {
+        productCardContainers.each(function () {
+            const image = $(this).find('.item-display.abbr');
+            if (image.length) {
+                image.css({
+                    "min-height": "5rem",
+                    "height": "5rem",
+                });
+            }
+        });
+    }
+}
+
 frappe.pages["point-of-sale"].refresh = function (wrapper) {
     setTimeout(async () => {
+        if (!window?.frappe.is_mobile()) return
+
         const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
 
-        if (!inputField?.length && !window?.frappe.is_mobile()) {
-            return;
-        }
+        if (!inputField?.length) return;
+
         const urlParams = new URLSearchParams(window.location.search);
         const POSProfile = urlParams.get('pos_profile');
 
@@ -47,26 +75,29 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         $('.standard-actions .btn-primary').on('click', () => {
             setTimeout(() => {
                 window.location.reload();
-            }, 1000)
+                applyStyling();
+            }, 1900)
         });
     }, 1800);
 
     setTimeout(() => {
+        if (!window?.frappe.is_mobile()) return
+
+        setTimeout(() => {
+            applyStyling();
+        }, 2000);
+
         const customer_section = $(".customer-field")
+        const customerInputField = customer_section?.find('input[data-target="Customer"]')
 
-        const customerInputField = customer_section.find('input[data-target="Customer"]')
+        if (customerInputField?.length) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerName = urlParams.get('customer_name');
 
-        if (!customerInputField?.length) {
-            return;
-        }
-        const urlParams = new URLSearchParams(window.location.search);
-        const customerName = urlParams.get('customer_name');
-
-        if (customerName) {
-            customerInputField[0].value = customerName;
-            customerInputField[0].dispatchEvent(new Event('change'));
-
-            console.log("-----sdfjn------sd", document?.frappe)
+            if (customerName) {
+                customerInputField[0].value = customerName;
+                customerInputField[0].dispatchEvent(new Event('change'));
+            }
         }
     }, 1500);
 

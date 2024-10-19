@@ -134,7 +134,7 @@ export default function Header({ title }: HeaderProps) {
               {notificationsList.map((notification, index: number) => (
                 <div
                   key={index}
-                  className="flex items-start gap-4 p-4 border-b last:border-b-0 relative"
+                  className="flex items-start gap-4 p-4 border-b last:border-b-0 relative cursor-pointer"
                   onClick={handleClickNotifications(
                     notification?.document_name ?? "",
                     notification?.name ?? ""

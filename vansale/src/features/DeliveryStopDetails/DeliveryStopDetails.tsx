@@ -167,6 +167,7 @@ export default function DeliveryStopDetails() {
                   handleClick={handleCreatePaymentEntry}
                   dialogCTAText="Collect Payment"
                   dialogTitle="Are you sure you want collect Payment?"
+                  disabled={isApiCalling}
                 >
                   <button
                     className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
@@ -186,16 +187,29 @@ export default function DeliveryStopDetails() {
                 Create Credit Invoice
               </button>
             )}
-
-            <button
-              onClick={handleStartDelivery}
-              className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+            <ConfirmationComp
+              handleClick={handleStartDelivery}
+              dialogCTAText={
+                status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                  ? "Create Invoice"
+                  : "Start Delivery"
+              }
+              dialogTitle={
+                status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                  ? "Are you sure you want to Create POS Invoice"
+                  : "Are you sure you want to Start Delivery"
+              }
               disabled={isCTADisabled}
             >
-              {status === DELIVERY_STATUS_CONST.IN_TRANSIT
-                ? "Create POS Invoice"
-                : "Start Delivery"}
-            </button>
+              <button
+                className="bg-[#1faa00] text-white px-3 py-1 rounded font-semibold disabled:bg-gray-400 disabled:text-white"
+                disabled={isCTADisabled}
+              >
+                {status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                  ? "Create POS Invoice"
+                  : "Start Delivery"}
+              </button>
+            </ConfirmationComp>
           </div>
         </div>
       </div>

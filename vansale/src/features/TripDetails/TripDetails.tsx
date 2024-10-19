@@ -16,6 +16,7 @@ import ConfirmationComp from "../Components/ConfirmationComp.tsx";
 
 export default function TripDetails() {
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
+  const [isApiCalled, setIsApiCalled] = useState(false);
   const [apiStatus, setApiStatus] = useState<{
     status: "" | "success" | "error" | "info" | "warning";
     message: string;
@@ -47,6 +48,8 @@ export default function TripDetails() {
   const handleButtonClick = async () => {
     if (!data?.name || !data?.custom_warehouse) return;
     try {
+      setIsApiCalled(true);
+
       const res = await closePosEntry(data.name, data.custom_warehouse);
       if (res) {
         setApiStatus({
@@ -60,6 +63,8 @@ export default function TripDetails() {
         status: "error",
         message: err?.response?.data?.message ?? "Something went wrong!",
       });
+    } finally {
+      setIsApiCalled(false);
     }
   };
 
@@ -70,6 +75,8 @@ export default function TripDetails() {
     }
     (async () => {
       try {
+        setIsApiCalled(true);
+
         const res = await getIsPosOpeningEntryFound(data.custom_warehouse);
         if (res?.message?.is_found) {
           setIsPosOpenEntryFound(true);
@@ -79,6 +86,8 @@ export default function TripDetails() {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsPosOpenEntryFound(false);
+      } finally {
+        setIsApiCalled(false);
       }
     })();
   }, [data]);
@@ -162,6 +171,7 @@ export default function TripDetails() {
                 handleClick={handleButtonClick}
                 dialogCTAText="Close POS"
                 dialogTitle="Are you sure you want to close POS?"
+                disabled={isLoading || isApiCalled}
               >
                 <Button variant="destructive">Close POS</Button>
               </ConfirmationComp>
@@ -216,7 +226,7 @@ export default function TripDetails() {
             onChange={handleSearch}
           />
         </div>
-        {isLoading && <LoadingOverlay />}
+        {(isLoading || isApiCalled) && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
             {filteredStops.length ? (

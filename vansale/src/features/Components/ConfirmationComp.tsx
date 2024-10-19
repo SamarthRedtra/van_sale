@@ -16,6 +16,7 @@ interface ConfirmationCompProps {
   dialogTitle: string;
   dialogDescription?: string;
   dialogCTAText: string;
+  disabled?: boolean;
   handleClick: () => void;
 }
 
@@ -24,9 +25,17 @@ export default function ConfirmationComp({
   dialogCTAText,
   dialogTitle,
   dialogDescription,
+  disabled,
   handleClick,
 }: ConfirmationCompProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const onClick = () => {
+    if (!disabled) {
+      setIsDialogOpen(false);
+      handleClick();
+    }
+  };
 
   return (
     <div>
@@ -47,7 +56,7 @@ export default function ConfirmationComp({
             <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleClick}>
+            <AlertDialogAction onClick={onClick}>
               {dialogCTAText || "Confirm"}
             </AlertDialogAction>
           </AlertDialogFooter>
