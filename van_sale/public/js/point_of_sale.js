@@ -2,7 +2,7 @@ frappe.provide("erpnext.PointOfSale");
 
 frappe.ui.form.on('POS Invoice', {
     set_warehouse: function (frm) {
-        if (!frm.doc?.set_warehouse) {
+        if (!frm?.doc?.set_warehouse) {
             // Get the 'pos_profile' query parameter from the URL
             const posProfile = new URLSearchParams(window.location.search).get("pos_profile");
 
