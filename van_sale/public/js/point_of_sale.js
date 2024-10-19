@@ -1,5 +1,27 @@
 frappe.provide("erpnext.PointOfSale");
 
+frappe.ui.form.on('POS Invoice', {
+    set_warehouse: function (frm) {
+        if (!frm.doc?.set_warehouse) {
+            frappe.call({
+                method: "frappe.client.get",
+                args: {
+                    doctype: "POS Profile",
+                    name: "TN" // Replace with the actual profile name or ID
+                },
+                callback: function (data) {
+                    if (data?.message) {
+                        // Prefill the fields in POS entry with the fetched data
+                        frm.set_value("set_warehouse", data.message.warehouse);
+                        frm.refresh_field("set_warehouse");
+                    }
+                }
+            })
+        }
+    }
+});
+
+
 frappe.pages["point-of-sale"].refresh = function (wrapper) {
     setTimeout(async () => {
         const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
@@ -20,7 +42,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
                 window.location.reload();
             }, 1000)
         });
-    }, 2000);
+    }, 1800);
 
     setTimeout(() => {
         const customer_section = $(".customer-field")
@@ -37,7 +59,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
             customerInputField[0].value = customerName;
             customerInputField[0].dispatchEvent(new Event('change'));
         }
-    }, 2000);
+    }, 1500);
 
     setTimeout(() => {
         const frappeAwesomeBar =

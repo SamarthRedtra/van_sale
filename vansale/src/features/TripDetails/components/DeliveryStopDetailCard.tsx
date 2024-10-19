@@ -91,7 +91,7 @@ export default function DeliveryStopDetailCard({
               </span>
             ) : (
               <span
-                className={`text-[10px] py-1 rounded-3xl font-bold px-2 bg-[#1faa00] text-white"`}
+                className={`text-[10px] py-1 rounded-3xl font-bold px-2 text-green-800 bg-green-100`}
               >
                 Payment Collected
               </span>
