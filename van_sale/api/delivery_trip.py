@@ -214,18 +214,16 @@ def is_pos_opening_entry_found(warehouse):
 # van_sale.api.delivery_trip.pos_close_entry
 @frappe.whitelist()
 def pos_close_entry(delivery_trip_id, warehouse):
-    frappe.clear_cache()
     delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip_id)
 
-    # Check if warehouse is valid and associated with a POS Profile
+    # Validate warehouse and POS Profile
     if not warehouse or not frappe.db.exists("POS Profile", {"warehouse": warehouse}):
         return {"message": f"No POS Profile found for warehouse: {warehouse}"}
 
-    # Fetch the POS Profile document
-    pos_profile = frappe.get_value("POS Profile", {"warehouse": warehouse}, "name")
+    pos_profile = delivery_trip_doc.custom_pos_profile
     pos_profile_doc = frappe.get_doc("POS Profile", pos_profile)
 
-    # Check if there is an open POS Opening Entry for the POS Profile
+    # Check for open POS Opening Entry
     pos_opening = frappe.get_value(
         "POS Opening Entry", {"pos_profile": pos_profile, "status": "Open"}, "name"
     )
@@ -235,28 +233,50 @@ def pos_close_entry(delivery_trip_id, warehouse):
             "message": f"No POS Opening Entry found for POS Profile: {pos_profile_doc.name}"
         }
 
-    # Get the current datetime
+    # Current datetime
     now = datetime.now()
 
     pos_invoice_list = []
     total_item_quantity = 0
     grand_total = 0
-    rounded_total = 0
     paid_amount = 0
+    payment_data = {}
 
+    # Consolidate data from POS Invoices
     for stop in delivery_trip_doc.delivery_stops:
         if stop.custom_pos_invoice:
             pos_invoice_doc = frappe.get_doc("POS Invoice", stop.custom_pos_invoice)
+            
             if pos_invoice_doc.status == "Consolidated":
                 continue
 
             pos_invoice_list.append({"pos_invoice": stop.custom_pos_invoice})
             total_item_quantity += int(pos_invoice_doc.total_qty or 0)
             grand_total += float(pos_invoice_doc.grand_total or 0)
-            rounded_total += float(pos_invoice_doc.rounded_total or 0)
             paid_amount += float(pos_invoice_doc.paid_amount or 0)
 
-    # Create a new POS Closing Entry document
+            # Consolidate payment amounts by mode_of_payment
+            for payment in pos_invoice_doc.payments:
+                mode = payment.mode_of_payment
+                amount = float(payment.amount or 0)
+                if mode not in payment_data:
+                    payment_data[mode] = {"opening_amount": 0, "expected_amount": 0, "closing_amount": 0}
+                
+                payment_data[mode]["expected_amount"] += amount
+                payment_data[mode]["closing_amount"] += amount
+
+    # Prepare payment reconciliation list
+    payment_reconciliation = [
+        {
+            "mode_of_payment": mode,
+            "opening_amount": data["opening_amount"],
+            "expected_amount": data["expected_amount"],
+            "closing_amount": data["closing_amount"],
+        }
+        for mode, data in payment_data.items()
+    ]
+
+    # Create and submit the POS Closing Entry document
     voucher = frappe.get_doc(
         {
             "doctype": "POS Closing Entry",
@@ -268,35 +288,21 @@ def pos_close_entry(delivery_trip_id, warehouse):
             "posting_date": now.date(),
             "posting_time": now.strftime("%H:%M:%S"),
             "pos_transactions": pos_invoice_list,
-            "payment_reconciliation": [
-                {
-                    "mode_of_payment": "Cash",
-                    "opening_amount": 0,
-                    "expected_amount": grand_total,
-                    "closing_amount": paid_amount,
-                }
-            ],
+            "payment_reconciliation": payment_reconciliation,
             "grand_total": grand_total,
             "net_total": paid_amount,
             "total_quantity": total_item_quantity,
         }
     )
 
-    # Insert the document into the database
     voucher.insert()
-
-    # Submit the document
     voucher.submit()
 
+    # Update Delivery Trip status and save custom POS Closing Entry link
     delivery_trip_doc.custom_pos_closing_entry_link = voucher.name
     delivery_trip_doc.save(ignore_permissions=True)
 
-    is_partially_completed = False
-
-    for stop in delivery_trip_doc.delivery_stops:
-        if stop.visited == 0:
-            is_partially_completed = True
-            break
+    is_partially_completed = any(stop.visited == 0 for stop in delivery_trip_doc.delivery_stops)
 
     frappe.db.set_value(
         "Delivery Trip",
@@ -306,8 +312,8 @@ def pos_close_entry(delivery_trip_id, warehouse):
     )
     frappe.db.commit()
 
-    # Return the name of the newly created POS Closing Entry
-    return {"message": f"POS Closing Entry created"}
+    # Return success message
+    return {"message": "POS Closing Entry created"}
 
 
 # van_sale.api.delivery_trip.get_pending_payment_stops
