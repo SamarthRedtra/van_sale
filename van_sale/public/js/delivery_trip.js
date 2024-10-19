@@ -28,11 +28,10 @@ frappe.ui.form.on('Delivery Trip', {
                     frm.clear_table("delivery_stops");
 
                     // Add new delivery stops from the fetched data
-                    response?.message?.data?.forEach(element => {
+                    response?.message?.data?.forEach((element, index) => {
                         let stop = frm.add_child("delivery_stops");
                         frappe.model.set_value(stop.doctype, stop.name, {
                             "customer": element?.customer_name ?? "",
-                            "address": element?.customer_address ?? "",
                             "custom_mobile_no": element?.mobile_number ?? "",
                             "customer_address": element?.location ?? "",
                             "contact": element?.contact_name ?? "",
