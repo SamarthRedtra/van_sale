@@ -3,6 +3,7 @@ import { FrappeProvider } from "frappe-react-sdk";
 import AppRoutes from "./AppRoutes";
 import { BrowserRouter } from "react-router-dom";
 import { useEffect } from "react";
+import InstallPWA from "./features/Components/InstallPrompt";
 
 const askNotificationPermission = async () => {
   if ("Notification" in window && "serviceWorker" in navigator) {
@@ -26,6 +27,7 @@ function App() {
       <FrappeProvider>
         <BrowserRouter>
           <AppRoutes />
+          <InstallPWA />
         </BrowserRouter>
       </FrappeProvider>
     </div>
