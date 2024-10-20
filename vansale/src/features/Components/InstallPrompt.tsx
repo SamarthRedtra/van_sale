@@ -1,46 +1,23 @@
 import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
-  Button,
-  Popover,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import DownloadIcon from "@mui/icons-material/Download";
-import ShareIcon from "@mui/icons-material/Share";
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Download } from "lucide-react";
 
 const InstallPWA = () => {
   const [showDialog, setShowDialog] = useState(false);
-  const [iosInstallMessage, setIosInstallMessage] = useState(false);
   const deferredPrompt = useRef(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const isIos = () => {
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    return /iphone|ipad|ipod/.test(userAgent);
-  };
-
-  const isInStandaloneMode = () => {
-    return "standalone" in window.navigator && window.navigator.standalone;
-  };
 
   useEffect(() => {
-    if (isIos() && !isInStandaloneMode()) {
-      setIosInstallMessage(true);
-    }
-
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt.current = e;
-
-      if (isIos() && !isInStandaloneMode()) {
-        setIosInstallMessage(true);
-      } else {
-        setShowDialog(true);
-      }
+      setShowDialog(true);
 
       console.log("beforeinstallprompt event was fired.");
     });
@@ -63,70 +40,35 @@ const InstallPWA = () => {
     }
   };
 
-  const handlePopoverClose = () => {
-    setIosInstallMessage(false);
-    setAnchorEl(null);
-  };
-
   return (
     <div>
       {/* Install PWA Dialog */}
-      <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
-        <DialogTitle>Install Vansale</DialogTitle>
-        <DialogContent>
-          {/* <Typography>
-            Get the app on your device for easy access & a better experience!
-          </Typography> */}
-          <Button
-            variant="contained"
-            onClick={handleInstallClick}
-            fullWidth
-            startIcon={<DownloadIcon />}
-          >
-            Install
-          </Button>
+      <Dialog open={showDialog}>
+        <DialogContent className="sm:max-w-[90%] max-w-[95%] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="text-xl font-bold text-left">
+              Install Vansale
+            </DialogTitle>
+          </DialogHeader>
+          <div className="p-6 space-y-4">
+            <p className="text-sm text-muted-foreground text-left">
+              Click the button below to install Vansale on your device.
+            </p>
+            <p className="text-sm text-muted-foreground text-left">
+              Vansale will be installed on your device and you can start using
+              it immediately.
+            </p>
+          </div>
+          <DialogFooter className="px-6 pb-6">
+            <Button
+              className="w-full bg-black text-white hover:bg-gray-800"
+              onClick={handleInstallClick}
+            >
+              <Download className="mr-2 h-4 w-4" /> Install
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* iOS Installation Popover */}
-      <Popover
-        open={iosInstallMessage}
-        anchorEl={anchorEl}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <div style={{ padding: "1rem", backgroundColor: "#e0f7fa" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6">Install Frappe HR</Typography>
-            <IconButton size="small" onClick={handlePopoverClose}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-          <Typography variant="body2">
-            Get the app on your iPhone for easy access & a better experience.
-            <br />
-            Tap{" "}
-            <ShareIcon
-              fontSize="small"
-              style={{ verticalAlign: "middle" }}
-            />{" "}
-            and then "Add to Home Screen"
-          </Typography>
-        </div>
-      </Popover>
     </div>
   );
 };
