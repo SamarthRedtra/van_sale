@@ -57,58 +57,60 @@ function applyStyling() {
 }
 
 frappe.pages["point-of-sale"].refresh = function (wrapper) {
-    setTimeout(async () => {
-        if (!window?.frappe.is_mobile()) return
+    $(document).ready(() => {
+        setTimeout(async () => {
+            if (!window?.frappe.is_mobile()) return
 
-        const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
+            const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
 
-        if (!inputField?.length) return;
+            if (!inputField?.length) return;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const POSProfile = urlParams.get('pos_profile');
+            const urlParams = new URLSearchParams(window.location.search);
+            const POSProfile = urlParams.get('pos_profile');
 
-        if (POSProfile && inputField?.length ) {
-            inputField[0].value = POSProfile;
-            inputField[0].dispatchEvent(new Event('change'));
-        }
+            if (POSProfile && inputField?.length) {
+                inputField[0].value = POSProfile;
+                inputField[0].dispatchEvent(new Event('change'));
+            }
 
-        $('.standard-actions .btn-primary').on('click', () => {
-            setTimeout(() => {
-                window.location.reload();
-                applyStyling();
-            }, 1900)
-        });
-    }, 1800);
-
-    setTimeout(() => {
-        if (!window?.frappe.is_mobile()) return
+            $('.standard-actions .btn-primary').on('click', () => {
+                setTimeout(() => {
+                    window.location.reload();
+                    applyStyling();
+                }, 1900)
+            });
+        }, 1800);
 
         setTimeout(() => {
-            applyStyling();
-        }, 2000);
+            if (!window?.frappe.is_mobile()) return
 
-        const customer_section = $(".customer-field")
-        const customerInputField = customer_section?.find('input[data-target="Customer"]')
+            setTimeout(() => {
+                applyStyling();
+            }, 2000);
 
-        if (customerInputField?.length) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const customerName = urlParams.get('customer_name');
+            const customer_section = $(".customer-field")
+            const customerInputField = customer_section?.find('input[data-target="Customer"]')
 
-            if (customerName) {
-                customerInputField[0].value = customerName;
-                customerInputField[0].dispatchEvent(new Event('change'));
+            if (customerInputField?.length) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const customerName = urlParams.get('customer_name');
+
+                if (customerName) {
+                    customerInputField[0].value = customerName;
+                    customerInputField[0].dispatchEvent(new Event('change'));
+                }
             }
-        }
-    }, 1500);
+        }, 1500);
 
-    setTimeout(() => {
-        const frappeAwesomeBar =
-            document?.body?.getElementsByClassName('search-bar')?.[0]
+        setTimeout(() => {
+            const frappeAwesomeBar =
+                document?.body?.getElementsByClassName('search-bar')?.[0]
 
-        if (frappeAwesomeBar) {
-            frappeAwesomeBar.remove()
-        }
-    }, 50)
+            if (frappeAwesomeBar) {
+                frappeAwesomeBar.remove()
+            }
+        }, 50)
+    })
 
     // Set up a MutationObserver to detect when the button is added to the DOM
     const observer = new MutationObserver(function (mutationsList) {
