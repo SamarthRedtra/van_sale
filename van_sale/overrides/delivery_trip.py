@@ -26,6 +26,7 @@ class VanSaleDeliveryTrip(DeliveryTrip):
                 pos_profile.applicable_for_users = []
 
                 pos_profile.append("applicable_for_users", {"user": self.custom_user})
+                pos_profile.custom_is_driver_profile = 1
 
                 pos_profile.save()
                 pos_profile.reload()
