@@ -1,0 +1,71 @@
+[
+ {
+  "columns": [
+   {
+    "column_name": "Draft",
+    "indicator": "Gray",
+    "order": "[]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Scheduled",
+    "indicator": "Gray",
+    "order": "[\n \"MAT-DT-2024-00014\"\n]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "In Transit",
+    "indicator": "Gray",
+    "order": "[\n \"MAT-DT-2024-00010\"\n]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Completed",
+    "indicator": "Gray",
+    "order": "[\n \"MAT-DT-2024-00012\",\n \"MAT-DT-2024-00009\",\n \"MAT-DT-2024-00008\"\n]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Cancelled",
+    "indicator": "Gray",
+    "order": "[\n \"MAT-DT-2024-00011\"\n]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   },
+   {
+    "column_name": "Partially Completed",
+    "indicator": "Gray",
+    "order": "[\n \"MAT-DT-2024-00013\"\n]",
+    "parent": "Delivery Trip",
+    "parentfield": "columns",
+    "parenttype": "Kanban Board",
+    "status": "Active"
+   }
+  ],
+  "docstatus": 0,
+  "doctype": "Kanban Board",
+  "field_name": "status",
+  "fields": null,
+  "filters": null,
+  "kanban_board_name": "Delivery Trip",
+  "modified": "2024-10-20 23:47:58.583112",
+  "name": "Delivery Trip",
+  "private": 0,
+  "reference_doctype": "Delivery Trip",
+  "show_labels": 0
+ }
+]
