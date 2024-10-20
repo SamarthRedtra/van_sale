@@ -6,11 +6,15 @@ import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
   strategies: "injectManifest",
+  registerType: 'autoUpdate',
+    injectRegister: null,
+    outDir: "../van_sale/public/vansale",
   injectManifest: {
     swSrc: "src/sw.js", // Path to your custom service worker
   },
   manifest: {
     name: "Vansale",
+    start_url:"/vansale",
     short_name: "Vansale",
     description: "A sales and delivery app",
     theme_color: "#ffffff",
