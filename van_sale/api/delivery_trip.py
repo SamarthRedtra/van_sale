@@ -192,22 +192,28 @@ def start_delivery(trip_name, stop_name):
 
 # van_sale.api.delivery_trip.is_pos_opening_entry_found
 @frappe.whitelist()
-def is_pos_opening_entry_found(warehouse):
+def is_pos_opening_entry_found(delivery_trip_id):
     response = {"message": "success", "is_found": False}
 
-    if not warehouse or not frappe.db.exists("POS Profile", {"warehouse": warehouse}):
+    if not delivery_trip_id or not frappe.db.exists("Delivery Trip", delivery_trip_id):
         return response
 
-    pos_profile = frappe.get_doc("POS Profile", {"warehouse": warehouse})
+    delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip_id)
 
     pos_opening_entry = frappe.db.exists(
-        "POS Opening Entry", {"pos_profile": pos_profile.name, "status": "Open"}
+        "POS Opening Entry",
+        {"custom_delivery_trip": delivery_trip_doc.name, "status": "Open"},
     )
+
+    if not pos_opening_entry:
+        return response
 
     return {
         "message": "success",
-        "is_found": True if pos_opening_entry else False,
-        "pos_profile": pos_profile.name,
+        "is_found": True,
+        "pos_profile": frappe.get_value(
+            "POS Opening Entry", pos_opening_entry, "pos_profile"
+        ),
     }
 
 
@@ -246,7 +252,7 @@ def pos_close_entry(delivery_trip_id, warehouse):
     for stop in delivery_trip_doc.delivery_stops:
         if stop.custom_pos_invoice:
             pos_invoice_doc = frappe.get_doc("POS Invoice", stop.custom_pos_invoice)
-            
+
             if pos_invoice_doc.status == "Consolidated":
                 continue
 
@@ -260,8 +266,12 @@ def pos_close_entry(delivery_trip_id, warehouse):
                 mode = payment.mode_of_payment
                 amount = float(payment.amount or 0)
                 if mode not in payment_data:
-                    payment_data[mode] = {"opening_amount": 0, "expected_amount": 0, "closing_amount": 0}
-                
+                    payment_data[mode] = {
+                        "opening_amount": 0,
+                        "expected_amount": 0,
+                        "closing_amount": 0,
+                    }
+
                 payment_data[mode]["expected_amount"] += amount
                 payment_data[mode]["closing_amount"] += amount
 
@@ -302,7 +312,9 @@ def pos_close_entry(delivery_trip_id, warehouse):
     delivery_trip_doc.custom_pos_closing_entry_link = voucher.name
     delivery_trip_doc.save(ignore_permissions=True)
 
-    is_partially_completed = any(stop.visited == 0 for stop in delivery_trip_doc.delivery_stops)
+    is_partially_completed = any(
+        stop.visited == 0 for stop in delivery_trip_doc.delivery_stops
+    )
 
     frappe.db.set_value(
         "Delivery Trip",
@@ -442,3 +454,29 @@ def clear_user_cache(user=None, doctype=None):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Cache Clearing Error")
         return {"error": frappe._("Error clearing cache: {0}").format(str(e))}
+
+
+# van_sale.api.delivery_trip.update_pos_opening_entry
+@frappe.whitelist()
+def update_pos_opening_entry(delivery_trip, pos_profile):
+    if not delivery_trip or not pos_profile:
+        return
+
+    if frappe.db.exists(
+        "POS Opening Entry", {"pos_profile": pos_profile, "status": "Open"}
+    ) and frappe.db.exists("Delivery Trip", delivery_trip):
+        pos_opening_entry_doc = frappe.get_doc(
+            "POS Opening Entry", {"pos_profile": pos_profile, "status": "Open"}
+        )
+
+        pos_opening_entry_doc.update({"custom_delivery_trip": delivery_trip})
+
+        pos_opening_entry_doc.save(ignore_permissions=True)
+
+        delivery_trip = frappe.get_doc("Delivery Trip", delivery_trip)
+
+        delivery_trip.update(
+            {"custom_pos_opening_entry_link": pos_opening_entry_doc.name}
+        )
+
+        delivery_trip.save(ignore_permissions=True)

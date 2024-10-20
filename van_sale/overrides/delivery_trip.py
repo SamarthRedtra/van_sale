@@ -10,8 +10,8 @@ class VanSaleDeliveryTrip(DeliveryTrip):
                 "doctype": "Delivery Trip",
                 "name": self.name,
                 "assign_to": [self.custom_user],
-            }, 
-            ignore_permissions=True
+            },
+            ignore_permissions=True,
         )
 
     def on_submit(self):
@@ -31,10 +31,20 @@ class VanSaleDeliveryTrip(DeliveryTrip):
                 pos_profile.reload()
 
                 self.add_assinee()
-                self.db_set('custom_pos_profile',pos_profile.name,commit=True)
+                self.db_set("custom_pos_profile", pos_profile.name, commit=True)
             else:
                 frappe.throw(
                     f"No POS Profile found for warehouse: {self.custom_warehouse}"
                 )
         else:
             frappe.throw("Both warehouse and user are not valid.")
+
+    def on_cancel(self):
+        if self.custom_pos_opening_entry_link:
+            frappe.throw(
+                frappe._(
+                    "Can not cancel an already partially completed Delivery Trip. Pleas ask driver to close POS to close the trip."
+                )
+            )
+
+        super().on_cancel()

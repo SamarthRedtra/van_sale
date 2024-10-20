@@ -67,6 +67,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
 
             const urlParams = new URLSearchParams(window.location.search);
             const POSProfile = urlParams.get('pos_profile');
+            const tripId = urlParams.get('trip_id');
 
             if (POSProfile && inputField?.length) {
                 inputField[0].value = POSProfile;
@@ -75,9 +76,21 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
 
             $('.standard-actions .btn-primary').on('click', () => {
                 setTimeout(() => {
-                    window.location.reload();
                     applyStyling();
-                }, 1900)
+
+                    if (tripId && (POSProfile || window?.cur_pos?.pos_profile)) {
+                        frappe.call({
+                            method: "van_sale.api.delivery_trip.update_pos_opening_entry",
+                            args: {
+                                delivery_trip: tripId,
+                                pos_profile: POSProfile || window?.cur_pos?.pos_profile // Replace with the actual profile name or ID
+                            },
+                        })
+                    }
+
+                    setTimeout(() => window.location.reload(), 1800);
+
+                }, 3200)
             });
         }, 1800);
 

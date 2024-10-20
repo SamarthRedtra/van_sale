@@ -11,7 +11,7 @@ export interface DeliveryTripDetails {
   company: string;
   custom_route: string;
   custom_pos_closing_entry?: string;
-  custom_pos_closing_entry_link:string;
+  custom_pos_closing_entry_link: string;
   email_notification_sent: number;
   driver: string;
   driver_name: string;
@@ -24,6 +24,7 @@ export interface DeliveryTripDetails {
   custom_user: string;
   status: string;
   doctype: string;
+  custom_pos_profile?: string;
   delivery_stops: DeliveryStop[];
 }
 

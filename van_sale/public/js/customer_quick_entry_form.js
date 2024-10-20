@@ -8,7 +8,7 @@ frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 		this.skip_redirect_on_error = true;
 	}
 
-	render_dialog() {		
+	render_dialog() {
 		this.mandatory = this.mandatory.concat(this.get_variant_fields());
 		super.render_dialog();
 

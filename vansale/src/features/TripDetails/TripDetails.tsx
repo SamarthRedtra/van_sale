@@ -77,7 +77,7 @@ export default function TripDetails() {
       try {
         setIsApiCalled(true);
 
-        const res = await getIsPosOpeningEntryFound(data.custom_warehouse);
+        const res = await getIsPosOpeningEntryFound(data.name);
         if (res?.message?.is_found) {
           setIsPosOpenEntryFound(true);
         } else {

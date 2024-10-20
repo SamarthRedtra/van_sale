@@ -43,10 +43,10 @@ export default function DeliveryStopDetails() {
 
         setIsApiCalling(true);
 
-        const res = await getIsPosOpeningEntryFound(
-          tripDetails?.custom_warehouse
+        const res = await getIsPosOpeningEntryFound(tripDetails?.name);
+        setPosProfile(
+          res?.message?.pos_profile || tripDetails?.custom_pos_profile || ""
         );
-        setPosProfile(res?.message?.pos_profile);
         if (res?.message?.is_found) {
           setIsPosOpenEntryFound(true);
         } else {

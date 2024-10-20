@@ -137,8 +137,8 @@ override_doctype_class = {
     "Warehouse": "van_sale.overrides.warehouse.VanSaleWarehouse",
     "Delivery Trip": "van_sale.overrides.delivery_trip.VanSaleDeliveryTrip",
     "POS Invoice": "van_sale.overrides.pos_invoice.VanSalePOSInvoice",
-    "Customer":"van_sale.overrides.customer.CustomCustomer",
-    "Contact":"van_sale.overrides.contact.CustomContact"
+    "Customer": "van_sale.overrides.customer.CustomCustomer",
+    "Contact": "van_sale.overrides.contact.CustomContact",
 }
 
 # Document Events
