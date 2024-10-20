@@ -1,23 +1,26 @@
-import { precacheAndRoute } from 'workbox-precaching';
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
 // This will be replaced with the precache manifest during the build
 precacheAndRoute(self.__WB_MANIFEST);
 
-const CACHE_NAME = 'vansale-cache-v1';
-const urlsToCache = [
-    '/',
-    '/index.html',
-];
+// Clean up old caches
+cleanupOutdatedCaches()
 
-// Install event
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('Opened cache');
-            return cache.addAll(urlsToCache);
-        })
-    );
-});
+// const CACHE_NAME = 'vansale-cache-v1';
+// const urlsToCache = [
+//     '/',
+//     '/index.html',
+// ];
+
+// // Install event
+// self.addEventListener('install', (event) => {
+//     event.waitUntil(
+//         caches.open(CACHE_NAME).then((cache) => {
+//             console.log('Opened cache');
+//             return cache.addAll(urlsToCache);
+//         })
+//     );
+// });
 
 // Fetch event
 self.addEventListener('fetch', (event) => {

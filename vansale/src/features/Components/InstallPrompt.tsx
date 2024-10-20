@@ -43,7 +43,7 @@ const InstallPWA = () => {
   return (
     <div>
       {/* Install PWA Dialog */}
-      <Dialog open={showDialog}>
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="sm:max-w-[90%] max-w-[95%] p-0">
           <DialogHeader className="p-6 pb-0">
             <DialogTitle className="text-xl font-bold text-left">
