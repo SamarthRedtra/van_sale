@@ -112,3 +112,143 @@
   height: 20px;
   margin: 0 10px;
 }
+
+/* Updated CSS for van_sale */
+
+.vansale_modal {
+  background-color: #ffffff;
+  max-width: 1200px;
+  overflow: auto;
+}
+.vansale_modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.vansale_modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+.vansale_close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+.vansale_status-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.vansale_status-tag {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.vansale_status-tag.vansale_active {
+  transform: scale(1.05);
+}
+.vansale_status-tag.vansale_all {
+  background-color: #e9ecef;
+  color: #495057;
+}
+.vansale_status-tag.vansale_pending {
+  background-color: #ffeeba;
+  color: #856404;
+}
+.vansale_status-tag.vansale_in-transit {
+  background-color: #b8daff;
+  color: #004085;
+}
+.vansale_status-tag.vansale_delivered {
+  background-color: #c3e6cb;
+  color: #155724;
+}
+.vansale_status-tag.vansale_cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.vansale_delivery-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+.vansale_delivery-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+.vansale_delivery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.vansale_customer-info h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #333;
+}
+.vansale_customer-info p {
+  margin: 4px 0;
+  color: #666;
+}
+.vansale_customer-address {
+  font-style: italic;
+}
+.vansale_status-info {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+.vansale_status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.vansale_status-icon.vansale_pending {
+  background-color: #ffc107;
+}
+.vansale_status-icon.vansale_in-transit {
+  background-color: #007bff;
+}
+.vansale_status-icon.vansale_delivered {
+  background-color: #28a745;
+}
+.vansale_status-icon.vansale_cancelled {
+  background-color: #dc3545;
+}
+.vansale_delivery-timeline {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+.vansale_timeline {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #dee2e6;
+  margin: 0 8px;
+  position: relative;
+}
+.vansale_moving-truck-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+}
+.vansale_start-time,
+.vansale_end-time {
+  font-size: 12px;
+  color: #6c757d;
+}
