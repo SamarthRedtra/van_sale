@@ -59,6 +59,8 @@ export interface DeliveryStop {
   custom_sales_invoice?: string;
   custom_start_timing?: string;
   custom_end_timing?: string;
+  is_cancelled?: boolean;
+  departure_time?: string;
 }
 
 // POS Invoice Types

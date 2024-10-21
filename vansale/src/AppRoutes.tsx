@@ -9,6 +9,7 @@ import { useFrappeAuth } from "frappe-react-sdk";
 import { useEffect } from "react";
 import SalesInvoice from "./features/SalesInvoice/SalesInvoice.tsx";
 import PaymentDueStops from "./features/PaymentDueStops/PaymentDueStops.tsx";
+import CancelledStops from "./features/CancelledStops/CancelledStops.tsx";
 
 type isRouteActive = boolean;
 
@@ -19,6 +20,7 @@ const pageRoutes: RouteConfig = [
   ["/vansale", <DeliveryTrip />, true],
   ["/vansale/delivery-trip/:trip_id", <TripDetails />, true],
   ["/vansale/payment-due-stops", <PaymentDueStops />, true],
+  ["/vansale/cancelled-stops", <CancelledStops />, true],
   [
     "/vansale/delivery-trip/:trip_id/:customer_id",
     <DeliveryStopDetails />,

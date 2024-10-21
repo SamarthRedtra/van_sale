@@ -359,6 +359,41 @@ def get_pending_payment_stops():
     }
 
 
+# van_sale.api.delivery_trip.get_cancelled_stops
+@frappe.whitelist()
+def get_cancelled_stops():
+    user = frappe.session.user
+
+    # Fetch the delivery trip names associated with the user in a single query
+    delivery_name_list = frappe.get_all(
+        "Delivery Trip", filters={"custom_user": user, "status": ["in",["Partially Completed", "Completed"]]}, pluck="name"
+    )
+
+    # If no delivery trips found, return an empty list early
+    if not delivery_name_list:
+        return []
+
+    # Fetch the unpaid credit delivery stops in one go, filtering by the parent delivery trips
+    delivery_stop_list = frappe.get_all(
+        "Delivery Stop",
+        filters={
+            "visited": 0,
+            "parent": ["in", delivery_name_list],
+        },
+        fields=["*"],
+    )
+
+    # Adding static field is_cancelled = True
+    for stop in delivery_stop_list:
+        stop["is_cancelled"] = True
+        stop["departure_time"] = frappe.get_value("Delivery Trip", stop.parent, "departure_time")
+
+    return {
+        "message": "Success",
+        "delivery_stops": delivery_stop_list,
+    }
+
+
 # van_sale.api.delivery_trip.get_notification_list
 @frappe.whitelist()
 def get_notification_list():

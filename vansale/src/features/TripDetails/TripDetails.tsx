@@ -234,7 +234,9 @@ export default function TripDetails() {
                 (stop: DeliveryStop, index: Key | null | undefined) => (
                   <DeliveryStopDetailCard
                     key={index}
+                    tripDetails={data}
                     stop={stop}
+                    tripStatus={data?.status}
                     isCTAAllowed
                     hasIcon
                   />

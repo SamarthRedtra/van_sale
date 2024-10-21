@@ -5,7 +5,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet.tsx";
-import { Bell, BellDot, HandCoins, LogOut, Menu, Truck } from "lucide-react";
+import {
+  Bell,
+  BellDot,
+  HandCoins,
+  LogOut,
+  Menu,
+  Truck,
+  Ban,
+} from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { useEffect, useState } from "react";
 import { useFrappeAuth } from "frappe-react-sdk";
@@ -103,6 +111,14 @@ export default function Header({ title }: HeaderProps) {
             >
               <HandCoins className="mr-2 h-5 w-5" />
               Payment Due Stops
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={handleOptionClick("/cancelled-stops")}
+            >
+              <Ban className="mr-2 h-5 w-5" />
+              Cancelled Stops
             </Button>
             {/* <Button
               variant="ghost"

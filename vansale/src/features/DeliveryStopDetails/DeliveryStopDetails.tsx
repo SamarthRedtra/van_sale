@@ -113,10 +113,10 @@ export default function DeliveryStopDetails() {
       setIsApiCalling(false);
     }
   };
+  const tripStatus = tripDetails ? getTripStatus(tripDetails).status : "";
 
   const isCTADisabled = useMemo(() => {
     if (tripDetails) {
-      const tripStatus = getTripStatus(tripDetails).status;
       return (
         !!tripDetails.custom_pos_closing_entry_link ||
         tripStatus === TRIP_STATUS.DRAFT ||
@@ -128,7 +128,7 @@ export default function DeliveryStopDetails() {
       );
     }
     return status === DELIVERY_STATUS_CONST.DELIVERED;
-  }, [status, tripDetails]);
+  }, [status, tripDetails, tripStatus]);
 
   return (
     <div className="mx-auto min-h-screen">
@@ -217,7 +217,13 @@ export default function DeliveryStopDetails() {
       {!isLoading && (
         <>
           <div className="flex flex-col gap-4 p-4">
-            {data && <DeliveryStopDetailCard stop={data} />}
+            {data && (
+              <DeliveryStopDetailCard
+                stop={data}
+                tripStatus={tripStatus}
+                tripDetails={tripDetails}
+              />
+            )}
           </div>
 
           {status === DELIVERY_STATUS_CONST.DELIVERED &&

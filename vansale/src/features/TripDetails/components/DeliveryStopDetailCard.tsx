@@ -1,13 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { DELIVERY_STATUS_CONST } from "../../../utils/constants.ts";
+import {
+  DELIVERY_STATUS_CONST,
+  TRIP_STATUS,
+} from "../../../utils/constants.ts";
 import { ClockIcon } from "@radix-ui/react-icons";
-import { DeliveryStop } from "../../../utils/types";
+import { DeliveryStop, DeliveryTripDetails } from "../../../utils/types";
 import { getDeliveryStatus } from "../../../utils/getStatus.ts";
 import { PhoneCall } from "lucide-react";
 import { format } from "date-fns";
 
 interface DeliveryStopDetailCardProps {
   stop: DeliveryStop;
+  tripDetails?: DeliveryTripDetails;
+  tripStatus?: string;
   showStopName?: boolean;
   isCTAAllowed?: boolean;
   hasIcon?: boolean;
@@ -15,6 +20,8 @@ interface DeliveryStopDetailCardProps {
 
 export default function DeliveryStopDetailCard({
   stop,
+  tripDetails,
+  tripStatus,
   showStopName = false,
   isCTAAllowed = false,
   hasIcon = false,
@@ -69,17 +76,28 @@ export default function DeliveryStopDetailCard({
           )}
         </div>
         <div className="flex justify-start gap-2">
-          <span
-            className={`text-[10px] py-1 rounded-3xl font-bold px-2 ${
-              status === DELIVERY_STATUS_CONST.IN_TRANSIT
-                ? "bg-[#00abff] text-white"
-                : status === DELIVERY_STATUS_CONST.PENDING
-                ? "bg-[#ffefc2] text-[#9e7602]"
-                : "bg-[#1faa00] text-white"
-            }`}
-          >
-            {status}
-          </span>
+          {stop?.is_cancelled ||
+          (status != DELIVERY_STATUS_CONST.DELIVERED &&
+            (tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED ||
+              tripStatus === TRIP_STATUS.COMPLETED)) ? (
+            <span
+              className={`text-[10px] py-1 rounded-3xl font-bold px-2 text-[#7F1D1D] bg-[#FEE2E2]`}
+            >
+              Cancelled
+            </span>
+          ) : (
+            <span
+              className={`text-[10px] py-1 rounded-3xl font-bold px-2 ${
+                status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                  ? "bg-[#00abff] text-white"
+                  : status === DELIVERY_STATUS_CONST.PENDING
+                  ? "bg-[#ffefc2] text-[#9e7602]"
+                  : "bg-[#1faa00] text-white"
+              }`}
+            >
+              {status}
+            </span>
+          )}
 
           {Boolean(stop?.visited) &&
             Boolean(stop?.custom_is_credit) &&
@@ -102,9 +120,14 @@ export default function DeliveryStopDetailCard({
         <div className="flex p-2 flex-col gap-1.5 border border-gray-200">
           <p className="flex items-center gap-1 text-xs">
             <ClockIcon color="#00f" />
-            <span>Est. Arrival</span>
+            <span>Delivery Date</span>
           </p>
-          <span className="font-semibold">{"--:-- --"}</span>
+          <span className="font-semibold">
+            {(tripDetails?.departure_time &&
+              format(new Date(tripDetails.departure_time), "dd MMM yyyy")) ||
+              (stop.departure_time &&
+                format(new Date(stop.departure_time), "dd MMM yyyy"))}
+          </span>
         </div>
         <div className="flex p-2 rounded-br-md justify-between items-center flex-1 border border-gray-200">
           <div className="flex flex-col gap-1.5">

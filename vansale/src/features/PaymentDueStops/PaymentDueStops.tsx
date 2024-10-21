@@ -44,15 +44,6 @@ export default function PaymentDueStops() {
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
         <Header title="Payment Due Stops" />
-
-        <div className="bg-purple-500 p-4">
-          <div className="flex justify-between items-center">
-            <span className="text-white font-semibold">My Planned Trips</span>
-            {/* <button className="bg-white text-purple-500 px-3 py-1 rounded-full text-sm">
-              Today
-            </button> */}
-          </div>
-        </div>
       </div>
 
       <div className="p-4">
