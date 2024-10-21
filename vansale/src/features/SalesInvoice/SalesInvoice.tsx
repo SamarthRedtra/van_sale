@@ -50,7 +50,10 @@ export default function SalesInvoice() {
         const res = await getIsPosOpeningEntryFound(
           tripDetails?.custom_warehouse
         );
-        setPosProfile(res?.message?.pos_profile);
+
+        setPosProfile(
+          res?.message?.pos_profile || tripDetails?.custom_pos_profile || ""
+        );
         if (res?.message?.is_found) {
           setIsPosOpenEntryFound(true);
         } else {
