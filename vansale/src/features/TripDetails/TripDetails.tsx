@@ -13,6 +13,7 @@ import closePosEntry from "../../services/closePosEntry.tsx";
 import Toast from "../Components/Toast.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import ConfirmationComp from "../Components/ConfirmationComp.tsx";
+import closeDeliveryTrip from "@/services/closeDeliveryTrip.tsx";
 
 export default function TripDetails() {
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
@@ -55,6 +56,28 @@ export default function TripDetails() {
         setApiStatus({
           status: "success",
           message: "Successfully closed POS",
+        });
+        mutate();
+      }
+    } catch (err: any) {
+      setApiStatus({
+        status: "error",
+        message: err?.response?.data?.message ?? "Something went wrong!",
+      });
+    } finally {
+      setIsApiCalled(false);
+    }
+  };
+
+  const handleDeliveryTripClose = async () => {
+    if (!data?.name) return;
+    try {
+      setIsApiCalled(true);
+      const res = await closeDeliveryTrip(data.name);
+      if (res) {
+        setApiStatus({
+          status: "success",
+          message: "Successfully Delivery Trip Closed",
         });
         mutate();
       }
@@ -164,18 +187,27 @@ export default function TripDetails() {
             </p>
           </div>
           {isPosOpenEntryFound &&
-            (data?.status === TRIP_STATUS.IN_TRANSIT ||
-              data?.status === TRIP_STATUS.COMPLETED ||
-              data?.status === TRIP_STATUS.PARTIALLY_COMPLETED) && (
-              <ConfirmationComp
-                handleClick={handleButtonClick}
-                dialogCTAText="Close POS"
-                dialogTitle="Are you sure you want to close POS?"
-                disabled={isLoading || isApiCalled}
-              >
-                <Button variant="destructive">Close POS</Button>
-              </ConfirmationComp>
-            )}
+          (data?.status === TRIP_STATUS.IN_TRANSIT ||
+            data?.status === TRIP_STATUS.COMPLETED ||
+            data?.status === TRIP_STATUS.PARTIALLY_COMPLETED) ? (
+            <ConfirmationComp
+              handleClick={handleButtonClick}
+              dialogCTAText="Close POS"
+              dialogTitle="Are you sure you want to close POS?"
+              disabled={isLoading || isApiCalled}
+            >
+              <Button variant="destructive">Close POS</Button>
+            </ConfirmationComp>
+          ) : data?.status === TRIP_STATUS.IN_TRANSIT ? (
+            <ConfirmationComp
+              handleClick={handleDeliveryTripClose}
+              dialogCTAText="Close Trip"
+              dialogTitle="Are you sure you want to close Trip?"
+              disabled={isLoading || isApiCalled}
+            >
+              <Button variant="destructive">Close Trip</Button>
+            </ConfirmationComp>
+          ) : null}
         </div>
       </div>
 

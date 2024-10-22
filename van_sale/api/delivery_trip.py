@@ -515,3 +515,25 @@ def update_pos_opening_entry(delivery_trip, pos_profile):
         )
 
         delivery_trip.save(ignore_permissions=True)
+
+
+# van_sale.api.delivery_trip.close_in_transit_delivery_trip
+@frappe.whitelist()
+def close_in_transit_delivery_trip(delivery_trip):
+    if not frappe.db.exists("Delivery Trip", delivery_trip):
+        frappe.throw(frappe._("Delivery Trip not found."), frappe.DoesNotExistError)
+
+    delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip)
+    
+    if delivery_trip_doc.status == "In Transit":
+        is_partially_completed = any(
+            stop.visited == 0 for stop in delivery_trip_doc.delivery_stops
+        )
+
+        frappe.db.set_value(
+            "Delivery Trip",
+            delivery_trip,
+            "status",
+            "Partially Completed" if is_partially_completed else "Completed",
+        )
+        frappe.db.commit()
