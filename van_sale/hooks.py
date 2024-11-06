@@ -5,6 +5,23 @@ app_description = "Redtra Technologies (Van Sales)"
 app_email = "info@redtra.com"
 app_license = "mit"
 
+app_home = "/app/vansale"
+
+app_email = "info@redtra.com"
+app_logo_url = "/assets/van_sale/vansale.png"
+
+add_to_apps_screen = [
+	{
+		"name": "van_sale",
+		"logo": "/assets/van_sale/vansale.png",
+		"title": "MOVE",
+		"route": "/app/vansale",
+        "has_permission": "van_sale.setup.check_app_permission",
+        "app_logo_url": "/assets/van_sale/vansale.png"
+	}
+]
+
+
 # Apps
 # ------------------
 
