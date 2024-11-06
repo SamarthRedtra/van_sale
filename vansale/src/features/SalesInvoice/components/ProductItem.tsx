@@ -44,6 +44,8 @@ type FormData = {
 export default function ProductItem({
   posProfile,
   handleAdd,
+  contract_items,
+  contract
 }: ProductItemProps) {
   const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState<PItem | null>(null);
@@ -137,6 +139,8 @@ export default function ProductItem({
             : (Number(selectedItem.price_list_rate) *
                 Number(formData.discount.value ?? 0)) /
               100,
+        charge_type: contract_items.includes(selectedItem.item_code)? false : true,     
+        contract:contract 
       });
 
       setFormData({

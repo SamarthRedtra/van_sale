@@ -77,6 +77,8 @@ def get_all_delivery_trips():
     return {"message": "success", "data": trip_list}
 
 
+
+
 def is_already_in_transit_stop(trip_name, stop_name):
     stop_info = frappe.get_value(
         "Delivery Stop", {"parent": trip_name, "custom_in_transition": 1, "visited": 0}

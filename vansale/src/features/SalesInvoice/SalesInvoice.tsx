@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import getIsPosOpeningEntryFound from "../../services/getIsPosOpeningEntryFound";
 import { useFrappeGetDoc, useFrappeUpdateDoc } from "frappe-react-sdk";
-import { DeliveryStop, DeliveryTripDetails, PItem } from "../../utils/types";
+import { DeliveryStop, DeliveryTripDetails, PItem ,Contract} from "../../utils/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import LoadingOverlay from "../Loader/LoadingOverlay";
@@ -14,7 +14,8 @@ import createSalesInvoice from "@/services/createSalesInvoice";
 import ConfirmationComp from "../Components/ConfirmationComp";
 
 export default function SalesInvoice() {
-  const { trip_id, customer_id } = useParams();
+  const { trip_id, customer_id,contract_id } = useParams();
+
   const navigate = useNavigate();
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
   const [posProfile, setPosProfile] = useState<string>("");
@@ -28,7 +29,14 @@ export default function SalesInvoice() {
     "Delivery Stop",
     customer_id
   );
+
+  const { data: contractDetails } = useFrappeGetDoc<Contract>(
+    "Contract",
+    contract_id
+  );
+
   const [isApiCalling, setIsApiCalling] = useState(false);
+  const [totalAmt ,setTotalamt] = useState(0)
   const { updateDoc, loading } = useFrappeUpdateDoc();
   const [dueDate, setDueDate] = useState<string>(
     format(new Date(), "yyyy-MM-dd")
@@ -39,8 +47,11 @@ export default function SalesInvoice() {
       price: number;
       discount: number;
       amount: number;
+      charge_type: boolean;
+      contract:string
     } & PItem)[]
   >([]);
+
 
   useEffect(() => {
     (async () => {
@@ -65,7 +76,23 @@ export default function SalesInvoice() {
         setIsPosOpenEntryFound(false);
       }
     })();
+   
+   
+
   }, [tripDetails]);
+
+  useEffect(() => {
+    console.log("productItems", productItems);
+    setTotalamt(
+      productItems.reduce((acc, item) => {
+        return item.charge_type ? acc + item.price_list_rate * item.quantity : acc;
+      }, 0)
+    );
+  }, [productItems, productItems?.price_list_rate]);
+
+
+
+
 
   const handleAdd = (
     item: {
@@ -73,6 +100,8 @@ export default function SalesInvoice() {
       price: number;
       discount: number;
       amount: number;
+      charge_type: boolean;
+      contract:string
     } & PItem
   ) => {
     setProductItems((prev) => {
@@ -186,13 +215,64 @@ export default function SalesInvoice() {
               min={format(new Date(), "yyyy-MM-dd")}
             />
           </div>
+         
+
+          <div className="bg-white shadow-md rounded-lg p-4">
+            {/* Selected Items Header */}
+            <div className="mb-4">
+              <p className="text-xl font-bold text-gray-800">Selected Items</p>
+            </div>
+
+            {/* Chargeable and Non-Chargeable Items */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Non-Chargeable Items Section */}
+              <div className="p-4 bg-gray-100 rounded-md">
+                <p className="font-semibold text-gray-700 mb-2">Non-Chargeable Items</p>
+                <ul className="space-y-2">
+                  {productItems
+                    .filter((item) => !item.charge_type)
+                    .map((item, idx) => (
+                      <li key={idx} className="text-gray-600 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
+                        {item.item_name}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              {/* Chargeable Items Section */}
+              <div className="p-4 bg-blue-50 rounded-md">
+                <p className="font-semibold text-blue-700 mb-2">Chargeable Items</p>
+                <ul className="space-y-2">
+                  {productItems
+                    .filter((item) => item.charge_type)
+                    .map((item, idx) => (
+                      <li key={idx} className="text-blue-700 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        {item.item_name} - ${item.price_list_rate} x {item.quantity} = ${item.price_list_rate * item.quantity}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Total Amount Section */}
+            <div className="mt-6 flex justify-between items-center">
+              <p className="text-lg font-semibold text-gray-800">Chargeable Items Amount:</p>
+              <p className="text-lg font-bold text-blue-700">${totalAmt}</p>
+            </div>
+          </div>
           <p className="text-xl text-left font-bold p-4">All Items</p>
 
-          <ProductItem handleAdd={handleAdd} posProfile={posProfile} />
+          <ProductItem handleAdd={handleAdd} posProfile={posProfile} contract={contractDetails?.name} contract_items = {contractDetails?.custom_items.map(d => d.item)}  />
 
-          <div>
-            <p className="text-xl text-left font-bold p-4">Selected Items</p>
-          </div>
+   
+            <div className="mb-4">
+              <p className="text-xl font-bold text-gray-800">Selected Items</p>
+          
+            </div>
+
+
           <div className="flex flex-col p-4 gap-3">
             {productItems.length > 0 ? (
               productItems.map((product, idx) => (

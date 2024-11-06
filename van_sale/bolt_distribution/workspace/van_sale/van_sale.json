@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"b3jhpZ46nq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Delivery Trip Status</b></span>\",\"col\":12}},{\"id\":\"REkimclde8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Scheduled\",\"col\":3}},{\"id\":\"KBTuE3d6gE\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"In-Transit\",\"col\":3}},{\"id\":\"GAnQhJsBm6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\" Partially Completed\",\"col\":3}},{\"id\":\"dqYhcaA_lo\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed\",\"col\":3}},{\"id\":\"XKZj36ldrI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kb3XPLg8lb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"pVkrmEAJR0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"0x46zZShr7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Route Master\",\"col\":3}},{\"id\":\"rbO0S8upJQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drivers\",\"col\":3}},{\"id\":\"s9-h8dirP3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"snrzfbFr5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"nWd2KJPW8l\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"ucexO6RnWz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"d_KVM1gsf9\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"JVu8-FJZCu\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"ji2Jlm3Q8i\",\"type\":\"card\",\"data\":{\"card_name\":\"Delivery Managemnt\",\"col\":4}},{\"id\":\"N61oiXpuwK\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"JiuSi0ubOg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"b3jhpZ46nq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Delivery Trip Status</b></span>\",\"col\":12}},{\"id\":\"REkimclde8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Scheduled\",\"col\":3}},{\"id\":\"KBTuE3d6gE\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"In-Transit\",\"col\":3}},{\"id\":\"GAnQhJsBm6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\" Partially Completed\",\"col\":3}},{\"id\":\"dqYhcaA_lo\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed\",\"col\":3}},{\"id\":\"XKZj36ldrI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kb3XPLg8lb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"pVkrmEAJR0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"0x46zZShr7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Route Master\",\"col\":3}},{\"id\":\"rbO0S8upJQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drivers\",\"col\":3}},{\"id\":\"s9-h8dirP3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"snrzfbFr5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"39__TaOLPi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Contract\",\"col\":3}},{\"id\":\"ZI5D5l5z2v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Level Agreement\",\"col\":3}},{\"id\":\"toyy45Rg2p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Isssue\",\"col\":3}},{\"id\":\"nWd2KJPW8l\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"ucexO6RnWz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"d_KVM1gsf9\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"JVu8-FJZCu\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"ji2Jlm3Q8i\",\"type\":\"card\",\"data\":{\"card_name\":\"Delivery Managemnt\",\"col\":4}},{\"id\":\"N61oiXpuwK\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"JiuSi0ubOg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2024-10-20 23:48:01.322131",
  "custom_blocks": [],
  "docstatus": 0,
@@ -383,7 +383,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-10-20 23:48:01.322131",
+ "modified": "2024-11-06 20:25:48.281236",
  "modified_by": "Administrator",
  "module": "Bolt Distribution",
  "name": "Van Sale",
@@ -414,6 +414,14 @@
  "sequence_id": 1.0,
  "shortcuts": [
   {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Contract",
+   "link_to": "Contract",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
    "color": "Green",
    "doc_view": "Kanban",
    "kanban_board": "Delivery Trip",
@@ -423,10 +431,26 @@
    "type": "DocType"
   },
   {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Service Level Agreement",
+   "link_to": "Service Level Agreement",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
    "color": "Green",
    "doc_view": "List",
    "label": "Vehicle",
    "link_to": "Vehicle",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Isssue",
+   "link_to": "Issue",
    "stats_filter": "[]",
    "type": "DocType"
   },

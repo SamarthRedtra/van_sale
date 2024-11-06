@@ -31,6 +31,8 @@ export default function DeliveryStopDetailCard({
 
   const status = getDeliveryStatus(stop);
 
+
+  console.log("issue_data  custom_location");
   const isStart = !stop?.visited && !stop?.custom_in_transition;
 
   const handleClick = (stopId: string, tripID: string) => async () => {
@@ -67,6 +69,16 @@ export default function DeliveryStopDetailCard({
                 : stop?.address?.replace("<br>", ",") ?? 0}
             </p>
           </div>
+          
+          <div className="ml-auto space-y-1 text-gray-700 sm:space-y-0 sm:space-x-3">
+            <p className="text-sm font-semibold">Issue Name:</p>
+            <p className="text-sm text-orange-600 font-semibold">{stop?.custom_issue_name ?? "leaking issue"}</p>
+
+            <p className="text-sm font-semibold">Issue Location:</p>
+            <p className="text-sm text-orange-600 font-semibold">{stop?.custom_location ?? "adleyya"}</p>
+          </div>
+
+
           {!!stop?.custom_mobile_no && (
             <a href={`tel:${stop?.custom_mobile_no ?? ""}`}>
               <div className="w-11 h-11 border border-[#c2dfff] flex items-center justify-center rounded-full bg-[#d9ebff]">
@@ -77,9 +89,9 @@ export default function DeliveryStopDetailCard({
         </div>
         <div className="flex justify-start gap-2">
           {stop?.is_cancelled ||
-          (status != DELIVERY_STATUS_CONST.DELIVERED &&
-            (tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED ||
-              tripStatus === TRIP_STATUS.COMPLETED)) ? (
+            (status != DELIVERY_STATUS_CONST.DELIVERED &&
+              (tripStatus === TRIP_STATUS.PARTIALLY_COMPLETED ||
+                tripStatus === TRIP_STATUS.COMPLETED)) ? (
             <span
               className={`text-[10px] py-1 rounded-3xl font-bold px-2 text-[#7F1D1D] bg-[#FEE2E2]`}
             >
@@ -87,13 +99,12 @@ export default function DeliveryStopDetailCard({
             </span>
           ) : (
             <span
-              className={`text-[10px] py-1 rounded-3xl font-bold px-2 ${
-                status === DELIVERY_STATUS_CONST.IN_TRANSIT
-                  ? "bg-[#00abff] text-white"
-                  : status === DELIVERY_STATUS_CONST.PENDING
+              className={`text-[10px] py-1 rounded-3xl font-bold px-2 ${status === DELIVERY_STATUS_CONST.IN_TRANSIT
+                ? "bg-[#00abff] text-white"
+                : status === DELIVERY_STATUS_CONST.PENDING
                   ? "bg-[#ffefc2] text-[#9e7602]"
                   : "bg-[#1faa00] text-white"
-              }`}
+                }`}
             >
               {status}
             </span>

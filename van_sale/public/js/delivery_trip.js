@@ -14,6 +14,11 @@ frappe.ui.form.on('Delivery Trip', {
             window.show_all_stops = show_all_stops
         }, 10);
 
+        if (frm.doc.docstatus === 1) {  // Check if the document is submitted
+            frm.set_df_property('delivery_stops', 'cannot_delete_rows', true); // Hide delete button
+            frm.set_df_property('delivery_stops', 'cannot_delete_all_rows', true); // Hide delete all button
+        }
+
         // Add button to the form
         frm.add_custom_button(__('Show Delivery Status'), function () {
             show_delivery_status_modal(frm);
@@ -96,6 +101,7 @@ function show_delivery_status_modal(frm) {
     // Show the modal
     dialog.show();
 }
+
 
 function show_all_stops() {
     // Show pending stops

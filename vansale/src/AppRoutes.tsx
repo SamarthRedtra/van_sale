@@ -27,7 +27,7 @@ const pageRoutes: RouteConfig = [
     true,
   ],
   [
-    "/vansale/delivery-trip/:trip_id/:customer_id/sales-invoice",
+    "/vansale/delivery-trip/:trip_id/:customer_id/:contract_id/sales-invoice",
     <SalesInvoice />,
     true,
   ],

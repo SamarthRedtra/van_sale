@@ -77,6 +77,17 @@ export default function ProductItemDetails({
           </button>
         </div>
 
+        {/* Chargeable/Non-Chargeable Badge */}
+        {item.charge_type ? (
+          <span className="bg-orange-200 text-red-500 text-xs font-semibold px-2 py-1 rounded">
+            Chargeable
+          </span>
+        ) : (
+          <span className="bg-gray-200 text-green-600 text-xs font-semibold px-2 py-1 rounded">
+            Non-Chargeable (Contract - {item.contract})
+          </span>
+        )}
+
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-600">Quantity:</span>
@@ -124,10 +135,11 @@ export default function ProductItemDetails({
         </div>
       </div>
 
+
       <div className="px-6 py-3 bg-gray-100">
         <div className="flex justify-between items-center">
           <span className="text-gray-600 font-bold">Total Amount:</span>
-          <span className="text-lg font-semibold text-green-600">
+          <span className="text-lg font-semibold text-green-600 ">
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: item.currency,

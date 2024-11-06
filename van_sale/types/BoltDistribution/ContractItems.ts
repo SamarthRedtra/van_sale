@@ -1,0 +1,19 @@
+
+export interface ContractItems{
+	name: string
+	creation: string
+	modified: string
+	owner: string
+	modified_by: string
+	docstatus: 0 | 1 | 2
+	parent?: string
+	parentfield?: string
+	parenttype?: string
+	idx?: number
+	/**	Item : Link - Item	*/
+	item: string
+	/**	Quantity : Int	*/
+	qty?: number
+	/**	UOM : Link - UOM	*/
+	uom?: string
+}

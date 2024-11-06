@@ -91,7 +91,7 @@ export default function DeliveryStopDetails() {
   const createSalesInvoice = async () => {
     if (!data) return;
     navigate(
-      `/vansale/delivery-trip/${data.parent}/${customer_id}/sales-invoice`
+      `/vansale/delivery-trip/${data.parent}/${customer_id}/${data.custom_contract}/sales-invoice`
     );
   };
 
