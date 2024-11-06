@@ -14,7 +14,7 @@ add_to_apps_screen = [
 	{
 		"name": "van_sale",
 		"logo": "/assets/van_sale/vansale.png",
-		"title": "MOVE",
+		"title": "Redtra Van Sales",
 		"route": "/app/vansale",
         "has_permission": "van_sale.setup.check_app_permission",
         "app_logo_url": "/assets/van_sale/vansale.png"
