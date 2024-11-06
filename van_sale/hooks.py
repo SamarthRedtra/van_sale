@@ -1,7 +1,7 @@
 app_name = "van_sale"
-app_title = "Bolt Distribution"
+app_title = "Van Sales"
 app_publisher = "info@redtra.com"
-app_description = "Bolt Distribution (Van Sales)"
+app_description = "Redtra Technologies (Van Sales)"
 app_email = "info@redtra.com"
 app_license = "mit"
 
