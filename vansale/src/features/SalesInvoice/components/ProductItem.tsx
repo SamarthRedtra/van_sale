@@ -77,7 +77,7 @@ export default function ProductItem({
     if (
       key === "quantity" &&
       selectedItem &&
-      +value > selectedItem.actual_qty
+      +value > selectedItem.actual_qty && selectedItem.is_stock_item == 1
     ) {
       setFormData({
         ...formData,
@@ -124,6 +124,7 @@ export default function ProductItem({
         discount: formData.discount.value,
         amount: formData.amount.value,
       });
+      
       handleAdd({
         ...selectedItem,
         price: Number(formData.price.value),

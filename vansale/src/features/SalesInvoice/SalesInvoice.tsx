@@ -119,7 +119,7 @@ export default function SalesInvoice() {
         const newQuantity = existingItem.quantity + item.quantity;
 
         // Ensure the new quantity does not exceed actual_qty
-        if (newQuantity > item.actual_qty) {
+        if (newQuantity > item.actual_qty && item.is_stock_item == 1) {
           existingItem.quantity = item.actual_qty;
         } else {
           existingItem.quantity = newQuantity;
@@ -127,10 +127,17 @@ export default function SalesInvoice() {
 
         return updatedItems;
       } else {
+
         // Item doesn't exist, ensure the added quantity is not greater than actual_qty
-        if (item.quantity > item.actual_qty) {
+        if (item.quantity > item.actual_qty && item.is_stock_item == 1) {
           item.quantity = item.actual_qty;
+
         }
+        else if(item.quantity == 0 && item.is_stock_item == 0){
+          item.quantity = 1
+        }
+        
+       
 
         return [...prev, item];
       }

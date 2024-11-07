@@ -1,4 +1,21 @@
 frappe.ui.form.on('Delivery Trip', {
+
+    setup:function (frm) {
+             
+        frm.set_query("custom_linked_issue", "delivery_stops", function (doc, cdt, cdn) {
+			var row = locals[cdt][cdn];
+			if (row.customer) {
+				return {
+					filters: {
+						customer: row.customer,
+                        status: 'Open',
+					},
+				};
+			}
+		});
+            
+    },
+
     onload: function (frm) {
         setTimeout(() => {
             frm.remove_custom_button('Delivery Note', 'Get stops from');
@@ -57,7 +74,6 @@ frappe.ui.form.on('Delivery Trip', {
         });
     },
 });
-
 
 function show_delivery_status_modal(frm) {
     // Create the modal
