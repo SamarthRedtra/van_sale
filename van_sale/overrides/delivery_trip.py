@@ -47,6 +47,7 @@ class VanSaleDeliveryTrip(DeliveryTrip):
             if len(issues_list) > 0:
                 frappe.db.set_value("Issue",{"name": ['in', issues_list]}, "status", "Resolved")
                 frappe.db.commit()
+                
 
     def on_cancel(self):
         if self.custom_pos_opening_entry_link:
