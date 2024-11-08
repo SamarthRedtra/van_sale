@@ -451,8 +451,8 @@ def create_sales_invoice(trip_details, stop_details, product_items, due_date=Non
         )
 
         # Insert the document and submit
-        sales_invoice.insert()
-        sales_invoice.submit()
+        sales_invoice.insert(ignore_permissions=True)
+        sales_invoice.submit(ignore_permissions=True)
 
         return {
             "status": "success",

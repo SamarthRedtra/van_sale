@@ -22,6 +22,7 @@ def create_payment_entry(sales_invoice, delivery_stop):
 
     delivery_stop_doc.custom_is_paid = 1
     delivery_stop_doc.save(ignore_permissions=True)
+    frappe.db.commit()
 
     return {
         "message": "Payment Entry created",

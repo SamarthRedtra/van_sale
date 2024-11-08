@@ -154,6 +154,11 @@ export default function SalesInvoice() {
         dueDate,
       });
 
+      if(salesDoc.message?.status === "error"){
+        setErrorMsg(salesDoc.message?.message ?? "Something went wrong!");
+        return;
+      }
+
       if (customer_id) {
         await updateDoc("Delivery Stop", customer_id, {
           custom_is_credit: 1,
@@ -256,7 +261,7 @@ export default function SalesInvoice() {
                     .map((item, idx) => (
                       <li key={idx} className="text-blue-700 flex items-center gap-2">
                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        {item.item_name} - ${item.price_list_rate} x {item.quantity} = ${item.price_list_rate * item.quantity}
+                        {item.item_name} - ${item.price_list_rate} x {item.quantity} = {item.currency? item.currency : ""} {item.price_list_rate * item.quantity}
                       </li>
                     ))}
                 </ul>
@@ -266,7 +271,7 @@ export default function SalesInvoice() {
             {/* Total Amount Section */}
             <div className="mt-6 flex justify-between items-center">
               <p className="text-lg font-semibold text-gray-800">Chargeable Items Amount:</p>
-              <p className="text-lg font-bold text-blue-700">${totalAmt}</p>
+              <p className="text-lg font-bold text-blue-700">{productItems[0]?.currency? productItems[0]?.currency : ""} {totalAmt}</p>
             </div>
           </div>
           <p className="text-xl text-left font-bold p-4">All Items</p>
