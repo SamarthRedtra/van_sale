@@ -261,7 +261,7 @@ export default function SalesInvoice() {
                     .map((item, idx) => (
                       <li key={idx} className="text-blue-700 flex items-center gap-2">
                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        {item.item_name} - ${item.price_list_rate} x {item.quantity} = {item.currency? item.currency : ""} {item.price_list_rate * item.quantity}
+                        {item.item_name} - {item.currency? item.currency : ""} {item.price_list_rate} x {item.quantity} = {item.currency? item.currency : ""} {item.price_list_rate * item.quantity}
                       </li>
                     ))}
                 </ul>
