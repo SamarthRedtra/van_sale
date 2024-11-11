@@ -117,19 +117,22 @@ export default function SalesInvoice() {
         productItems,
         dueDate,
       });
-
-      if (customer_id) {
-        await updateDoc("Delivery Stop", customer_id, {
-          custom_is_credit: 1,
-          custom_sales_invoice: salesDoc?.message?.invoice_name ?? "",
-          custom_end_timing: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-          visited: 1,
-        });
+      if (salesDoc?.message?.invoice_name) {
+        if (customer_id) {
+          await updateDoc("Delivery Stop", customer_id, {
+            custom_is_credit: 1,
+            custom_sales_invoice: salesDoc?.message?.invoice_name ?? "",
+            custom_end_timing: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+            visited: 1,
+          });
+        }
+        setSuccessMsg("Invoice created successfully");
+        setTimeout(() => {
+          navigate(`/vansale/delivery-trip/${trip_id}/${customer_id}`);
+        }, 2000);
+      } else {
+        setErrorMsg("Something went wrong!");
       }
-      setSuccessMsg("Invoice created successfully");
-      setTimeout(() => {
-        navigate(`/vansale/delivery-trip/${trip_id}/${customer_id}`);
-      }, 2000);
     } catch (err: any) {
       console.log(isPosOpenEntryFound);
       setErrorMsg(err?.response?.data?.message ?? "Something went wrong!");
