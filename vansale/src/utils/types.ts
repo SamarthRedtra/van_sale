@@ -263,3 +263,27 @@ export interface PItem {
   currency?: string;
   batch_no?: null;
 }
+
+// CreateCustomerPayload
+
+export interface CreateCustomerPayload {
+  customer_type: string;
+  customer_name: string;
+  address_line1: string;
+  city: string;
+  state: string;
+  country: string;
+  custom_latitude: number;
+  custom_longitude: number;
+  address_line2: string;
+  pincode: string;
+  email_id: string;
+  mobile_number: string;
+}
+
+// ToastProps
+
+export interface ToastProps {
+  message: string;
+  type: "success" | "error" | "info" | "warning" | "";
+}

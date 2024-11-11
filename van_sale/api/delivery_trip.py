@@ -366,7 +366,12 @@ def get_cancelled_stops():
 
     # Fetch the delivery trip names associated with the user in a single query
     delivery_name_list = frappe.get_all(
-        "Delivery Trip", filters={"custom_user": user, "status": ["in",["Partially Completed", "Completed"]]}, pluck="name"
+        "Delivery Trip",
+        filters={
+            "custom_user": user,
+            "status": ["in", ["Partially Completed", "Completed"]],
+        },
+        pluck="name",
     )
 
     # If no delivery trips found, return an empty list early
@@ -386,7 +391,9 @@ def get_cancelled_stops():
     # Adding static field is_cancelled = True
     for stop in delivery_stop_list:
         stop["is_cancelled"] = True
-        stop["departure_time"] = frappe.get_value("Delivery Trip", stop.parent, "departure_time")
+        stop["departure_time"] = frappe.get_value(
+            "Delivery Trip", stop.parent, "departure_time"
+        )
 
     return {
         "message": "Success",
@@ -524,7 +531,7 @@ def close_in_transit_delivery_trip(delivery_trip):
         frappe.throw(frappe._("Delivery Trip not found."), frappe.DoesNotExistError)
 
     delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip)
-    
+
     if delivery_trip_doc.status == "In Transit":
         is_partially_completed = any(
             stop.visited == 0 for stop in delivery_trip_doc.delivery_stops
@@ -537,3 +544,64 @@ def close_in_transit_delivery_trip(delivery_trip):
             "Partially Completed" if is_partially_completed else "Completed",
         )
         frappe.db.commit()
+
+
+# van_sale.api.delivery_trip.add_to_delivery_trip
+@frappe.whitelist()
+def add_to_delivery_trip(delivery_trip, customer):
+    if not frappe.db.exists("Delivery Trip", delivery_trip):
+        frappe.throw(frappe._("Delivery Trip not found."), frappe.DoesNotExistError)
+
+    if not frappe.db.exists("Customer", customer):
+        frappe.throw(frappe._("Customer not found."), frappe.DoesNotExistError)
+
+    delivery_trip_doc = frappe.get_doc("Delivery Trip", delivery_trip)
+
+    query = f"""
+        SELECT
+            contact.mobile_no
+        FROM
+            `tabContact` AS contact
+        LEFT JOIN
+            `tabDynamic Link` AS dl ON dl.parent = contact.name
+        WHERE
+            contact.name = '{customer}'
+    """
+
+    customer_mobile_no_list = frappe.db.sql(query, as_dict=True)
+
+    address_query = f"""
+        SELECT
+            address.name
+        FROM
+            `tabAddress` AS address
+        LEFT JOIN
+            `tabDynamic Link` AS dl ON dl.parent = address.name
+        WHERE
+            dl.link_name = '{customer}'
+    """
+
+    customer_address_list = frappe.db.sql(address_query, as_dict=True)
+
+    customer_mobile_no = (
+        customer_mobile_no_list[0].mobile_no if customer_mobile_no_list else None
+    )
+    customer_address = customer_address_list[0].name if customer_address_list else None
+
+    # Append the new delivery stop, including the required address field
+    delivery_trip_doc.append(
+        "delivery_stops",
+        {
+            "customer": customer,
+            "custom_mobile_no": customer_mobile_no,
+            "address": customer_address,  # Ensure address is included to avoid MandatoryError
+        },
+    )
+
+    # Save the updated delivery trip document
+    delivery_trip_doc.save(ignore_permissions=True)
+
+    # Commit the transaction to the database
+    frappe.db.commit()
+
+    return {"message": "Delivery trip updated successfully"}

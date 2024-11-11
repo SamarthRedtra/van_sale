@@ -12,7 +12,8 @@ import {
 import { useState } from "react";
 
 interface ConfirmationCompProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  isOpen?: boolean;
   dialogTitle: string;
   dialogDescription?: string;
   dialogCTAText: string;
@@ -22,13 +23,14 @@ interface ConfirmationCompProps {
 
 export default function ConfirmationComp({
   children,
+  isOpen,
   dialogCTAText,
   dialogTitle,
   dialogDescription,
   disabled,
   handleClick,
 }: ConfirmationCompProps) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(isOpen || false);
 
   const onClick = () => {
     if (!disabled) {
@@ -40,7 +42,9 @@ export default function ConfirmationComp({
   return (
     <div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        {children && (
+          <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        )}
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>

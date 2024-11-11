@@ -9,11 +9,15 @@ class VanSalePOSInvoice(POSInvoice):
         if not self.set_warehouse:
             frappe.throw("No warehouse found for POS Profile: " + self.pos_profile)
 
-        delivery_trip_from_pos_opening = frappe.db.get_value("POS Opening Entry",filters={'pos_profile': self.pos_profile,'status':'Open'},fieldname='custom_delivery_trip')
-        
+        delivery_trip_from_pos_opening = frappe.db.get_value(
+            "POS Opening Entry",
+            filters={"pos_profile": self.pos_profile, "status": "Open"},
+            fieldname="custom_delivery_trip",
+        )
+
         if not delivery_trip_from_pos_opening:
             frappe.throw(f"Delivery Trip Not Found Against {self.pos_profile}")
-            
+
         delivery_stop_filters = {
             "customer": self.customer,
             "parent": delivery_trip_from_pos_opening,
@@ -32,5 +36,7 @@ class VanSalePOSInvoice(POSInvoice):
             delivery_stop.save()
 
     def on_submit(self):
-        if frappe.db.get_value('POS Profile',self.pos_profile,'custom_is_driver_profile'):
+        if frappe.db.get_value(
+            "POS Profile", self.pos_profile, "custom_is_driver_profile"
+        ):
             self.mark_customer_visited()

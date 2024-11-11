@@ -134,10 +134,10 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
                         if (button.length) {
                             // Remove the original button
                             button.remove();
-        
+
                             // Create your new button
                             const newButton = $('<div class="vansale-start-new-stop btn new-btn">Start New Stop</div>');
-        
+
                             // Append the new button to the .abs-container .summary-btns element
                             const summary_btn = $('.abs-container .summary-btns');
                             if (summary_btn.length) {
@@ -145,31 +145,31 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
                             } else {
                                 console.log('Summary button container not found.');
                             }
-        
+
                             // Add an event listener for the new button
                             newButton.on('click', function (event) {
                                 event.preventDefault();
-        
+
                                 redirect_url = '/vansale';
-        
+
                                 // Get query parameters from the current URL
                                 const urlParams = new URLSearchParams(window.location.search);
                                 const tripId = urlParams.get('trip_id');
-        
+
                                 if (tripId) {
                                     redirect_url += `/delivery-trip/${tripId}`;
                                 }
-        
+
                                 window.location.href = redirect_url;
                             });
-        
+
                             // Disconnect the observer once the button is replaced
                             observer.disconnect();
                         }
                     }
                 });
             });
-        
+
             // Observe changes in the DOM where the button could be added (typically the wrapper or a specific container)
             observer.observe(wrapper, {
                 childList: true,
@@ -177,7 +177,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
             });
         }
     })
-   
+
     // Set up a MutationObserver to detect when the button is added to the DOM
-   
+
 }

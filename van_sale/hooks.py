@@ -47,7 +47,7 @@ doctype_js = {
     "Delivery Trip": "public/js/delivery_trip.js",
     "POS Invoice": "public/js/pos_invoice.js",
 }
-doctype_list_js = {"Delivery Trip" : "public/js/delivery_trip_list.js"}
+doctype_list_js = {"Delivery Trip": "public/js/delivery_trip_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -249,9 +249,7 @@ override_doctype_class = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
-fixtures=[
-    {'doctype':'Kanban Board'}
-]
+fixtures = [{"doctype": "Kanban Board"}]
 
 website_route_rules = [
     {"from_route": "/vansale/<path:app_path>", "to_route": "vansale"},

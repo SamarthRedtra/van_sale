@@ -14,6 +14,7 @@ import Toast from "../Components/Toast.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import ConfirmationComp from "../Components/ConfirmationComp.tsx";
 import closeDeliveryTrip from "@/services/closeDeliveryTrip.tsx";
+import AddCustomerModal from "../AddCustomerModal/AddCustomerModal.tsx";
 
 export default function TripDetails() {
   const [isPosOpenEntryFound, setIsPosOpenEntryFound] = useState(false);
@@ -157,6 +158,10 @@ export default function TripDetails() {
     });
   };
 
+  const handleRefetch = () => {
+    mutate();
+  };
+
   return (
     <div className="mx-auto min-h-screen relative">
       <div className="bg-white shadow sticky">
@@ -168,6 +173,13 @@ export default function TripDetails() {
             <ChevronLeftIcon className="w-7 h-7" />
             <span>My Trips</span>
           </h1>
+
+          {(data?.status === TRIP_STATUS.IN_TRANSIT ||
+            data?.status === TRIP_STATUS.SCHEDULED) && (
+            <div className="flex gap-2">
+              <AddCustomerModal refetch={handleRefetch} />
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between items-center p-4 bg-[#ebf1f9]">
