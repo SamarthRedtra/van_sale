@@ -14,13 +14,17 @@ const AddCustomerSchema = z.object({
     .regex(
       /^-?((1?[0-7]?|[0-9]?)[0-9]|180)(\.[0-9]{1,10})?$/,
       "Invalid latitude"
-    ),
+    )
+    .optional()
+    .or(z.literal("")),
   longitude: z
     .string()
     .regex(
       /^-?((1?[0-7]?|[0-9]?)[0-9]|180)(\.[0-9]{1,10})?$/,
       "Invalid longitude"
-    ),
+    )
+    .optional()
+    .or(z.literal("")),
   addressLine2: z.string().optional(),
   state: z.string().optional(),
   postalCode: z.string().optional(),

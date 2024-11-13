@@ -304,7 +304,7 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="grid gap-2">
                     <label htmlFor="latitude" className="text-sm font-medium">
-                      Latitude <span className="text-red-500">*</span>
+                      Latitude
                     </label>
                     <Input
                       id="latitude"
@@ -321,7 +321,7 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
                   </div>
                   <div className="grid gap-2">
                     <label htmlFor="longitude" className="text-sm font-medium">
-                      Longitude <span className="text-red-500">*</span>
+                      Longitude
                     </label>
                     <Input
                       id="longitude"
