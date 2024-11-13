@@ -249,7 +249,15 @@ override_doctype_class = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
-fixtures = [{"doctype": "Kanban Board"}]
+fixtures = [
+    {"doctype": "Kanban Board"},
+    {
+        "doctype": "Property Setter",
+        "or_filters": [
+            ["Property Setter", "name", "=", "Delivery Trip-main-Allow on Submit"],
+        ],
+    },
+]
 
 website_route_rules = [
     {"from_route": "/vansale/<path:app_path>", "to_route": "vansale"},
