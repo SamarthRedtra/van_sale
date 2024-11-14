@@ -94,8 +94,8 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
         city: payload.city,
         state: payload?.state || "",
         pincode: payload?.postalCode || "",
-        custom_latitude: parseFloat(payload.latitude),
-        custom_longitude: parseFloat(payload.longitude),
+        custom_latitude: parseFloat(payload?.latitude || "0"),
+        custom_longitude: parseFloat(payload?.longitude || "0"),
         country: payload.country,
       });
 
