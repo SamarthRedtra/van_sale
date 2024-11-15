@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +25,12 @@ import LoadingOverlay from "../Loader/LoadingOverlay";
 import ConfirmationComp from "../Components/ConfirmationComp";
 import addDeliveryStop from "@/services/addDeliveryStop";
 import { useParams } from "react-router-dom";
+import {
+  SelectComponent,
+  SelectOptionType,
+} from "../Components/SelectComponent";
+import getCityMasterList from "@/services/getCityMasterList";
+import getCountryMasterList from "@/services/getCountryMasterList";
 
 interface AddCustomerModalProps {
   refetch: () => void;
@@ -38,10 +44,45 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
   const [isAddToDelivery, setIsAddToDelivery] = useState(false);
   const [formData, setFormData] = useState(getInitialState());
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [cityOptionList, setCityOptionList] = useState<SelectOptionType[]>([]);
+  const [countryOptionList, setCountryOptionList] = useState<
+    SelectOptionType[]
+  >([]);
   const [toast, setToast] = useState<ToastProps>({
     message: "",
     type: "",
   });
+
+  useEffect(() => {
+    const handleGetInitialList = async () => {
+      try {
+        const [cityRes, countryRes] = await Promise.all([
+          getCityMasterList(),
+          getCountryMasterList(),
+        ]);
+
+        if (!cityRes || !countryRes) return;
+
+        const cityList =
+          cityRes?.data?.map((city: { name: any }) => ({
+            value: city.name,
+            label: city.name,
+          })) || [];
+        const countryList =
+          countryRes?.data?.map((country: { name: any }) => ({
+            value: country.name,
+            label: country.name,
+          })) || [];
+
+        setCityOptionList(cityList);
+        setCountryOptionList(countryList);
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+
+    handleGetInitialList();
+  }, []);
 
   const handleChange = (key: keyof typeof formData, value: string) => {
     // Check if the key is 'mobileNumber'
@@ -171,7 +212,7 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
         <DialogTrigger asChild>
           <Button variant="outline">New Customer</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[768px] max-w-[425px] sm:max-h-[90vh] max-h-screen overflow-y-auto ">
+        <DialogContent className="sm:max-w-[768px] max-w-[425px] max-h-[90vh] overflow-y-auto ">
           <DialogHeader>
             <DialogTitle>New Customer</DialogTitle>
           </DialogHeader>
@@ -288,12 +329,17 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
                     <label htmlFor="city" className="text-sm font-medium">
                       City <span className="text-red-500">*</span>
                     </label>
-                    <Input
+                    <SelectComponent
+                      value={formData.city.value}
+                      onChange={(value) => handleChange("city", value)}
+                      options={cityOptionList}
+                    />
+                    {/* <Input
                       id="city"
                       value={formData.city.value}
                       onChange={(e) => handleChange("city", e.target.value)}
                       required
-                    />
+                    /> */}
                     {formData.city.error && (
                       <p className="text-sm font-medium text-destructive">
                         {formData.city.error}
@@ -398,12 +444,17 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
                     <label htmlFor="country" className="text-sm font-medium">
                       Country <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      id="country"
+                    <SelectComponent
                       value={formData.country.value}
-                      onChange={(e) => handleChange("country", e.target.value)}
-                      required
+                      onChange={(value) => handleChange("country", value)}
+                      options={countryOptionList}
                     />
+                    {/* // <Input
+                    //   id="country"
+                    //   value={formData.country.value}
+                    //   onChange={(e) => handleChange("country", e.target.value)}
+                    //   required
+                    // /> */}
                     {formData.country.error && (
                       <p className="text-sm font-medium text-destructive">
                         {formData.country.error}
