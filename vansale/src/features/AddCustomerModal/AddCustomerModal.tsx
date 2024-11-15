@@ -84,6 +84,10 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
     handleGetInitialList();
   }, []);
 
+  useEffect(() => {
+    if (!open) setFormData(getInitialState());
+  }, [open]);
+
   const handleChange = (key: keyof typeof formData, value: string) => {
     // Check if the key is 'mobileNumber'
     if (key === "mobileNumber") {
