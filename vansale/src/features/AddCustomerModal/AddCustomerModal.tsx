@@ -31,6 +31,7 @@ import {
 } from "../Components/SelectComponent";
 import getCityMasterList from "@/services/getCityMasterList";
 import getCountryMasterList from "@/services/getCountryMasterList";
+import getCustomerList from "@/services/getCustomerList";
 
 interface AddCustomerModalProps {
   refetch: () => void;
@@ -40,11 +41,17 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
   const params = useParams();
 
   const [open, setOpen] = useState(false);
+  const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [isLoadingApi, setIsLoadingApi] = useState(false);
   const [isAddToDelivery, setIsAddToDelivery] = useState(false);
   const [formData, setFormData] = useState(getInitialState());
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [selectedCustomerError, setSelectedCustomerError] =
+    useState<string>("");
   const [cityOptionList, setCityOptionList] = useState<SelectOptionType[]>([]);
+  const [customerOptionList, setCustomerOptionList] = useState<
+    SelectOptionType[]
+  >([]);
   const [countryOptionList, setCountryOptionList] = useState<
     SelectOptionType[]
   >([]);
@@ -56,10 +63,20 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
   useEffect(() => {
     const handleGetInitialList = async () => {
       try {
-        const [cityRes, countryRes] = await Promise.all([
+        const [cityRes, countryRes, customerRes] = await Promise.all([
           getCityMasterList(),
           getCountryMasterList(),
+          getCustomerList(),
         ]);
+
+        if (customerRes) {
+          const customerList =
+            customerRes?.data?.map((customer: { name: any }) => ({
+              value: customer.name,
+              label: customer.name,
+            })) || [];
+          setCustomerOptionList(customerList);
+        }
 
         if (!cityRes || !countryRes) return;
 
@@ -85,8 +102,14 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
   }, []);
 
   useEffect(() => {
-    if (!open) setFormData(getInitialState());
-  }, [open]);
+    if (!open) {
+      if (isNewCustomer) {
+        setFormData(getInitialState());
+      } else {
+        setSelectedCustomer("");
+      }
+    }
+  }, [open, isNewCustomer]);
 
   const handleChange = (key: keyof typeof formData, value: string) => {
     // Check if the key is 'mobileNumber'
@@ -179,6 +202,36 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
     }
   };
 
+  const handleAddDeliveryStop = async () => {
+    if (!selectedCustomer) {
+      setSelectedCustomerError("Please select a customer");
+      return;
+    }
+    try {
+      setIsLoadingApi(true);
+      const res = await addDeliveryStop({
+        delivery_trip: params?.trip_id || "",
+        customer: selectedCustomer,
+      });
+
+      if (res) {
+        refetch();
+        setToast({
+          message: "Customer added to delivery trip successfully",
+          type: "success",
+        });
+        handleClose(false);
+      }
+    } catch (err: any) {
+      setToast({
+        message: err?.response?.data?.message || "Something went wrong!",
+        type: "error",
+      });
+    } finally {
+      setIsLoadingApi(false);
+    }
+  };
+
   const handleToastClose = () => {
     setToast({
       message: "",
@@ -210,285 +263,356 @@ export default function AddCustomerModal({ refetch }: AddCustomerModalProps) {
     }
   };
 
+  const handleClose = (value: boolean) => {
+    if (!value) {
+      setOpen(false);
+      setSelectedCustomer("");
+      setSelectedCustomerError("");
+      setIsAddToDelivery(false);
+      setIsNewCustomer(false);
+    } else {
+      setOpen(true);
+    }
+  };
+
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(value) => handleClose(value)}>
         <DialogTrigger asChild>
-          <Button variant="outline">New Customer</Button>
+          <Button variant="outline">Add Stop</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[768px] max-w-[425px] max-h-[90vh] overflow-y-auto ">
-          <DialogHeader>
-            <DialogTitle>New Customer</DialogTitle>
-          </DialogHeader>
-          <form className="grid gap-4">
-            <div className="grid gap-2">
-              <label htmlFor="customerName" className="text-sm font-medium">
-                Customer Name <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="customerName"
-                value={formData.customerName.value}
-                onChange={(e) => handleChange("customerName", e.target.value)}
-                required
-              />
-              {formData.customerName.error && (
-                <p className="text-sm font-medium text-destructive">
-                  {formData.customerName.error}
-                </p>
-              )}
-            </div>
-            <div className="grid gap-2">
-              <label htmlFor="customerType" className="text-sm font-medium">
-                Customer Type <span className="text-red-500">*</span>
-              </label>
-              <Select
-                value={formData.customerType.value}
-                onValueChange={(value) => handleChange("customerType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CustomerType.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-semibold mt-3">
-                  Primary Contact Details
-                </h3>
+        {isNewCustomer && (
+          <DialogContent className="sm:max-w-[768px] max-w-[425px] max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>New Customer</DialogTitle>
+            </DialogHeader>
+            <form className="grid gap-4">
+              <div className="grid gap-2">
+                <label htmlFor="customerName" className="text-sm font-medium">
+                  Customer Name <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  id="customerName"
+                  value={formData.customerName.value}
+                  onChange={(e) => handleChange("customerName", e.target.value)}
+                  required
+                />
+                {formData.customerName.error && (
+                  <p className="text-sm font-medium text-destructive">
+                    {formData.customerName.error}
+                  </p>
+                )}
               </div>
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <label htmlFor="email" className="text-sm font-medium">
-                    Email Id
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email.value}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                  />
-                  {formData.email.error && (
-                    <p className="text-sm font-medium text-destructive">
-                      {formData.email.error}
-                    </p>
-                  )}
+              <div className="grid gap-2">
+                <label htmlFor="customerType" className="text-sm font-medium">
+                  Customer Type <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  value={formData.customerType.value}
+                  onValueChange={(value) => handleChange("customerType", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CustomerType.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-semibold mt-3">
+                    Primary Contact Details
+                  </h3>
                 </div>
-                <div className="grid gap-2">
-                  <label htmlFor="mobile" className="text-sm font-medium">
-                    Mobile Number <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    id="mobile"
-                    value={formData.mobileNumber.value}
-                    onChange={(e) =>
-                      handleChange("mobileNumber", e.target.value)
-                    }
-                    required
-                  />
-                  {formData.mobileNumber.error && (
-                    <p className="text-sm font-medium text-destructive">
-                      {formData.mobileNumber.error}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-semibold mt-3">
-                  Primary Address Details
-                </h3>
-              </div>
-              <div className="grid gap-4">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4">
                   <div className="grid gap-2">
-                    <label
-                      htmlFor="addressLine1"
-                      className="text-sm font-medium"
-                    >
-                      Address Line 1 <span className="text-red-500">*</span>
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email Id
                     </label>
                     <Input
-                      id="addressLine1"
-                      value={formData.addressLine1.value}
-                      onChange={(e) =>
-                        handleChange("addressLine1", e.target.value)
-                      }
-                      required
+                      id="email"
+                      type="email"
+                      value={formData.email.value}
+                      onChange={(e) => handleChange("email", e.target.value)}
                     />
-                    {formData.addressLine1.error && (
+                    {formData.email.error && (
                       <p className="text-sm font-medium text-destructive">
-                        {formData.addressLine1.error}
+                        {formData.email.error}
                       </p>
                     )}
                   </div>
                   <div className="grid gap-2">
-                    <label htmlFor="city" className="text-sm font-medium">
-                      City <span className="text-red-500">*</span>
+                    <label htmlFor="mobile" className="text-sm font-medium">
+                      Mobile Number <span className="text-red-500">*</span>
                     </label>
-                    <SelectComponent
-                      value={formData.city.value}
-                      onChange={(value) => handleChange("city", value)}
-                      options={cityOptionList}
+                    <Input
+                      id="mobile"
+                      value={formData.mobileNumber.value}
+                      onChange={(e) =>
+                        handleChange("mobileNumber", e.target.value)
+                      }
+                      required
                     />
-                    {/* <Input
+                    {formData.mobileNumber.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {formData.mobileNumber.error}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-semibold mt-3">
+                    Primary Address Details
+                  </h3>
+                </div>
+                <div className="grid gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-2">
+                      <label
+                        htmlFor="addressLine1"
+                        className="text-sm font-medium"
+                      >
+                        Address Line 1 <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        id="addressLine1"
+                        value={formData.addressLine1.value}
+                        onChange={(e) =>
+                          handleChange("addressLine1", e.target.value)
+                        }
+                        required
+                      />
+                      {formData.addressLine1.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.addressLine1.error}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="city" className="text-sm font-medium">
+                        City <span className="text-red-500">*</span>
+                      </label>
+                      <SelectComponent
+                        value={formData.city.value}
+                        onChange={(value) => handleChange("city", value)}
+                        options={cityOptionList}
+                      />
+                      {/* <Input
                       id="city"
                       value={formData.city.value}
                       onChange={(e) => handleChange("city", e.target.value)}
                       required
                     /> */}
-                    {formData.city.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.city.error}
-                      </p>
-                    )}
+                      {formData.city.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.city.error}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="grid gap-2">
-                    <label htmlFor="latitude" className="text-sm font-medium">
-                      Latitude
-                    </label>
-                    <Input
-                      id="latitude"
-                      placeholder="0.000"
-                      value={formData.latitude.value}
-                      onChange={(e) => handleChange("latitude", e.target.value)}
-                      required
-                    />
-                    {formData.latitude.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.latitude.error}
-                      </p>
-                    )}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-2">
+                      <label htmlFor="latitude" className="text-sm font-medium">
+                        Latitude
+                      </label>
+                      <Input
+                        id="latitude"
+                        placeholder="0.000"
+                        value={formData.latitude.value}
+                        onChange={(e) =>
+                          handleChange("latitude", e.target.value)
+                        }
+                        required
+                      />
+                      {formData.latitude.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.latitude.error}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid gap-2">
+                      <label
+                        htmlFor="longitude"
+                        className="text-sm font-medium"
+                      >
+                        Longitude
+                      </label>
+                      <Input
+                        id="longitude"
+                        placeholder="0.000"
+                        value={formData.longitude.value}
+                        onChange={(e) =>
+                          handleChange("longitude", e.target.value)
+                        }
+                        required
+                      />
+                      {formData.longitude.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.longitude.error}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="longitude" className="text-sm font-medium">
-                      Longitude
-                    </label>
-                    <Input
-                      id="longitude"
-                      placeholder="0.000"
-                      value={formData.longitude.value}
-                      onChange={(e) =>
-                        handleChange("longitude", e.target.value)
-                      }
-                      required
-                    />
-                    {formData.longitude.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.longitude.error}
-                      </p>
-                    )}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-2">
+                      <label
+                        htmlFor="addressLine2"
+                        className="text-sm font-medium"
+                      >
+                        Address Line 2
+                      </label>
+                      <Input
+                        id="addressLine2"
+                        value={formData.addressLine2.value}
+                        onChange={(e) =>
+                          handleChange("addressLine2", e.target.value)
+                        }
+                      />
+                      {formData.addressLine2.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.addressLine2.error}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="state" className="text-sm font-medium">
+                        State
+                      </label>
+                      <Input
+                        id="state"
+                        value={formData.state.value}
+                        onChange={(e) => handleChange("state", e.target.value)}
+                      />
+                      {formData.state.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.state.error}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="grid gap-2">
-                    <label
-                      htmlFor="addressLine2"
-                      className="text-sm font-medium"
-                    >
-                      Address Line 2
-                    </label>
-                    <Input
-                      id="addressLine2"
-                      value={formData.addressLine2.value}
-                      onChange={(e) =>
-                        handleChange("addressLine2", e.target.value)
-                      }
-                    />
-                    {formData.addressLine2.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.addressLine2.error}
-                      </p>
-                    )}
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="state" className="text-sm font-medium">
-                      State
-                    </label>
-                    <Input
-                      id="state"
-                      value={formData.state.value}
-                      onChange={(e) => handleChange("state", e.target.value)}
-                    />
-                    {formData.state.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.state.error}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="grid gap-2">
-                    <label htmlFor="postalCode" className="text-sm font-medium">
-                      Postal Code
-                    </label>
-                    <Input
-                      id="postalCode"
-                      value={formData.postalCode.value}
-                      onChange={(e) =>
-                        handleChange("postalCode", e.target.value)
-                      }
-                    />
-                    {formData.postalCode.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.postalCode.error}
-                      </p>
-                    )}
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="country" className="text-sm font-medium">
-                      Country <span className="text-red-500">*</span>
-                    </label>
-                    <SelectComponent
-                      value={formData.country.value}
-                      onChange={(value) => handleChange("country", value)}
-                      options={countryOptionList}
-                    />
-                    {/* // <Input
-                    //   id="country"
-                    //   value={formData.country.value}
-                    //   onChange={(e) => handleChange("country", e.target.value)}
-                    //   required
-                    // /> */}
-                    {formData.country.error && (
-                      <p className="text-sm font-medium text-destructive">
-                        {formData.country.error}
-                      </p>
-                    )}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-2">
+                      <label
+                        htmlFor="postalCode"
+                        className="text-sm font-medium"
+                      >
+                        Postal Code
+                      </label>
+                      <Input
+                        id="postalCode"
+                        value={formData.postalCode.value}
+                        onChange={(e) =>
+                          handleChange("postalCode", e.target.value)
+                        }
+                      />
+                      {formData.postalCode.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.postalCode.error}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="country" className="text-sm font-medium">
+                        Country <span className="text-red-500">*</span>
+                      </label>
+                      <SelectComponent
+                        value={formData.country.value}
+                        onChange={(value) => handleChange("country", value)}
+                        options={countryOptionList}
+                      />
+                      {formData.country.error && (
+                        <p className="text-sm font-medium text-destructive">
+                          {formData.country.error}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            {toast.type === "error" && (
-              <div
-                className="flex items-center p-4 mb-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-lg"
-                role="alert"
-              >
-                <span className="font-medium">{toast.message}</span>
+              {toast.type === "error" && (
+                <div
+                  className="flex items-center p-4 mb-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-lg"
+                  role="alert"
+                >
+                  <span className="font-medium">{toast.message}</span>
+                </div>
+              )}
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg"
+                  onClick={handleSubmit}
+                  disabled={isLoadingApi}
+                >
+                  {isLoadingApi && <LoadingOverlay />}
+                  Create Customer
+                </Button>
               </div>
-            )}
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg"
-                onClick={handleSubmit}
-                disabled={isLoadingApi}
-              >
-                {isLoadingApi && <LoadingOverlay />}
-                Create Customer
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
+            </form>
+          </DialogContent>
+        )}
+        {!isNewCustomer && (
+          <>
+            <DialogContent className="sm:max-w-[768px] max-w-[425px] max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add Delivery Stop</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleAddDeliveryStop}>
+                <label htmlFor="customer" className="text-sm font-medium">
+                  Customer <span className="text-red-500">*</span>
+                </label>
+                <SelectComponent
+                  value={selectedCustomer}
+                  onChange={(value) => {
+                    setSelectedCustomer(value);
+                    if (value && selectedCustomerError) {
+                      setSelectedCustomerError("");
+                    }
+                  }}
+                  options={customerOptionList}
+                />
+                {selectedCustomerError && (
+                  <p className="text-sm font-medium text-destructive">
+                    {selectedCustomerError}
+                  </p>
+                )}
+                <div className="flex gap-2 w-fit items-center mt-4">
+                  <Input
+                    required
+                    id="customer"
+                    type="checkbox"
+                    aria-label="Is new customer"
+                    className="w-4 h-4"
+                    checked={isNewCustomer}
+                    onChange={(e) => setIsNewCustomer(e.target.checked)}
+                  />
+                  <label htmlFor="customer" className="text-sm font-medium">
+                    Is new customer <span className="text-red-500">*</span>
+                  </label>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    className="bg-[#0050b5] text-white py-1 px-3 text-sm font-semibold rounded-lg"
+                    onClick={handleAddDeliveryStop}
+                    disabled={isLoadingApi}
+                  >
+                    {isLoadingApi && <LoadingOverlay />}
+                    Add Stop
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </>
+        )}
       </Dialog>
       {toast.message && (
         <Toast
