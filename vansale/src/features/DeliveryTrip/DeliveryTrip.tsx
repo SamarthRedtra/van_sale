@@ -5,6 +5,8 @@ import getDeliveryDetails from "../../services/getTripDetails.tsx";
 import LoadingOverlay from "../Loader/LoadingOverlay.tsx";
 import NoTripFound from "./components/NoTripFound.tsx";
 import Header from "../Components/Header.tsx";
+import PosOpen from "./components/PosOpen.tsx";
+
 import {
   Select,
   SelectTrigger,
@@ -66,8 +68,8 @@ export default function DeliveryTrip() {
   return (
     <div className="mx-auto min-h-screen">
       <div className="bg-white shadow">
-        <Header title="My Trips" />
-        <div className="bg-purple-500 p-4">
+        <Header title="POS" />
+        {/* <div className="bg-purple-500 p-4">
           <div className="flex justify-between items-center">
             <span className="text-white font-semibold">My Planned Trips</span>
             <Select
@@ -88,11 +90,11 @@ export default function DeliveryTrip() {
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="p-4">
-        <div className="relative">
+        {/*<div className="relative">
           <svg
             className="w-5 h-5 absolute left-3 top-3 text-gray-400"
             xmlns="http://www.w3.org/2000/svg"
@@ -114,17 +116,22 @@ export default function DeliveryTrip() {
             className="w-full pl-10 pr-4 py-2 border rounded-md"
             onChange={handleSearch}
           />
-        </div>
+        </div> */}
         {isLoading && <LoadingOverlay />}
         {!isLoading && (
           <div className="mt-4 flex flex-col gap-4">
-            {filteredTrips.length ? (
+
+            <PosOpen />
+            {/* {filteredTrips.length ? (
               filteredTrips.map((item, index) => (
                 <DeliveryTripDetailCard key={index} tripDetails={item} />
               ))
             ) : (
               <NoTripFound />
-            )}
+              
+            )} */}
+            
+
           </div>
         )}
       </div>

@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import SalesInvoice from "./features/SalesInvoice/SalesInvoice.tsx";
 import PaymentDueStops from "./features/PaymentDueStops/PaymentDueStops.tsx";
 import CancelledStops from "./features/CancelledStops/CancelledStops.tsx";
+import PosInvoice from "./features/PosInvoice/PosInvoice.tsx";
+import InvoiceDetails from "./features/PosInvoice/Components/InvoiceDetails.tsx";
 
 type isRouteActive = boolean;
 
@@ -21,6 +23,8 @@ const pageRoutes: RouteConfig = [
   ["/vansale/delivery-trip/:trip_id", <TripDetails />, true],
   ["/vansale/payment-due-stops", <PaymentDueStops />, true],
   ["/vansale/cancelled-stops", <CancelledStops />, true],
+  ["/vansale/pos-invoice", <PosInvoice />, true],
+  ["/vansale/pos-invoice/:invoiceId", <InvoiceDetails />, true],
   [
     "/vansale/delivery-trip/:trip_id/:customer_id",
     <DeliveryStopDetails />,

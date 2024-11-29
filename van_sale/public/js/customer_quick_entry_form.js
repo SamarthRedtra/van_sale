@@ -49,7 +49,6 @@ frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 				label: __("Mobile Number"),
 				fieldname: "mobile_number",
 				fieldtype: "Phone",
-				mandatory_depends_on: "eval:doc.customer_type",
 			},
 			{
 				fieldtype: "Section Break",
@@ -60,13 +59,13 @@ frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 				label: __("Address Line 1"),
 				fieldname: "address_line1",
 				fieldtype: "Data",
-				mandatory_depends_on: "eval:doc.customer_type",
+				
 			},
 			{
 				label: __("Latitude"),
 				fieldname: "custom_latitude",
 				fieldtype: "Float",
-				mandatory_depends_on: "eval:doc.customer_type",
+				
 			},
 			{
 				label: __("Address Line 2"),
@@ -85,13 +84,12 @@ frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 				label: __("City"),
 				fieldname: "city",
 				fieldtype: "Data",
-				mandatory_depends_on: "eval:doc.customer_type",
 			},
 			{
 				label: __("Longitude"),
 				fieldname: "custom_longitude",
 				fieldtype: "Float",
-				mandatory_depends_on: "eval:doc.customer_type",
+				
 			},
 			{
 				label: __("State"),
@@ -103,7 +101,7 @@ frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 				fieldname: "country",
 				fieldtype: "Link",
 				options: "Country",
-				mandatory_depends_on: "eval:doc.customer_type",
+			
 			},
 			{
 				label: __("Customer POS Id"),

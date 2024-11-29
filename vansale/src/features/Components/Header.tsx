@@ -11,6 +11,8 @@ import {
   HandCoins,
   LogOut,
   Menu,
+  Receipt,
+  House,
   Truck,
   Ban,
 } from "lucide-react";
@@ -43,7 +45,7 @@ export default function Header({ title }: HeaderProps) {
 
   const handleOptionClick = (path: string) => () => {
     setIsMenuOpen(false);
-
+    console.log(path,"99")
     const updatedPath = "/vansale" + path;
     navigate(updatedPath);
   };
@@ -99,6 +101,12 @@ export default function Header({ title }: HeaderProps) {
             <Button
               variant="ghost"
               className="w-full justify-start"
+              onClick={handleOptionClick("/")}>
+              <House className="mr-2 h-5 w-5" />Home
+          </Button>
+            {/* <Button
+              variant="ghost"
+              className="w-full justify-start"
               onClick={handleOptionClick("")}
             >
               <Truck className="mr-2 h-5 w-5" />
@@ -119,15 +127,16 @@ export default function Header({ title }: HeaderProps) {
             >
               <Ban className="mr-2 h-5 w-5" />
               Cancelled Stops
-            </Button>
-            {/* <Button
+            </Button> */}
+            <Button
               variant="ghost"
               className="w-full justify-start"
-              onClick={handleOptionClick}
+              onClick={handleOptionClick("/pos-invoice") }
+              
             >
-              <Settings className="mr-2 h-5 w-5" />
-              Settings
-            </Button> */}
+              <Receipt className="mr-2 h-5 w-5" />
+            POS Invoice
+            </Button>
           </div>
         </SheetContent>
       </Sheet>

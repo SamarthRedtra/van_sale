@@ -38,6 +38,7 @@ function applyStyling() {
         const itemCodeSearchField = filterContainer.find('.search-field');
         if (itemCodeSearchField.length) {
             itemCodeSearchField.css("margin", "0");
+            itemCodeSearchField.css("margin-bottom", "10px");
         }
     }
 
@@ -59,7 +60,7 @@ function applyStyling() {
 frappe.pages["point-of-sale"].refresh = function (wrapper) {
     $(document).ready(() => {
         setTimeout(async () => {
-            if (!window?.frappe.is_mobile()) return
+            if (!window?.frappe.is_mobile()) return false;
 
             const inputField = cur_dialog?.$wrapper.find?.('input[data-fieldname="pos_profile"]');
 
@@ -95,7 +96,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }, 1800);
 
         setTimeout(() => {
-            if (!window?.frappe.is_mobile()) return
+            if (!window?.frappe.is_mobile()) return false;
 
             setTimeout(() => {
                 applyStyling();
@@ -116,6 +117,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }, 1500);
 
         setTimeout(() => {
+            if (!window?.frappe.is_mobile()) return false;
             const frappeAwesomeBar =
                 document?.body?.getElementsByClassName('search-bar')?.[0]
 
