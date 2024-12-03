@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { Store } from "lucide-react";
 
-export default function PosOpen() {
+export default function PosOpen({ pos_profile }: any) {
   const navigate = useNavigate();
 
   // Redirect to POS
   const handleOpenPOS = () => {
     //navigate('/app/point-of-sale');
-    window.location.href = '/app/point-of-sale';
+    window.location.href = `/app/point-of-sale?pos_profile=${pos_profile}`;
   };
 
   return (

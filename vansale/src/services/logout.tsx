@@ -1,5 +1,6 @@
 import axios from "axios";
 import clearCache from "./clearCache";
+import Cookie from "js-cookie";
 
 const logout = async (currentUser: string) => {
   const res = await axios({
@@ -12,6 +13,8 @@ const logout = async (currentUser: string) => {
 
   if (res.status === 200) {
     await clearCache(currentUser);
+    Cookie.remove("selectedPosProfile");
+
   }
 
   return await res.data;

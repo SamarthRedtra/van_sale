@@ -1,10 +1,17 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useFrappeGetDoc } from "frappe-react-sdk";
 import { format } from "date-fns";
+import { Printer } from 'lucide-react';
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
+
+
 
 export default function InvoiceDetails() {
   const { invoiceId } = useParams(); // Get the invoice ID from the URL
   const navigate = useNavigate();
+  const handlePrint = () => {
+    window.location.href= `/printview?doctype=POS%20Invoice&name=ACC-PSINV-2024-00002&trigger_print=1&format=Standard&no_letterhead=1&letterhead=No%20Letterhead&settings=%7B%7D&_lang=en`
+  }
 
   // Fetch invoice details using useFrappeGetDoc
   const { data: invoice, isLoading, error } = useFrappeGetDoc("POS Invoice", invoiceId);
@@ -23,15 +30,22 @@ export default function InvoiceDetails() {
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
+      POS Invoice
       {/* Header */}
       <div className="bg-white shadow p-4 rounded-lg mb-4 flex justify-between items-center">
-        <h2 className="text-lg font-bold">Invoice Details</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-blue-600 text-sm font-semibold"
-        >
-          Back
-        </button>
+      <div className="flex justify-between items-center p-4">
+          <h1
+            onClick={() =>
+              navigate(`/vansale/pos-invoice/`)
+            }
+            className="text-xl font-bold flex gap-2 items-center select-none cursor-pointer"
+          >
+            <ChevronLeftIcon className="w-7 h-7 color-inherit text-black" />
+            <span className="text-sm font-semibold">{invoice.name}</span> 
+          </h1>
+        </div>
+        <Printer className="w-6 h-6" onClick={handlePrint}/>
+
       </div>
 
       {/* Customer Details */}

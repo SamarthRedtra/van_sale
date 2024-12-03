@@ -35,8 +35,8 @@ class VanSalePOSInvoice(POSInvoice):
             )
             delivery_stop.save()
 
-    def on_submit(self):
-        if frappe.db.get_value(
-            "POS Profile", self.pos_profile, "custom_is_driver_profile"
-        ):
-            self.mark_customer_visited()
+    # def on_submit(self):
+    #     if frappe.db.get_value(
+    #         "POS Profile", self.pos_profile, "custom_is_driver_profile"
+    #     ):
+    #         self.mark_customer_visited()

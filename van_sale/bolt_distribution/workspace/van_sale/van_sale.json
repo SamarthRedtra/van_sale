@@ -1,7 +1,7 @@
 {
  "charts": [],
- "content": "[{\"id\":\"b3jhpZ46nq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Delivery Trip Status</b></span>\",\"col\":12}},{\"id\":\"REkimclde8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Scheduled\",\"col\":3}},{\"id\":\"KBTuE3d6gE\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"In-Transit\",\"col\":3}},{\"id\":\"GAnQhJsBm6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\" Partially Completed\",\"col\":3}},{\"id\":\"dqYhcaA_lo\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed\",\"col\":3}},{\"id\":\"XKZj36ldrI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kb3XPLg8lb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"pVkrmEAJR0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"0x46zZShr7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Route Master\",\"col\":3}},{\"id\":\"rbO0S8upJQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drivers\",\"col\":3}},{\"id\":\"s9-h8dirP3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"snrzfbFr5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"nWd2KJPW8l\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"ucexO6RnWz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"d_KVM1gsf9\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"JVu8-FJZCu\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"ji2Jlm3Q8i\",\"type\":\"card\",\"data\":{\"card_name\":\"Delivery Managemnt\",\"col\":4}},{\"id\":\"N61oiXpuwK\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"JiuSi0ubOg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
- "creation": "2024-10-20 23:48:01.322131",
+ "content": "[{\"id\":\"b3jhpZ46nq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Delivery Trip Status</b></span>\",\"col\":12}},{\"id\":\"REkimclde8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Scheduled\",\"col\":3}},{\"id\":\"KBTuE3d6gE\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"In-Transit\",\"col\":3}},{\"id\":\"GAnQhJsBm6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\" Partially Completed\",\"col\":3}},{\"id\":\"dqYhcaA_lo\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed\",\"col\":3}},{\"id\":\"XKZj36ldrI\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kb3XPLg8lb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"pVkrmEAJR0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"0x46zZShr7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Route Master\",\"col\":3}},{\"id\":\"rbO0S8upJQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Drivers\",\"col\":3}},{\"id\":\"s9-h8dirP3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"snrzfbFr5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"nWd2KJPW8l\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"ucexO6RnWz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"K1G4bH7B-d\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Warehouse\",\"col\":3}},{\"id\":\"d_KVM1gsf9\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"JVu8-FJZCu\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"ji2Jlm3Q8i\",\"type\":\"card\",\"data\":{\"card_name\":\"Delivery Managemnt\",\"col\":4}},{\"id\":\"N61oiXpuwK\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"JiuSi0ubOg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "creation": "2024-12-04 00:27:03.216225",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -22,7 +22,6 @@
    "link_to": "Account",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -34,7 +33,6 @@
    "link_to": "Company",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -46,7 +44,6 @@
    "link_to": "Customer",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -58,7 +55,6 @@
    "link_to": "Supplier",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -70,7 +66,6 @@
    "link_to": "Item",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -82,7 +77,6 @@
    "link_to": "Warehouse",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -94,7 +88,6 @@
    "link_to": "Brand",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -106,7 +99,6 @@
    "link_to": "UOM",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -118,7 +110,6 @@
    "link_to": "Stock Reconciliation",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -130,7 +121,6 @@
    "link_to": "Lead",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -142,7 +132,6 @@
    "link_to": "Customer Group",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -154,7 +143,6 @@
    "link_to": "Territory",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -166,7 +154,6 @@
    "link_to": "Data Import",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -178,7 +165,6 @@
    "link_to": "Opening Invoice Creation Tool",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -190,7 +176,6 @@
    "link_to": "Chart of Accounts Importer",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -202,7 +187,6 @@
    "link_to": "Letter Head",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -214,7 +198,6 @@
    "link_to": "Email Account",
    "link_type": "DocType",
    "onboard": 1,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -224,7 +207,6 @@
    "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Card Break"
   },
   {
@@ -235,7 +217,6 @@
    "link_to": "City Master",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -246,7 +227,6 @@
    "link_to": "Route Master",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -257,7 +237,6 @@
    "link_to": "Driver",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -268,7 +247,6 @@
    "link_to": "Vehicle",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -279,7 +257,6 @@
    "link_to": "Delivery Trip",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -289,7 +266,6 @@
    "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Card Break"
   },
   {
@@ -300,7 +276,6 @@
    "link_to": "POS Profile",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -311,7 +286,6 @@
    "link_to": "Sales Invoice",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -322,7 +296,6 @@
    "link_to": "POS Invoice",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -333,7 +306,6 @@
    "link_to": "Payment Entry",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Link"
   },
   {
@@ -343,7 +315,6 @@
    "link_count": 3,
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "type": "Card Break"
   },
   {
@@ -354,7 +325,6 @@
    "link_to": "Stock Ledger",
    "link_type": "Report",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "report_ref_doctype": "Stock Ledger Entry",
    "type": "Link"
   },
@@ -366,7 +336,6 @@
    "link_to": "Stock Balance",
    "link_type": "Report",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "report_ref_doctype": "Stock Ledger Entry",
    "type": "Link"
   },
@@ -378,12 +347,11 @@
    "link_to": "Warehouse Wise Stock Balance",
    "link_type": "Report",
    "onboard": 0,
-   "only_for": "United Arab Emirates",
    "report_ref_doctype": "Stock Ledger Entry",
    "type": "Link"
   }
  ],
- "modified": "2024-10-20 23:48:01.322131",
+ "modified": "2024-12-04 00:36:52.801316",
  "modified_by": "Administrator",
  "module": "Bolt Distribution",
  "name": "Van Sale",
@@ -419,6 +387,14 @@
    "kanban_board": "Delivery Trip",
    "label": "Delivery Trip",
    "link_to": "Delivery Trip",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Warehouse",
+   "link_to": "Warehouse",
    "stats_filter": "[]",
    "type": "DocType"
   },

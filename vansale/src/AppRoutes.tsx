@@ -12,6 +12,8 @@ import PaymentDueStops from "./features/PaymentDueStops/PaymentDueStops.tsx";
 import CancelledStops from "./features/CancelledStops/CancelledStops.tsx";
 import PosInvoice from "./features/PosInvoice/PosInvoice.tsx";
 import InvoiceDetails from "./features/PosInvoice/Components/InvoiceDetails.tsx";
+import SalesInvoicetwo from "./features/SalesInvoicetwo/SalesInvoicetwo.tsx";
+import SInvoiceDetails from "./features/SalesInvoicetwo/Components/sInvoiceDetails.tsx";
 
 type isRouteActive = boolean;
 
@@ -25,6 +27,8 @@ const pageRoutes: RouteConfig = [
   ["/vansale/cancelled-stops", <CancelledStops />, true],
   ["/vansale/pos-invoice", <PosInvoice />, true],
   ["/vansale/pos-invoice/:invoiceId", <InvoiceDetails />, true],
+  ["/vansale/s-invoice", <SalesInvoicetwo />, true],
+  ["/vansale/s-invoice/:invoiceId", <SInvoiceDetails />, true],
   [
     "/vansale/delivery-trip/:trip_id/:customer_id",
     <DeliveryStopDetails />,

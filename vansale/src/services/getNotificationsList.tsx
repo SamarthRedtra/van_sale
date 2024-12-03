@@ -12,4 +12,22 @@ const getNotificationsList = async () => {
   return await res.data;
 };
 
-export default getNotificationsList;
+
+
+const getCurrentUser = async () => {
+  const res = await axios({
+    method: "GET",
+    url: "/api/method/van_sale.api.utils.get_user_info",
+    headers: {
+      "x-frappe-csrf-token": window?.csrf_token ?? "",
+    },
+  });
+
+  return await res.data;
+};
+
+export  {
+  getCurrentUser,
+  getNotificationsList
+
+};

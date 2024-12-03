@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../Components/Header";
-import DeliveryStopDetailCard from "../TripDetails/components/DeliveryStopDetailCard";
 import LoadingOverlay from "../Loader/LoadingOverlay";
 import NoCustomerFound from "../TripDetails/components/NoCustomerFound";
 import { useFrappeGetDocList, useFrappeAuth } from "frappe-react-sdk";
 import InvoiceDetailCard from "./Components/InvoiceComponent";
+import Cookie from "js-cookie";
+import getPosProfiles from "@/services/getPosProfiles";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select.tsx";
 
 export default function PosInvoice() {
   const { currentUser } = useFrappeAuth();
+  const posprofileFromCookie = Cookie.get("selectedPosProfile");
   const [search, setSearch] = useState("");
+  const [posProfile, setPosProfile] = useState(posprofileFromCookie || ""); // Default to cookie value
+  const [posProfiles, setPosProfiles] = useState([]);
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
 
   // Fetch POS-Invoice data using useFrappeGetDocList
-  const { data, isLoading, error } = useFrappeGetDocList("POS Invoice", {
+  const { data, isLoading: isLoadingInvoices, error } = useFrappeGetDocList("POS Invoice", {
     fields: [
       "name",
       "grand_total",
@@ -21,11 +33,33 @@ export default function PosInvoice() {
       "status",
       "posting_date",
     ],
-    filters: [["owner", "=", currentUser]], // Only fetch invoices for the current user
+    filters: [["pos_profile", "=", posProfile]], // Dynamically pass the selected POS profile
   });
+
+  // Fetch POS Profiles
+  const fetchProfiles = async () => {
+    try {
+      setIsLoadingProfiles(true);
+      const profiles: any = await getPosProfiles(); // Replace with your service call
+      setPosProfiles(profiles || []);
+    } catch (error) {
+      console.error("Error fetching POS profiles:", error);
+    } finally {
+      setIsLoadingProfiles(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.toLowerCase());
+  };
+
+  const handlePosProfileChange = (value: string) => {
+    setPosProfile(value);
+    //Cookie.set("selectedPosProfile", value); // Update the cookie with the new selection
   };
 
   // Dynamic filtering
@@ -48,6 +82,34 @@ export default function PosInvoice() {
       </div>
 
       <div className="p-4">
+        {/* POS Profile Selector */}
+        <div className="mb-4">
+          <label htmlFor="posProfile" className="block text-sm font-medium text-gray-700 font-bold">
+            Select POS Profile
+          </label>
+          {isLoadingProfiles ? (
+            <div className="text-gray-500">Loading POS profiles...</div>
+          ) : (
+            <Select
+              onValueChange={(value) => {
+                handlePosProfileChange(value);
+              }}
+            >
+              <SelectTrigger className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 text-left shadow-sm">
+                <SelectValue placeholder="Select POS" className="font-bold" />
+              </SelectTrigger>
+              <SelectContent className="z-[9999] bg-white rounded-md shadow-lg">
+                {posProfiles.map((profile) => (
+                  <SelectItem key={profile.name} value={profile.name}>
+                    {profile.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+
+        {/* Search Input */}
         <div className="relative">
           <svg
             className="w-5 h-5 absolute left-3 top-3 text-gray-400"
@@ -71,9 +133,10 @@ export default function PosInvoice() {
             onChange={handleSearch}
           />
         </div>
-        {isLoading && <LoadingOverlay />}
+
+        {isLoadingInvoices && <LoadingOverlay />}
         {error && <p className="text-red-500">Error loading invoices.</p>}
-        {!isLoading && !error && (
+        {!isLoadingInvoices && !error && (
           <div className="mt-4 flex flex-col gap-4">
             {filteredInvoices.length ? (
               filteredInvoices.map((invoice) => (

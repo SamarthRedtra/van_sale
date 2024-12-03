@@ -1,6 +1,18 @@
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { ClockIcon } from "@radix-ui/react-icons";
+import {
+  Bell,
+  BellDot,
+  HandCoins,
+  LogOut,
+  Menu,
+  Receipt,
+  House,
+  Truck,
+  Ban,
+  Printer
+} from "lucide-react";
 
 interface InvoiceDetailCardProps {
   invoice: {
@@ -45,6 +57,7 @@ export default function InvoiceDetailCard({
           <div className="flex flex-col">
             <h2 className="font-semibold text-lg">{invoice.customer || "-"}</h2>
             <p className="text-sm text-gray-500">{invoice.name || "-"}</p>
+  
           </div>
           <div className="text-right">
             <p className="text-sm font-semibold">

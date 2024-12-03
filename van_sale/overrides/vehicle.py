@@ -30,14 +30,14 @@ class VanSaleVehicle(Vehicle):
                 }
             ).insert(ignore_permissions=True)
 
-            self.custom_warehouse = warehouse_doc.name
+            #self.custom_warehouse = warehouse_doc.name
             self.flags.is_processed = True
             self.save()
         else:
             # If custom_warehouse exists, update the warehouse linked to the vehicle
             warehouse_doc = frappe.get_doc("Warehouse", self.custom_warehouse)
             warehouse_doc.custom_is_vehicle = 1
-            warehouse_doc.custom_vehicle = self.name
+            #warehouse_doc.custom_vehicle = self.name
             warehouse_doc.save()
 
             self.flags.is_processed = True
@@ -52,3 +52,6 @@ class VanSaleVehicle(Vehicle):
         # If custom_is_warehouse is true but no warehouse is linked, create or update it
         if self.custom_is_warehouse:
             self.update_warehouse()
+    
+  
+                

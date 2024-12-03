@@ -1,5 +1,37 @@
 frappe.provide("frappe.ui.form");
 
+
+
+frappe.ui.toolbar.add_button_to_navbar = function () {
+	const backButtonHtml = `<li class="nav-item">
+	<a 
+	  class="nav-link bg-blue-500 hover:bg-blue-600 text-black font-medium rounded px-3 py-2 shadow flex items-center" 
+	  href="/vansale" 
+	  title="Back to VanSale"
+	  style="margin-right: 10px; display: flex; align-items: center; gap: 5px;"
+	>
+	  ${frappe.utils.icon('arrow-left', 'md')}
+	  <span> Open VanSale</span>
+	</a>
+  </li>
+`;
+
+  
+	// Add the button to the Navbar
+	$('header.navbar > .container > .navbar-collapse > ul').prepend(backButtonHtml);
+  }
+  
+  // Execute the function
+frappe.ui.toolbar.add_button_to_navbar();
+console.log(frappe.ui.toolbar.add_button_to_navbar()
+,"executed");
+setTimeout(() => {
+	if(frappe.is_mobile()){
+		frappe.ui.toolbar.add_button_to_navbar();
+	}
+},500)
+
+
 frappe.ui.form.CustomerQuickEntryForm = class CustomerQuickEntryForm extends (
 	frappe.ui.form.QuickEntryForm
 ) {

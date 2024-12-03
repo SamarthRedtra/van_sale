@@ -15,22 +15,25 @@ import {
   House,
   Truck,
   Ban,
+  ReceiptText
 } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { useEffect, useState } from "react";
 import { useFrappeAuth } from "frappe-react-sdk";
 import { useNavigate } from "react-router-dom";
-import getNotificationsList from "@/services/getNotificationsList";
+import {getNotificationsList, getCurrentUser} from "@/services/getNotificationsList";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar,AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import markNotificationToRead from "@/services/markNotifiactionToRead";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import logout from "@/services/logout";
+import Cookies from "js-cookie";
+
 
 interface HeaderProps {
   title?: string;
@@ -40,8 +43,13 @@ export default function Header({ title }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUnreadMsgFound, setIsUnreadMsgFound] = useState(false);
   const [notificationsList, setNotificationsList] = useState([]);
+  const [selectedPos, setSelectedPos] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<any>(null);
+
   const navigate = useNavigate();
-  const { currentUser } = useFrappeAuth();
+  const { currentUser} = useFrappeAuth()
+  
+
 
   const handleOptionClick = (path: string) => () => {
     setIsMenuOpen(false);
@@ -61,6 +69,15 @@ export default function Header({ title }: HeaderProps) {
     const handleShowNotifications = async () => {
       const list = await getNotificationsList();
       setNotificationsList(list?.message?.notification_logs ?? []);
+      const pos = Cookies.get("selectedPosProfile");
+      setSelectedPos(pos);
+      const user_info = await getCurrentUser();
+      setUserInfo(user_info.message);
+      console.log(userInfo);
+
+
+
+
     };
     handleShowNotifications();
   }, []);
@@ -94,6 +111,15 @@ export default function Header({ title }: HeaderProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
+        <div className="flex items-center space-x-4 mb-4">
+      
+            
+
+            {/* Greeting with Emoji */}
+            <div className="text-lg font-medium flex items-center">
+             <span className="font-bold mr-1"> {userInfo?.full_name || "Guest"}</span>  Hello 👋
+            </div>
+          </div>
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>
           </SheetHeader>
@@ -137,6 +163,16 @@ export default function Header({ title }: HeaderProps) {
               <Receipt className="mr-2 h-5 w-5" />
             POS Invoice
             </Button>
+            
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={handleOptionClick("/s-invoice") }
+              
+            >
+              <ReceiptText className="mr-2 h-5 w-5" />
+            Sales Invoice
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
@@ -146,6 +182,12 @@ export default function Header({ title }: HeaderProps) {
       )}
 
       <div className="flex items-center space-x-2">
+        {selectedPos && (
+         <span className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 px-3 py-1 text-xs font-medium text-white shadow-sm animate-pulse">
+         {selectedPos}
+       </span>
+        )}
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -198,6 +240,21 @@ export default function Header({ title }: HeaderProps) {
           <LogOut className="h-5 w-5" />
           <span className="sr-only">Logout</span>
         </Button>
+           <Avatar title={userInfo?.full_name+"\n"+userInfo?.email}>
+              <AvatarImage
+                src={userInfo?.user_image || ""}
+                alt={userInfo?.full_name || "User Avatar"}
+              />
+              <AvatarFallback >
+                {userInfo?.full_name
+                  ? userInfo.full_name
+                      .split(" ")
+                      .map((word) => word[0])
+                      .join("")
+                      .toUpperCase()
+                  : "U"}
+              </AvatarFallback>
+            </Avatar>
       </div>
     </div>
   );

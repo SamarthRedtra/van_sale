@@ -59,7 +59,7 @@ export default function LoginScreen() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="rounded-full bg-primary p-2">
-            <svg
+            {/* <svg
               className="w-8 h-8 text-primary-foreground"
               fill="none"
               stroke="currentColor"
@@ -72,7 +72,8 @@ export default function LoginScreen() {
                 strokeWidth={2}
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
-            </svg>
+            </svg> */}
+            <img src="/assets/van_sale/assets/redtra.png" className="w-8 h-8" alt="Logo" />
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -147,6 +148,8 @@ export default function LoginScreen() {
             </div>
           </form>
 
+         
+
           {notification && (
             <Alert
               variant={
@@ -165,6 +168,18 @@ export default function LoginScreen() {
               <AlertDescription>{notification.message}</AlertDescription>
             </Alert>
           )}
+           <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Developed By <a target="_blank" className="text-blue-500 font-semibold" href="https://redtra.com"> Redtra Technologies</a>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
