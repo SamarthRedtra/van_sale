@@ -127,7 +127,7 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }, 50)
     })
     $(document).ready(()=>{
-        if(new URLSearchParams(window.location.search).get("pos_profile")){
+        if(new URLSearchParams(window.location.search).get("pos_profile") && false){
             const observer = new MutationObserver(function (mutationsList) {
                 mutationsList.forEach(function (mutation) {
                     if (mutation.type === 'childList') {

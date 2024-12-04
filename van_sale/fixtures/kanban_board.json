@@ -13,7 +13,7 @@
    {
     "column_name": "Scheduled",
     "indicator": "Gray",
-    "order": "[\n \"MAT-DT-2024-00014\"\n]",
+    "order": "[]",
     "parent": "Delivery Trip",
     "parentfield": "columns",
     "parenttype": "Kanban Board",
@@ -22,7 +22,7 @@
    {
     "column_name": "In Transit",
     "indicator": "Gray",
-    "order": "[\n \"MAT-DT-2024-00010\"\n]",
+    "order": "[]",
     "parent": "Delivery Trip",
     "parentfield": "columns",
     "parenttype": "Kanban Board",
@@ -31,7 +31,7 @@
    {
     "column_name": "Completed",
     "indicator": "Gray",
-    "order": "[\n \"MAT-DT-2024-00012\",\n \"MAT-DT-2024-00009\",\n \"MAT-DT-2024-00008\"\n]",
+    "order": "[]",
     "parent": "Delivery Trip",
     "parentfield": "columns",
     "parenttype": "Kanban Board",
@@ -40,7 +40,7 @@
    {
     "column_name": "Cancelled",
     "indicator": "Gray",
-    "order": "[\n \"MAT-DT-2024-00011\"\n]",
+    "order": "[]",
     "parent": "Delivery Trip",
     "parentfield": "columns",
     "parenttype": "Kanban Board",
@@ -49,7 +49,7 @@
    {
     "column_name": "Partially Completed",
     "indicator": "Gray",
-    "order": "[\n \"MAT-DT-2024-00013\"\n]",
+    "order": "[]",
     "parent": "Delivery Trip",
     "parentfield": "columns",
     "parenttype": "Kanban Board",

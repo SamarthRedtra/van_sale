@@ -11,12 +11,10 @@ frappe.ui.toolbar.add_button_to_navbar = function () {
 	  style="margin-right: 10px; display: flex; align-items: center; gap: 5px;"
 	>
 	  ${frappe.utils.icon('arrow-left', 'md')}
-	  <span> Open VanSale</span>
+	  <span> Back </span>
 	</a>
   </li>
 `;
-
-  
 	// Add the button to the Navbar
 	$('header.navbar > .container > .navbar-collapse > ul').prepend(backButtonHtml);
   }

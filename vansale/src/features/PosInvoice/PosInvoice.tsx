@@ -71,7 +71,7 @@ export default function PosInvoice() {
       invoice.currency?.toLowerCase().includes(searchTerm) ||
       (invoice.grand_total?.toString() || "").includes(searchTerm) ||
       (invoice.posting_date?.toLowerCase() || "").includes(searchTerm) ||
-      (invoice.posting_time?.toLowerCase() || "").includes(searchTerm)
+      (invoice?.posting_time?.toLowerCase() || "").includes(searchTerm)
     );
   });
 

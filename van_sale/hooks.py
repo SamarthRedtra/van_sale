@@ -257,6 +257,7 @@ fixtures = [
             ["Property Setter", "name", "=", "Delivery Trip-main-Allow on Submit"],
         ],
     },
+    {"doctype": "Role Profile", "filters": {"name": "Driver"}},
 ]
 
 website_route_rules = [
