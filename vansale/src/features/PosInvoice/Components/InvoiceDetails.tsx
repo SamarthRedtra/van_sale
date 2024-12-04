@@ -73,7 +73,7 @@ export default function InvoiceDetails() {
           <div className="flex justify-between text-sm">
             <span>Time</span>
             <span className="font-medium">
-              {invoice.posting_time
+              {invoice?.posting_time
                 ? format(new Date(`1970-01-01T${invoice.posting_time}Z`), "hh:mm a")
                 : "--:--"}
             </span>
