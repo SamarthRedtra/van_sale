@@ -10,7 +10,7 @@ export default function SInvoiceDetails() {
   const { invoiceId } = useParams(); // Get the invoice ID from the URL
   const navigate = useNavigate();
   const handlePrint = () => {
-    window.location.href= `/printview?doctype=Sales%20Invoice&name=ACC-SINV-2024-00046&trigger_print=1&format=Standard&no_letterhead=1&letterhead=No%20Letterhead&settings=%7B%7D&_lang=en`
+    window.location.href= `/printview?doctype=Sales%20Invoice&name=${invoiceId}&trigger_print=1&format=Standard&no_letterhead=1&letterhead=No%20Letterhead&settings=%7B%7D&_lang=en`
   }
 
   // Fetch invoice details using useFrappeGetDoc

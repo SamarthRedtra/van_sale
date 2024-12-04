@@ -20,12 +20,12 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
     theme_color: "#ffffff",
     icons: [
       {
-        src: "/android-chrome-192x192.png",
+        src: "/resized_logo_2048x2048.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/android-chrome-512x512.png",
+        src: "/resized_logo_4096x4096.png",
         sizes: "512x512",
         type: "image/png",
       },
