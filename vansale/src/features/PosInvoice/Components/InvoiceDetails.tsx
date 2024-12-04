@@ -9,6 +9,18 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons";
 export default function InvoiceDetails() {
   const { invoiceId } = useParams(); // Get the invoice ID from the URL
   const navigate = useNavigate();
+
+
+  function sanitizePostingTime(postingTime: string | null) {
+    if (!postingTime) return null;
+    
+    const timeParts = postingTime.split(".")[0].split(":"); // Remove fractions and split by ":"
+    if (timeParts[0].length === 1) {
+      timeParts[0] = `0${timeParts[0]}`; // Pad single-digit hour
+    }
+    return timeParts.join(":"); // Return sanitized time
+  }
+
   const handlePrint = () => {
     window.location.href= `/printview?doctype=POS%20Invoice&name=${invoiceId}&trigger_print=1&format=POS Invoice&no_letterhead=0&letterhead=Bolt%20Header&settings=%7B%7D&_lang=en`
   }
@@ -73,9 +85,12 @@ export default function InvoiceDetails() {
           <div className="flex justify-between text-sm">
             <span>Time</span>
             <span className="font-medium">
-              {invoice?.posting_time
-                ? format(new Date(`1970-01-01T${invoice.posting_time}Z`), "hh:mm a")
-                : "--:--"}
+            {invoice?.posting_time
+              ? format(
+                  new Date(`1970-01-01T${sanitizePostingTime(invoice.posting_time)}Z`),
+                  "hh:mm a"
+                )
+              : "--:--"}
             </span>
           </div>
           <div className="flex justify-between text-sm">
