@@ -65,15 +65,19 @@ export default function PosInvoice() {
   // Dynamic filtering
   const filteredInvoices = (data || []).filter((invoice) => {
     const searchTerm = search.toLowerCase();
+    const postingDate = invoice.posting_date || ""; // Fallback to empty string
+    const postingTime = invoice.posting_time || ""; // Fallback to empty string
+  
     return (
       invoice.customer?.toLowerCase().includes(searchTerm) ||
       invoice.name?.toLowerCase().includes(searchTerm) ||
       invoice.currency?.toLowerCase().includes(searchTerm) ||
       (invoice.grand_total?.toString() || "").includes(searchTerm) ||
-      (invoice.posting_date?.toLowerCase() || "").includes(searchTerm) ||
-      (invoice?.posting_time?.toLowerCase() || "").includes(searchTerm)
+      postingDate.toLowerCase().includes(searchTerm) ||
+      postingTime.toLowerCase().includes(searchTerm)
     );
   });
+
 
   return (
     <div className="mx-auto min-h-screen">
@@ -144,6 +148,8 @@ export default function PosInvoice() {
                   key={invoice.name}
                   invoice={{
                     ...invoice,
+                    posting_date: invoice.posting_date || "N/A", // Provide default value if date is invalid
+                    posting_time: invoice.posting_time || "N/A", // Provide default value if time is invalid
                     status: invoice.status || "Unknown", // Provide status dynamically
                   }}
                   isCTAAllowed={true} // Show the action button
