@@ -26,19 +26,43 @@ export default function ClosedInvoice() {
   const [posProfiles, setPosProfiles] = useState([]);
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const formattedSelectedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
+
+  const filtersDate = [["pos_profile", "=", posProfile],["posting_date", "=", `${formattedSelectedDate}`]];
+  const filters = [["pos_profile", "=", posProfile]];
+
+  const or_filters = [
+    ["name", "like", `%${debouncedSearch}%`],
+    ["grand_total", "like", `%${debouncedSearch}%`],
+    ["user", "like", `%${debouncedSearch}%`],
+    ["status", "like", `%${debouncedSearch}%`],
+    
+
+  ];
   // Fetch POS-Invoice data using useFrappeGetDocList
   const { data, isLoading: isLoadingInvoices, error } = useFrappeGetDocList("POS Closing Entry", {
     fields: [
       "*"
     ],
-    filters: [["pos_profile", "=", posProfile]], // Dynamically pass the selected POS profile
-  });
+    filters: selectedDate ? filtersDate : filters,
+    orFilters:or_filters,
+    orderBy: { field: "posting_date", order: "desc" },
+    limit: 30,
+    });
 
-  const formattedSelectedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
 
   console.log(data)
   console.log(selectedDate)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
 
   // Fetch POS Profiles
@@ -67,24 +91,6 @@ export default function ClosedInvoice() {
     //Cookie.set("selectedPosProfile", value); // Update the cookie with the new selection
   };
 
-  // Dynamic filtering
-// Dynamic filtering
-const filteredInvoices = (data || []).filter((invoice) => {
-  const searchTerm = search.toLowerCase();
-  const postingDate = invoice.posting_date || ""; // Fallback to empty string
-
-  const matchesSearch =
-    invoice.company?.toLowerCase().includes(searchTerm) ||
-    invoice.name?.toLowerCase().includes(searchTerm) ||
-    invoice.user?.toLowerCase().includes(searchTerm) ||
-    (invoice.grand_total?.toString() || "").includes(searchTerm)
-
-  const matchesDate =
-    !selectedDate || postingDate === format(selectedDate, "yyyy-MM-dd");
-
-  // Show all data if no date is selected; otherwise, filter by date and search
-  return matchesSearch && matchesDate;
-});
 
 
 
@@ -166,8 +172,8 @@ const filteredInvoices = (data || []).filter((invoice) => {
         {error && <p className="text-red-500">Error loading invoices.</p>}
         {!isLoadingInvoices && !error && (
           <div className="mt-4 flex flex-col gap-4">
-            {filteredInvoices.length ? (
-              filteredInvoices.map((invoice) => (
+            {data?.length ? (
+              data?.map((invoice) => (
                 <InvoiceDetailCard
                   key={invoice.name}
                   invoice={{

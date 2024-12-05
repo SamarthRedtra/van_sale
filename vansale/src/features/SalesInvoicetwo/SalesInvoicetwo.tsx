@@ -21,7 +21,16 @@ export default function SalesInvoicetwo() {
   const [posProfile, setPosProfile] = useState(posprofileFromCookie || ""); // Default to cookie value
   const [posProfiles, setPosProfiles] = useState([]);
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const filters = [["pos_profile", "=", posProfile]];
 
+  const or_filters = [
+    ["name", "like", `%${debouncedSearch}%`],
+    ["grand_total", "like", `%${debouncedSearch}%`],
+    ["currency", "like", `%${debouncedSearch}%`],
+    ["customer", "like", `%${debouncedSearch}%`],
+    ["status", "like", `%${debouncedSearch}%`]
+  ];
   // Fetch POS-Invoice data using useFrappeGetDocList
   const { data, isLoading: isLoadingInvoices, error } = useFrappeGetDocList("Sales Invoice", {
     fields: [
@@ -33,7 +42,10 @@ export default function SalesInvoicetwo() {
       "status",
       "posting_date",
     ],
-    filters: [["pos_profile", "=", posProfile]], // Dynamically pass the selected POS profile
+    filters,
+    orFilters:or_filters,
+    orderBy: { field: "posting_date", order: "desc" },
+    limit: 30,
   });
 
   // Fetch POS Profiles
@@ -52,6 +64,16 @@ export default function SalesInvoicetwo() {
   useEffect(() => {
     fetchProfiles();
   }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.toLowerCase());
@@ -141,8 +163,7 @@ export default function SalesInvoicetwo() {
         {error && <p className="text-red-500">Error loading invoices.</p>}
         {!isLoadingInvoices && !error && (
           <div className="mt-4 flex flex-col gap-4">
-            {filteredInvoices.length ? (
-              filteredInvoices.map((invoice) => (
+           { data?.length ? (filteredInvoices.map((invoice) => (
                 <InvoiceDetailCard
                   key={invoice.name}
                   invoice={{
@@ -153,10 +174,11 @@ export default function SalesInvoicetwo() {
                   }}
                   isCTAAllowed={true} // Show the action button
                 />
-              ))
-            ) : (
-              <NoCustomerFound />
-            )}
+              ))) :(
+                <NoCustomerFound/>
+              )
+              
+           }
           </div>
         )}
       </div>

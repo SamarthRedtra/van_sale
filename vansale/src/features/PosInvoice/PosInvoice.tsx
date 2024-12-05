@@ -18,12 +18,27 @@ export default function PosInvoice() {
   const { currentUser } = useFrappeAuth();
   const posprofileFromCookie = Cookie.get("selectedPosProfile");
   const [search, setSearch] = useState("");
-  const [posProfile, setPosProfile] = useState(posprofileFromCookie || ""); // Default to cookie value
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [posProfile, setPosProfile] = useState(posprofileFromCookie || "");
   const [posProfiles, setPosProfiles] = useState([]);
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
 
+  const filters = [["pos_profile", "=", posProfile]];
+
+  const or_filters = [
+    ["name", "like", `%${debouncedSearch}%`],
+    ["grand_total", "like", `%${debouncedSearch}%`],
+    ["currency", "like", `%${debouncedSearch}%`],
+    ["customer", "like", `%${debouncedSearch}%`],
+    ["status", "like", `%${debouncedSearch}%`]
+  ];
+  console.log(debouncedSearch);
   // Fetch POS-Invoice data using useFrappeGetDocList
-  const { data, isLoading: isLoadingInvoices, error } = useFrappeGetDocList("POS Invoice", {
+  const {
+    data,
+    isLoading: isLoadingInvoices,
+    error,
+  } = useFrappeGetDocList("POS Invoice", {
     fields: [
       "name",
       "grand_total",
@@ -33,14 +48,17 @@ export default function PosInvoice() {
       "status",
       "posting_date",
     ],
-    filters: [["pos_profile", "=", posProfile]], // Dynamically pass the selected POS profile
+    filters,
+    orFilters:or_filters,
+    orderBy: { field: "posting_date", order: "desc" },
+    limit: 30,
   });
 
   // Fetch POS Profiles
   const fetchProfiles = async () => {
     try {
       setIsLoadingProfiles(true);
-      const profiles: any = await getPosProfiles(); // Replace with your service call
+      const profiles = await getPosProfiles(); // Replace with your service call
       setPosProfiles(profiles || []);
     } catch (error) {
       console.error("Error fetching POS profiles:", error);
@@ -53,6 +71,17 @@ export default function PosInvoice() {
     fetchProfiles();
   }, []);
 
+  // Debounce the search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value.toLowerCase());
   };
@@ -61,23 +90,6 @@ export default function PosInvoice() {
     setPosProfile(value);
     //Cookie.set("selectedPosProfile", value); // Update the cookie with the new selection
   };
-
-  // Dynamic filtering
-  const filteredInvoices = (data || []).filter((invoice) => {
-    const searchTerm = search.toLowerCase();
-    const postingDate = invoice.posting_date || ""; // Fallback to empty string
-    const postingTime = invoice.posting_time || ""; // Fallback to empty string
-  
-    return (
-      invoice.customer?.toLowerCase().includes(searchTerm) ||
-      invoice.name?.toLowerCase().includes(searchTerm) ||
-      invoice.currency?.toLowerCase().includes(searchTerm) ||
-      (invoice.grand_total?.toString() || "").includes(searchTerm) ||
-      postingDate.toLowerCase().includes(searchTerm) ||
-      postingTime.toLowerCase().includes(searchTerm)
-    );
-  });
-
 
   return (
     <div className="mx-auto min-h-screen">
@@ -88,7 +100,10 @@ export default function PosInvoice() {
       <div className="p-4">
         {/* POS Profile Selector */}
         <div className="mb-4">
-          <label htmlFor="posProfile" className="block text-sm font-medium text-gray-700 font-bold">
+          <label
+            htmlFor="posProfile"
+            className="block text-sm font-medium text-gray-700 font-bold"
+          >
             Select POS Profile
           </label>
           {isLoadingProfiles ? (
@@ -142,17 +157,17 @@ export default function PosInvoice() {
         {error && <p className="text-red-500">Error loading invoices.</p>}
         {!isLoadingInvoices && !error && (
           <div className="mt-4 flex flex-col gap-4">
-            {filteredInvoices.length ? (
-              filteredInvoices.map((invoice) => (
+            {data?.length ? (
+              data.map((invoice) => (
                 <InvoiceDetailCard
                   key={invoice.name}
                   invoice={{
                     ...invoice,
-                    posting_date: invoice.posting_date || "N/A", // Provide default value if date is invalid
-                    posting_time: invoice.posting_time || "N/A", // Provide default value if time is invalid
-                    status: invoice.status || "Unknown", // Provide status dynamically
+                    posting_date: invoice.posting_date || "N/A",
+                    posting_time: invoice.posting_time || "N/A",
+                    status: invoice.status || "Unknown",
                   }}
-                  isCTAAllowed={true} // Show the action button
+                  isCTAAllowed={true}
                 />
               ))
             ) : (
