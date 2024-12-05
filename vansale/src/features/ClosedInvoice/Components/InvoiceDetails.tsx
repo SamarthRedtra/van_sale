@@ -55,7 +55,7 @@ export default function InvoiceDetails() {
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      POS Invoice
+      POS Closing
       {/* Header */}
       <div className="bg-white shadow p-4 rounded-lg mb-4 flex justify-between items-center">
       <div className="flex justify-between items-center p-4">
