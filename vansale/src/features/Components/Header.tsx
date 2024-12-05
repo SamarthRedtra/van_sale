@@ -15,7 +15,8 @@ import {
   House,
   Truck,
   Ban,
-  ReceiptText
+  ReceiptText,
+  CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { useEffect, useState } from "react";
@@ -172,6 +173,16 @@ export default function Header({ title }: HeaderProps) {
             >
               <ReceiptText className="mr-2 h-5 w-5" />
             Sales Invoice
+            </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={handleOptionClick("/closed-invoice") }
+              
+            >
+              <CheckCircle className="mr-2 h-5 w-5" />
+            POS Closing
             </Button>
           </div>
         </SheetContent>

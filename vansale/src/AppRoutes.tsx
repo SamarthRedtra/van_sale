@@ -11,7 +11,9 @@ import SalesInvoice from "./features/SalesInvoice/SalesInvoice.tsx";
 import PaymentDueStops from "./features/PaymentDueStops/PaymentDueStops.tsx";
 import CancelledStops from "./features/CancelledStops/CancelledStops.tsx";
 import PosInvoice from "./features/PosInvoice/PosInvoice.tsx";
+import ClosedInvoice from "./features/ClosedInvoice/ClosedInvoice.tsx";
 import InvoiceDetails from "./features/PosInvoice/Components/InvoiceDetails.tsx";
+import ClosedInvoiceDetails from "./features/ClosedInvoice/Components/InvoiceDetails.tsx";
 import SalesInvoicetwo from "./features/SalesInvoicetwo/SalesInvoicetwo.tsx";
 import SInvoiceDetails from "./features/SalesInvoicetwo/Components/sInvoiceDetails.tsx";
 
@@ -26,6 +28,8 @@ const pageRoutes: RouteConfig = [
   ["/vansale/payment-due-stops", <PaymentDueStops />, true],
   ["/vansale/cancelled-stops", <CancelledStops />, true],
   ["/vansale/pos-invoice", <PosInvoice />, true],
+  ["/vansale/closed-invoice", <ClosedInvoice />, true],
+  ["/vansale/closed-invoice/:invoiceId", <ClosedInvoiceDetails />, true],
   ["/vansale/pos-invoice/:invoiceId", <InvoiceDetails />, true],
   ["/vansale/s-invoice", <SalesInvoicetwo />, true],
   ["/vansale/s-invoice/:invoiceId", <SInvoiceDetails />, true],
