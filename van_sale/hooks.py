@@ -46,6 +46,7 @@ page_js = {"point-of-sale": "public/js/point_of_sale.js"}
 doctype_js = {
     "Delivery Trip": "public/js/delivery_trip.js",
     "POS Invoice": "public/js/pos_invoice.js",
+    "Employee": "public/js/employee.js",
 }
 doctype_list_js = {"Delivery Trip": "public/js/delivery_trip_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
