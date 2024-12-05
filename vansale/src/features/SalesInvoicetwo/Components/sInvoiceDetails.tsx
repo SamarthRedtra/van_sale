@@ -26,11 +26,22 @@ export default function SInvoiceDetails() {
 
   function sanitizePostingTime(postingTime: string | any) {
     if (!postingTime) return null;
-    
-    const timeParts = postingTime.split(".")[0].split(":"); // Remove fractions and split by ":"
-    if (timeParts[0].length === 1) {
-      timeParts[0] = `0${timeParts[0]}`; // Pad single-digit hour
+  
+    // Remove fractional seconds and split into parts
+    const timeParts = postingTime.split(".")[0].split(":");
+  
+    // Ensure hours, minutes, and seconds are two digits
+    for (let i = 0; i < timeParts.length; i++) {
+      if (timeParts[i].length === 1) {
+        timeParts[i] = `0${timeParts[i]}`;
+      }
     }
+  
+    // If seconds are missing or incomplete, add a default value
+    while (timeParts.length < 3) {
+      timeParts.push("00"); // Add missing parts as "00"
+    }
+  
     return timeParts.join(":"); // Return sanitized time
   }
 
