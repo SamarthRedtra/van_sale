@@ -11,7 +11,7 @@ export default function InvoiceDetails() {
   const navigate = useNavigate();
 
 
-  function sanitizePostingTime(postingTime: string | null) {
+  function sanitizePostingTime(postingTime: string | any) {
     if (!postingTime) return null;
     
     const timeParts = postingTime.split(".")[0].split(":"); // Remove fractions and split by ":"
@@ -20,6 +20,8 @@ export default function InvoiceDetails() {
     }
     return timeParts.join(":"); // Return sanitized time
   }
+
+  
 
   const handlePrint = () => {
     window.location.href= `/printview?doctype=POS%20Invoice&name=${invoiceId}&trigger_print=1&format=POS Invoice&no_letterhead=0&letterhead=Bolt%20Header&settings=%7B%7D&_lang=en`

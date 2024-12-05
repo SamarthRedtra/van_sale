@@ -147,7 +147,7 @@ export default function SalesInvoicetwo() {
                   key={invoice.name}
                   invoice={{
                     ...invoice,
-                    posting_date: invoice.posting_date || "N/A", // Provide default value if date is invalid
+                      posting_date: invoice.posting_date || "N/A", // Provide default value if date is invalid
                      posting_time: invoice.posting_time || "N/A", // Provide default value if time is invalid
                     status: invoice.status || "Unknown", // Provide status dynamically
                   }}

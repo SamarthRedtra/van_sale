@@ -24,6 +24,16 @@ export default function SInvoiceDetails() {
     return <div className="p-4 text-red-500">Failed to load invoice details.</div>;
   }
 
+  function sanitizePostingTime(postingTime: string | any) {
+    if (!postingTime) return null;
+    
+    const timeParts = postingTime.split(".")[0].split(":"); // Remove fractions and split by ":"
+    if (timeParts[0].length === 1) {
+      timeParts[0] = `0${timeParts[0]}`; // Pad single-digit hour
+    }
+    return timeParts.join(":"); // Return sanitized time
+  }
+
   if (!invoice) {
     return <div className="p-4 text-gray-500">Invoice not found.</div>;
   }
@@ -74,9 +84,12 @@ export default function SInvoiceDetails() {
           <div className="flex justify-between text-sm">
             <span>Time</span>
             <span className="font-medium">
-              {invoice.posting_time
-                ? format(new Date(`1970-01-01T${invoice.posting_time}Z`), "hh:mm a")
-                : "--:--"}
+            {invoice?.posting_time
+              ? format(
+                  new Date(`1970-01-01T${sanitizePostingTime(invoice.posting_time)}Z`),
+                  "hh:mm a"
+                )
+              : "--:--"}
             </span>
           </div>
           <div className="flex justify-between text-sm">

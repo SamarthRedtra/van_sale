@@ -37,6 +37,17 @@ export default function InvoiceDetailCard({
     navigate(`/vansale/s-invoice/${invoiceId}`);
   };
 
+  function sanitizePostingTime(postingTime: string | any) {
+    if (!postingTime) return null;
+    
+    const timeParts = postingTime.split(".")[0].split(":"); // Remove fractions and split by ":"
+    if (timeParts[0].length === 1) {
+      timeParts[0] = `0${timeParts[0]}`; // Pad single-digit hour
+    }
+    return timeParts.join(":"); // Return sanitized time
+  }
+
+
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case "paid":
@@ -80,8 +91,11 @@ export default function InvoiceDetailCard({
               : "-"}
           </p>
           <p>
-            {invoice.posting_time
-              ? format(new Date(`1970-01-01T${invoice.posting_time}Z`), "hh:mm a")
+          {invoice?.posting_time
+              ? format(
+                  new Date(`1970-01-01T${sanitizePostingTime(invoice.posting_time)}Z`),
+                  "hh:mm a"
+                )
               : "--:--"}
           </p>
         </div>
