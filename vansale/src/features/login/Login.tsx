@@ -101,7 +101,9 @@ export default function LoginScreen() {
             </div>
 
             <div className="flex flex-col gap-2 items-start">
+            <Label htmlFor="email">Password</Label>
               <div className="relative w-full">
+              
                 <Input
                   id="password"
                   name="password"

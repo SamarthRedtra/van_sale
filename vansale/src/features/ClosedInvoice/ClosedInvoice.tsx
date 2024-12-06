@@ -137,7 +137,7 @@ export default function ClosedInvoice() {
       selected={selectedDate}
       onChange={(date) => setSelectedDate(date)}
       className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:outline-none focus:border-indigo-500"
-      placeholderText="Select a date"
+      placeholderText="DD/MM/YYYY"
     />
   </div>
 </div>
