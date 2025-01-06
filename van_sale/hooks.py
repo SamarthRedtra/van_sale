@@ -129,6 +129,7 @@ doctype_list_js = {"Delivery Trip": "public/js/delivery_trip_list.js"}
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+
 # DocType Class
 # ---------------
 # Override standard doctype classes
@@ -204,8 +205,8 @@ override_doctype_class = {
 
 # Request Events
 # ----------------
-# before_request = ["van_sale.utils.before_request"]
-# after_request = ["van_sale.utils.after_request"]
+before_request = ["van_sale.middleware.check_subscription_suspension"]
+# after_request = ["van_sale.middleware.check_subscription_suspension"]
 
 # Job Events
 # ----------
