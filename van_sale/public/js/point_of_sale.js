@@ -116,6 +116,8 @@ frappe.pages["point-of-sale"].refresh = function (wrapper) {
         }, 1500);
 
         setTimeout(() => {
+            if (!window?.frappe.is_mobile()) return false;
+
             const frappeAwesomeBar =
                 document?.body?.getElementsByClassName('search-bar')?.[0]
 
