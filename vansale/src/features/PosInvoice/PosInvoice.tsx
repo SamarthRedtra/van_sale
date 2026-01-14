@@ -43,7 +43,7 @@ export default function PosInvoice() {
       "name",
       "grand_total",
       "currency",
-      "customer",
+      "customer_name as customer",
       "posting_time",
       "status",
       "posting_date",
